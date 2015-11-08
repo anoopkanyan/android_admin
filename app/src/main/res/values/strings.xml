@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Spree Admin App</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="product">Products</string>
+    <string name="hint_product_name">Product Name</string>
+    <string name="hint_product_shipping_category_id">Shipping Category ID</string>
+    <string name="hint_product_price">Price</string>
+    <string name="hint_product_id">Product ID</string>
+    <string name="err_msg_name_product">Name is empty</string>
+    <string name="err_msg_product_id">Product Id is null</string>
+    <string name="err_msg_product_price">Product Price is null</string>
+    <string name="btn_get_products">Get Product</string>
+    <string name="btn_create_product">Create Product</string>
+    <string name="checkout">Checkout</string>
+    <string name="edit_product">Details</string>
+    <string name="search">Search Products</string>
+    <string name="title_activity_edit_product">Edit Product</string>
+</resources>

@@ -1,0 +1,14 @@
+The icons in this ZIP file were downloaded from http://icons4android.com 
+
+All icons are licensed under Creative Commons (Attribution-Share Alike 3.0 Unported) (http://creativecommons.org/licenses/by-sa/3.0/)
+Please note that one condition of this license is attribution. 
+
+If you use these icons in your project(s), you must add a link to 
+
+http://graphicriver.net/item/pictype-vector-icons/3917143?ref=tmthymllr
+
+on your website or playstore site. 
+
+Example of correct attribution: 
+
+ App icons by <a href="http://graphicriver.net/item/pictype-vector-icons/3917143?ref=tmthymllr">Timothy Miller</a>.
