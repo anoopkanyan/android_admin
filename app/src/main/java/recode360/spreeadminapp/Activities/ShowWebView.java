@@ -1,4 +1,4 @@
-package recode360.spreeadminapp;
+package recode360.spreeadminapp.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,6 +11,8 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+
+import recode360.spreeadminapp.R;
 
 public class ShowWebView extends Activity {
     /**
@@ -45,7 +47,7 @@ public class ShowWebView extends Activity {
 
         web = new WebView(this);
         web.getSettings().setJavaScriptEnabled(true);
-        web.loadUrl("http://www.script-tutorials.com/demos/199/index.html");
+        web.loadUrl("https://unsee.cc/");
         web.setWebViewClient(new myWebClient());
         web.setWebChromeClient(new WebChromeClient() {
             //The undocumented magic method override

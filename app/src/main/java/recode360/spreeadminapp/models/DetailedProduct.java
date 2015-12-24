@@ -23,7 +23,19 @@ public class DetailedProduct {
     boolean is_master;
     private int shipping_category_id;
     private OptionValues option_values;
-    private Image images;
+
+    public Image images[];
+
+
+    public Image[] getImages() {
+        return images;
+    }
+
+    public void setImages(Image[] images) {
+        this.images = images;
+    }
+
+
 
     public int getId() {
         return id;
@@ -145,15 +157,6 @@ public class DetailedProduct {
         this.shipping_category_id = shipping_category_id;
     }
 
-
-
-    public Image getImages() {
-        return images;
-    }
-
-    public void setImages(Image images) {
-        this.images = images;
-    }
 
     public OptionValues getOption_values() {
         return option_values;

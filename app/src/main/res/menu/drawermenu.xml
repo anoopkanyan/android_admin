@@ -1,31 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:theme="@style/AppTheme">
 
 
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_item_home"
+            android:icon="@drawable/ic_home"
+            android:title="Dashboard" />
 
-    <item android:title="Dashboard"
-          android:id="@+id/nav_item_inbox"
-          android:icon="@drawable/ic_home" />
+        <item
+            android:id="@+id/nav_item_product"
+            android:icon="@drawable/ic_products"
+            android:title="Products" />
 
-    <item android:title="Products"
-          android:id="@+id/nav_item_sent"
-          android:icon="@drawable/ic_products"/>
+        <item
+            android:id="@+id/nav_item_order"
+            android:icon="@drawable/ic_orders"
+            android:title="Orders" />
 
-    <item android:title="Orders"
-          android:id="@+id/nav_item_draft"
-          android:icon="@drawable/ic_orders"/>
-
-
-
-
-
-    <group android:id="@+id/group_settings_id">
-
-        <item android:title="Settings"
-              android:icon="@drawable/settings"/>
-        <item android:title="Help"
-             android:icon="@drawable/help"/>
+        <item
+            android:icon="@drawable/settings"
+            android:title="Settings" />
+        <item
+            android:icon="@drawable/help"
+            android:title="Help" />
     </group>
+
 
 
 </menu>

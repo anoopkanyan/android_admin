@@ -7,11 +7,17 @@ public class Config {
 
     // server URL configuration
 
-    //base URL to the store
-    public static final String URL_BASE = "https://rails-tutorial-anoopkanyan.c9.io/api";
+    //URL to the store
+    public static  String URL_STORE="";
 
-    //API key for the admin
-    public static final String API_KEY = "bc140277531e4d9957c66d27e9f660ec6618aece79e02f5f";
+
+    //API key for the admin, to be extracted using LoginActivity
+    public static  String API_KEY ="";
+
+    //FULL name of the user, is extracted from the JSON requests by the LoginActivity
+    public static String USER_FULL_NAME="";
+
+    public static String USER_EMAIL="";
 
 
 }

@@ -1,4 +1,4 @@
-package recode360.spreeadminapp;
+package recode360.spreeadminapp.Fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,6 +10,8 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import recode360.spreeadminapp.R;
 
 /**
  *
@@ -67,9 +69,9 @@ public class TabFragment extends Fragment {
         public Fragment getItem(int position)
         {
           switch (position){
-              case 0 : return new PrimaryFragment();
-              case 1 : return new SocialFragment();
-              case 2 : return new UpdatesFragment();
+              case 0 : return new AllOrdersFragment();
+              case 1 : return new OrdersPendingFragment();
+              case 2 : return new OrdersShipFragment();
           }
         return null;
         }
@@ -90,11 +92,12 @@ public class TabFragment extends Fragment {
 
             switch (position){
                 case 0 :
-                    return "First";
+                    return "All Orders";
                 case 1 :
-                    return "Second";
+                    return "Pending";
                 case 2 :
-                    return "Third";
+                    return "Ship";
+
             }
                 return null;
         }

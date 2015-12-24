@@ -1,4 +1,4 @@
-package recode360.spreeadminapp;
+package recode360.spreeadminapp.Fragments;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -16,38 +16,36 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
 
+import recode360.spreeadminapp.R;
 import recode360.spreeadminapp.app.AppController;
+import recode360.spreeadminapp.app.Config;
 
 /**
  * Created by ANOOP on 10/29/2015.
-   Fragment to handle creation of a product
+ * Fragment to handle creation of a product
  */
 
 
 public class CreateProductFragment extends Fragment {
 
     private Button btnCreateProduct;
-    private EditText inputName, inputPrice,inputId;
-    private TextInputLayout inputLayoutName, inputLayoutPrice,inputLayoutId;
+    private EditText inputName, inputPrice, inputId;
+    private TextInputLayout inputLayoutName, inputLayoutPrice, inputLayoutId;
     private String productName;
     private int productId;
     private BigDecimal productPrice;
     private String TAG;
-    private String url = "https://rails-tutorial-anoopkanyan.c9.io/api/products?token=bc140277531e4d9957c66d27e9f660ec6618aece79e02f5f";
+    private String url = "https://rails-tutorial-anoopkanyan.c9.io/api/products?token=" + Config.API_KEY;
 
 
     @Nullable
@@ -71,7 +69,7 @@ public class CreateProductFragment extends Fragment {
         inputPrice.addTextChangedListener(new MyTextWatcher(inputPrice));
         inputId.addTextChangedListener(new MyTextWatcher(inputId));
 
-        btnCreateProduct=(Button) view.findViewById(R.id.btn_create_product);
+        btnCreateProduct = (Button) view.findViewById(R.id.btn_create_product);
 
         btnCreateProduct.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,17 +79,13 @@ public class CreateProductFragment extends Fragment {
         });
 
         return view;
-     //   return inflater.inflate(R.layout.product_create_layout, null);
+        //   return inflater.inflate(R.layout.product_create_layout, null);
 
 
     }
 
 
-
-
-
-    void submitForm(){
-
+    void submitForm() {
 
 
         if (!validateName()) {
@@ -108,12 +102,11 @@ public class CreateProductFragment extends Fragment {
 
         String tag_json_obj = "json_obj_req";
 
-       url= url+"&product[name]="+inputName.getText().toString()+"&product[price]="+inputPrice.getText().toString()+"&product[shipping_category_id]="+inputId.getText().toString();
+        url = url + "&product[name]=" + inputName.getText().toString() + "&product[price]=" + inputPrice.getText().toString() + "&product[shipping_category_id]=" + inputId.getText().toString();
 
         final ProgressDialog pDialog = new ProgressDialog(getActivity());
         pDialog.setMessage("Loading...");
         pDialog.show();
-
 
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
@@ -133,9 +126,7 @@ public class CreateProductFragment extends Fragment {
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
                 pDialog.hide();
             }
-        })
-        ;
-
+        });
 
 
 // Adding request to request queue

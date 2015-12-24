@@ -1,4 +1,4 @@
-package recode360.spreeadminapp;
+package recode360.spreeadminapp.Fragments;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import recode360.spreeadminapp.R;
 import recode360.spreeadminapp.app.AppController;
 import recode360.spreeadminapp.utils.PhotoMultipartRequest;
 
@@ -49,7 +50,7 @@ public class UploadImageFragment extends Fragment {
 
     private int PICK_IMAGE_REQUEST = 1;
 
-    private String UPLOAD_URL ="https://rails-tutorial-anoopkanyan.c9.io/articles";
+    private String UPLOAD_URL ="http://upload.photobox.com/en/";
 
     private String KEY_IMAGE = "image";
     private String KEY_NAME = "name";

@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Spree Admin App</string>
-
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="product">Products</string>
@@ -17,4 +16,11 @@
     <string name="edit_product">Details</string>
     <string name="search">Search Products</string>
     <string name="title_activity_edit_product">Edit Product</string>
+    <string name="lbl_password">Password</string>
+    <string name="lbl_email">Email</string>
+    <string name="lbl_login">LOGIN</string>
+    <string name="msg_enter_store_credentials">Enter your store credentials</string>
+    <string name="title_activity_login">Login</string>
+    <string name="orders">Orders</string>
+    <string name="title_activity_orders">Orders</string>
 </resources>

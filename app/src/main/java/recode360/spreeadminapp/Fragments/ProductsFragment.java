@@ -1,10 +1,11 @@
-package recode360.spreeadminapp;
+package recode360.spreeadminapp.Fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -33,7 +34,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.melnykov.fab.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,9 +43,13 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import recode360.spreeadminapp.Activities.EditProductActivity;
+import recode360.spreeadminapp.Activities.MainActivity;
+import recode360.spreeadminapp.R;
 import recode360.spreeadminapp.adapter.ProductListAdapter;
 import recode360.spreeadminapp.adapter.ProductListAdapter.ProductListAdapterListener;
 import recode360.spreeadminapp.app.AppController;
+import recode360.spreeadminapp.app.Config;
 import recode360.spreeadminapp.models.Product;
 
 /**
@@ -57,9 +61,7 @@ public class ProductsFragment extends Fragment implements ProductListAdapterList
 
     private ListView listView;
 
-
     private Toolbar toolbar;
-
 
     private MenuItem mSearchAction;
     private boolean isSearchOpened = false;
@@ -68,21 +70,14 @@ public class ProductsFragment extends Fragment implements ProductListAdapterList
     FragmentManager mFragmentManager;
     FragmentTransaction mFragmentTransaction;
 
-
-
     // To store all the products
     private List<Product> productsList;
-
 
     private ProductListAdapter adapter;
 
     // Progress dialog
     private ProgressDialog pDialog;
     private FloatingActionButton fab;
-
-
-
-
 
 
     @Nullable
@@ -93,23 +88,19 @@ public class ProductsFragment extends Fragment implements ProductListAdapterList
 
         View view = inflater.inflate(R.layout.products_layout, container, false);
 
-     //   toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        fab=(FloatingActionButton) view.findViewById(R.id.fab);
+        //   toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        fab = (FloatingActionButton) view.findViewById(R.id.fab);
 
         fab.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
 
                 mFragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.containerView,new CreateProductFragment()).commit();
-
+                fragmentTransaction.replace(R.id.containerView, new CreateProductFragment()).commit();
 
 
             }
         });
-
-
-
 
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
@@ -127,109 +118,106 @@ public class ProductsFragment extends Fragment implements ProductListAdapterList
         pDialog = new ProgressDialog(getActivity());
         pDialog.setCancelable(false);
 
+
         fetchProducts();
 
-
-
-        return  view;
+        return view;
 
     }
-/**
- * Fetching the products from our server
- * */
-        private void fetchProducts() {
-            // Showing progress dialog before making request
 
-            pDialog.setMessage("Fetching products...");
+    /**
+     * Fetching the products from our server
+     */
+    private void fetchProducts() {
 
-            showpDialog();
+        // Showing progress dialog before making request
+        pDialog.setMessage("Fetching products...");
+        showpDialog();
 
-            // Making json object request
+        // Making json object request
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+                "https://rails-tutorial-anoopkanyan.c9.io/api/products.json?token=" + Config.API_KEY, null, new Response.Listener<JSONObject>() {
 
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                    "https://rails-tutorial-anoopkanyan.c9.io/api/products.json?token=bc140277531e4d9957c66d27e9f660ec6618aece79e02f5f", null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d(TAG, response.toString());
 
-                @Override
-                public void onResponse(JSONObject response) {
-                    Log.d(TAG, response.toString());
+                try {
+                    JSONArray products = response
+                            .getJSONArray("products");
 
-                    try {
-                        JSONArray products = response
-                                .getJSONArray("products");
+                    // looping through all product nodes and storing
+                    // them in array list
+                    for (int i = 0; i < products.length(); i++) {
 
-                        // looping through all product nodes and storing
-                        // them in array list
-                        for (int i = 0; i < products.length(); i++) {
+                        JSONObject product = (JSONObject) products
+                                .get(i);
 
-                            JSONObject product = (JSONObject) products
-                                    .get(i);
-
-                            String id = product.getString("id");
-                            String name = product.getString("name");
-                            String description = product
-                                    .getString("description");
+                        String id = product.getString("id");
+                        String name = product.getString("name");
+                        String description = product
+                                .getString("description");
                         //    String image = product.getString("image");
-                            BigDecimal price = new BigDecimal(product
-                                    .getString("price"));
-                          //  String sku = product.getString("sku");
+                        BigDecimal price = new BigDecimal(product
+                                .getString("price"));
+                        //  String sku = product.getString("sku");
 
-                            JSONObject master = product.getJSONObject("master");
-                            Product p = new Product();
-                            JSONArray images= master.getJSONArray("images");
-                            if(images.length()>0) {
-                                JSONObject image_object = images.getJSONObject(0);
+                        JSONObject master = product.getJSONObject("master");
+                        Product p = new Product();
+                        JSONArray images = master.getJSONArray("images");
+                        if (images.length() > 0) {
+                            JSONObject image_object = images.getJSONObject(0);
 
-                                String result = image_object.getString("product_url");
+                            String result = image_object.getString("product_url");
 
-                                System.out.println(result);
-                                p.setImage("https://rails-tutorial-anoopkanyan.c9.io"+result);
-                            }
-
-                            p.setId(Integer.parseInt(id));
-                            p.setName(name);
-                            p.setDescription(description);
-                            p.setPrice(price);
-
-
-                            productsList.add(p);
+                            System.out.println(result);
+                            p.setImage("https://rails-tutorial-anoopkanyan.c9.io" + result);
                         }
 
-                        // notifying adapter about data changes, so that the
-                        // list renders with new data
-                        adapter.notifyDataSetChanged();
+                        p.setId(Integer.parseInt(id));
+                        p.setName(name);
+                        p.setDescription(description);
+                        p.setPrice(price);
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        Toast.makeText(getActivity(),
-                                "Error: " + e.getMessage(),
-                                Toast.LENGTH_LONG).show();
+                        productsList.add(p);
                     }
 
-                    // hiding the progress dialog
-                    hidepDialog();
-                }
-            }, new Response.ErrorListener() {
+                    // notifying adapter about data changes, so that the
+                    // list renders with new data
+                    adapter.notifyDataSetChanged();
 
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    VolleyLog.d(TAG, "Error: " + error.getMessage());
+                } catch (JSONException e) {
+                    e.printStackTrace();
                     Toast.makeText(getActivity(),
-                            error.getMessage(), Toast.LENGTH_SHORT).show();
-                    // hide the progress dialog
-                    hidepDialog();
+                            "Error: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
                 }
-            });
+
+                // hiding the progress dialog
+                hidepDialog();
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                Toast.makeText(getActivity(),
+                        error.getMessage(), Toast.LENGTH_SHORT).show();
+                // hide the progress dialog
+                hidepDialog();
+            }
+        });
 
 
-            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(
-                    50000,
-                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(
+                50000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
 
-            // Adding request to request queue
-            AppController.getInstance().addToRequestQueue(jsonObjReq);
-        }
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(jsonObjReq);
+    }
 
     private void showpDialog() {
         if (!pDialog.isShowing())
@@ -245,9 +233,9 @@ public class ProductsFragment extends Fragment implements ProductListAdapterList
     @Override
     public void onAddToCartPressed(Product product) {
 
-        Intent intent = new Intent(getActivity(),EditProductActivity.class);
+        Intent intent = new Intent(getActivity(), EditProductActivity.class);
+        intent.putExtra("product_id", product.getId());
         startActivity(intent);
-
     }
 
 
@@ -279,12 +267,12 @@ public class ProductsFragment extends Fragment implements ProductListAdapterList
         return super.onOptionsItemSelected(item);
     }
 
-    protected void handleMenuSearch(){
+    protected void handleMenuSearch() {
 
         ActionBar action = ((AppCompatActivity) getActivity()).getSupportActionBar();
 
 
-        if(isSearchOpened){ //test if the search is open
+        if (isSearchOpened) { //test if the search is open
 
             action.setDisplayShowCustomEnabled(false); //disable a custom view inside the actionbar
             action.setDisplayShowTitleEnabled(true); //show the title in the action bar
@@ -304,14 +292,15 @@ public class ProductsFragment extends Fragment implements ProductListAdapterList
             action.setCustomView(R.layout.search_bar);//add the custom view
             action.setDisplayShowTitleEnabled(false); //hide the title
 
-            edtSeach = (EditText)action.getCustomView().findViewById(R.id.edtSearch); //the text editor
+            edtSeach = (EditText) action.getCustomView().findViewById(R.id.edtSearch); //the text editor
+
 
             //this is a listener to do a search when the user clicks on search button
             edtSeach.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                     if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                        doSearch();
+                        doSearch(edtSeach.getText().toString());
                         return true;
                     }
                     return false;
@@ -334,17 +323,21 @@ public class ProductsFragment extends Fragment implements ProductListAdapterList
     }
 
     public void onBackPressed() {
-        if(isSearchOpened) {
+        if (isSearchOpened) {
             handleMenuSearch();
             return;
         }
         super.getActivity().onBackPressed();
     }
 
-    private void doSearch() {
-//
-    }
+    private void doSearch(String query) {
 
+    pDialog.setMessage("Searching");
+    showpDialog();
+
+
+
+    }
 
 
 }

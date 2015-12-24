@@ -1,4 +1,4 @@
-package recode360.spreeadminapp;
+package recode360.spreeadminapp.Fragments;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import recode360.spreeadminapp.R;
 
 public class PrimaryFragment extends Fragment {
 
