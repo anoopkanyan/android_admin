@@ -21,10 +21,10 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     private List<Orders> ordersList;
     private Activity activity;
 
-    public OrderAdapter(List<Orders> ordersList,Activity activity) {
 
+    public OrderAdapter(List<Orders> ordersList, Activity activity) {
         this.ordersList = ordersList;
-        this.activity=activity;
+        this.activity = activity;
     }
 
 
@@ -40,10 +40,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         orderViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 //first check if the order's state i.e ship,pending or cart and start a new activity correspondingly
                 Intent i = new Intent(activity, OrdersActivity.class);
-                i.putExtra("order_no",order.getNumber());
+                i.putExtra("order_no", order.getNumber());
                 activity.startActivity(i);
 
             }
@@ -56,21 +55,18 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         if (order.getPayment_state().equals("balance_due")) {
             orderViewHolder.vPayment.setTextColor(Color.RED);
             orderViewHolder.vPayment.setText(order.getPayment_state());
-        }
-        else if (order.getPayment_state().equals("paid")) {
+        } else if (order.getPayment_state().equals("paid")) {
             orderViewHolder.vPayment.setTextColor(Color.parseColor("#ff33a93c"));
             orderViewHolder.vPayment.setText(order.getPayment_state());
         }
 
         if (order.getShipment_state().equals("pending")) {
             orderViewHolder.vShipment.setTextColor(Color.RED);
-            orderViewHolder.vShipment.setText("shipment "+ order.getShipment_state());
-        }
-        else if (order.getShipment_state().equals("ready")) {
+            orderViewHolder.vShipment.setText("shipment " + order.getShipment_state());
+        } else if (order.getShipment_state().equals("ready")) {
             orderViewHolder.vShipment.setTextColor(Color.parseColor("#ff33a93c"));
-            orderViewHolder.vShipment.setText("shipment "+order.getShipment_state());
-        }
-        else if (order.getShipment_state().equals("shipped")) {
+            orderViewHolder.vShipment.setText("shipment " + order.getShipment_state());
+        } else if (order.getShipment_state().equals("shipped")) {
             orderViewHolder.vShipment.setTextColor(Color.parseColor("#ff33a93c"));
             orderViewHolder.vShipment.setText(order.getShipment_state());
         }
@@ -88,7 +84,6 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
 
 
             }
@@ -121,7 +116,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               Log.d("Clicked","Clicked");
+                Log.d("Clicked", "Clicked");
 
             }
         };

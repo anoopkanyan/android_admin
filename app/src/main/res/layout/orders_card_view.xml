@@ -3,12 +3,12 @@
     android:id="@+id/cardview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
     android:layout_marginBottom="8dp"
-    android:elevation="100dp"
-    card_view:cardBackgroundColor="@color/white"
+    android:layout_marginTop="8dp"
+    android:background="?android:selectableItemBackground"
     android:clickable="true"
-    android:background="?android:selectableItemBackground">
+    android:elevation="100dp"
+    card_view:cardBackgroundColor="@color/white">
 
 
     <LinearLayout
@@ -28,58 +28,57 @@
                 android:padding="5dp"
                 android:textColor="@color/lbl_product_name"
                 android:textSize="16dp"
-                android:textStyle="bold"
-                />
+                android:textStyle="bold" />
 
 
             <TextView
                 android:id="@+id/orderDisplayTotal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
-                android:textSize="16dp"
-                android:textStyle="bold"
+                android:layout_alignParentTop="true"
                 android:padding="5dp"
-                android:textColor="@color/lbl_product_name"  />
+                android:textColor="@color/lbl_product_name"
+                android:textSize="16dp"
+                android:textStyle="bold" />
 
 
             <TextView
                 android:id="@+id/orderStateLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="State:"
                 android:layout_below="@+id/orderNumber"
                 android:padding="5dp"
-                android:textColor="@color/lbl_product_description"/>
+                android:text="State:"
+                android:textColor="@color/lbl_product_description" />
 
 
             <TextView
                 android:id="@+id/orderState"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/orderStateLabel"
                 android:layout_below="@+id/orderNumber"
+                android:layout_toRightOf="@+id/orderStateLabel"
                 android:padding="5dp"
-                android:textColor="@color/lbl_product_description"/>
+                android:textColor="@color/lbl_product_description" />
 
             <TextView
                 android:id="@+id/orderPaymentState"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/orderNumber"
                 android:layout_alignParentRight="true"
+                android:layout_below="@+id/orderNumber"
                 android:padding="5dp"
-                android:textColor="@color/lbl_product_description"  />
+                android:textColor="@color/lbl_product_description" />
 
             <TextView
                 android:id="@+id/orderQuantityLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Quantity:"
                 android:layout_below="@+id/orderStateLabel"
                 android:padding="5dp"
-                android:textColor="@color/lbl_product_description"/>
+                android:text="Quantity:"
+                android:textColor="@color/lbl_product_description" />
 
 
             <TextView
@@ -89,17 +88,16 @@
                 android:layout_below="@+id/orderState"
                 android:layout_toRightOf="@+id/orderQuantityLabel"
                 android:padding="5dp"
-                android:textColor="@color/lbl_product_description"  />
+                android:textColor="@color/lbl_product_description" />
 
             <TextView
                 android:id="@+id/orderShipmentState"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/orderState"
                 android:layout_alignParentRight="true"
+                android:layout_below="@+id/orderState"
                 android:padding="5dp"
-                android:textColor="@color/lbl_product_description"  />
-
+                android:textColor="@color/lbl_product_description" />
 
 
         </RelativeLayout>
