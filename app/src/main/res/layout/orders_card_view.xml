@@ -6,9 +6,11 @@
     android:layout_marginBottom="8dp"
     android:layout_marginTop="8dp"
     android:background="?android:selectableItemBackground"
+    android:foreground="?android:attr/selectableItemBackground"
     android:clickable="true"
     android:elevation="100dp"
-    card_view:cardBackgroundColor="@color/white">
+    card_view:cardBackgroundColor="@color/white"
+    card_view:cardCornerRadius="@dimen/card_corner_radius">
 
 
     <LinearLayout

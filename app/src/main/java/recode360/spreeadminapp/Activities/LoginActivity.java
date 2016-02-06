@@ -28,7 +28,7 @@ public class LoginActivity extends Activity {
     public static final String TAG = AppController.class
             .getSimpleName();
     // Email, password edittext
-    EditText txtEmail, txtPassword,txtStoreURL;
+    EditText txtEmail, txtPassword, txtStoreURL;
 
     // login button
     Button btnLogin;
@@ -53,8 +53,7 @@ public class LoginActivity extends Activity {
         // Email, Password input text
         txtEmail = (EditText) findViewById(R.id.inputEmail);
         txtPassword = (EditText) findViewById(R.id.inputPassword);
-        txtStoreURL= (EditText) findViewById(R.id.inputURL);
-
+        txtStoreURL = (EditText) findViewById(R.id.inputURL);
 
 
         // Login button
@@ -73,10 +72,10 @@ public class LoginActivity extends Activity {
 
 
                 // Check if username, password is filled
-                if (username.trim().length() > 0 && password.trim().length() > 0&&URL.trim().length()>0) {
+                if (username.trim().length() > 0 && password.trim().length() > 0 && URL.trim().length() > 0) {
                     // For testing puspose username, password is checked with sample data
 
-                    String details="{\"user\":{\"email\":"+username+",\"password\":"+password+"}}";
+                    String details = "{\"user\":{\"email\":" + username + ",\"password\":" + password + "}}";
 
                     try {
                         jsonBody = new JSONObject(details);
@@ -88,9 +87,9 @@ public class LoginActivity extends Activity {
                     final String url = URL + "api/users/sign_in";
 
 
-                  //  final ProgressDialog pDialog = new ProgressDialog(getBaseContext());
-                   // pDialog.setMessage("Verfying");
-                   // pDialog.show();
+                    //  final ProgressDialog pDialog = new ProgressDialog(getBaseContext());
+                    // pDialog.setMessage("Verfying");
+                    // pDialog.show();
 
                     JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
                             url, jsonBody,
@@ -104,16 +103,16 @@ public class LoginActivity extends Activity {
                                     // For testing i am stroing name, email as follow
                                     // Use user real data
                                     try {
-                                        session.createLoginSession(response.getJSONObject("bill_address").getString("full_name"),username, response.getString("spree_api_key"),URL);
+                                        session.createLoginSession(response.getJSONObject("bill_address").getString("full_name"), username, response.getString("spree_api_key"), URL);
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
 
-                                        // Staring MainActivity
+                                    // Staring MainActivity
                                     Intent i = new Intent(getApplicationContext(), MainActivity.class);
                                     startActivity(i);
                                     finish();
-                     //               pDialog.hide();
+                                    //               pDialog.hide();
                                 }
                             }, new Response.ErrorListener() {
 

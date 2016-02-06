@@ -2,9 +2,13 @@ package recode360.spreeadminapp.Activities;
 
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -26,12 +31,16 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
+import com.cocosw.bottomsheet.BottomSheet;
+import com.github.clans.fab.FloatingActionMenu;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import recode360.spreeadminapp.R;
@@ -42,18 +51,22 @@ import recode360.spreeadminapp.models.DetailedProduct;
 import recode360.spreeadminapp.models.sessions.AlertDialogManager;
 import recode360.spreeadminapp.utils.CustomRequest;
 import recode360.spreeadminapp.utils.Utils;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 public class EditProductActivity extends AppCompatActivity {
     CollapsingToolbarLayout collapsingToolbar;
     RecyclerView recyclerView;
     int mutedColor = R.attr.colorPrimary;
     SimpleRecyclerAdapter simpleRecyclerAdapter;
+    private Toolbar toolbar;
+
+    private List<FloatingActionMenu> menus = new ArrayList<>();
+    private Handler mUiHandler = new Handler();
 
     private int product_id;
-    private Toolbar toolbar;
     private JsonObjectRequest jsonObjReq;
     private DetailedProduct product;
-
 
     private EditText editName;
     private EditText editPrice;
@@ -70,6 +83,7 @@ public class EditProductActivity extends AppCompatActivity {
     private FloatingActionButton imageButton;
     AlertDialogManager alert;
 
+    private int camera_int;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +115,16 @@ public class EditProductActivity extends AppCompatActivity {
         editHeight = (EditText) findViewById(R.id.editHeight);
         editDepth = (EditText) findViewById(R.id.editDepth);
         editWidth = (EditText) findViewById(R.id.editWidth);
+
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+
+        if (  sp.getString("pref_barcode_camera", "0").equals("0")){
+
+            camera_int = 0;
+        }else{
+            camera_int = 1;
+        }
 
 
         String tag_json_obj = "json_obj_req";
@@ -158,21 +182,37 @@ public class EditProductActivity extends AppCompatActivity {
 
         imageButton = (FloatingActionButton) findViewById(R.id.imageUploadButton);
 
+
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              //  Intent intent = new Intent(getApplicationContext(), BarcodeScanner.class);
-                //   intent.putExtra("product_id", product.getId());
-                //startActivity(intent);
+
+                new BottomSheet.Builder(EditProductActivity.this).title("Choose Action").sheet(R.menu.list).listener(new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case R.id.scan:
+                                //Barcode scanner activity launched here to get the SKU
+                                IntentIntegrator integrator = new IntentIntegrator(EditProductActivity.this);
+                                integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);
+                                integrator.setPrompt("Scan a barcode");
+                                integrator.setBeepEnabled(true);
+                                integrator.setOrientationLocked(true);
+                                integrator.setCameraId(camera_int);  // Use a specific camera of the device
+                                integrator.initiateScan();
+                                break;
+
+                            case R.id.upload:
+                                //activity for image upload launched here
+                                Intent intent = new Intent(EditProductActivity.this, ImageActivity.class);
+                                intent.putExtra("product_id", Integer.toString(product_id));
+                                startActivity(intent);
+                        }
+                    }
+                }).show();
+
 
                 Log.d("test", "Scan button works!");
-                IntentIntegrator integrator = new IntentIntegrator(EditProductActivity.this);
-                integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);
-                integrator.setPrompt("Scan a barcode");
-                integrator.setBeepEnabled(true);
-                integrator.setOrientationLocked(true);
-                integrator.setCameraId(0);  // Use a specific camera of the device
-                integrator.initiateScan();
 
 
             }
@@ -186,6 +226,9 @@ public class EditProductActivity extends AppCompatActivity {
             }
         });
 
+        presentShowcaseView(500);
+
+
     }
 
 
@@ -194,7 +237,7 @@ public class EditProductActivity extends AppCompatActivity {
         editName.setText(pro.getName());
         editPrice.setText(pro.getPrice().toString());
 
-        editDescription.setText(pro.getDescription());
+        editDescription.setText(Utils.stripHtml(pro.getDescription())); //strip HTML tags and put the data in description.
         editSku.setText(pro.getSku());
 
         try {
@@ -236,8 +279,13 @@ public class EditProductActivity extends AppCompatActivity {
         //  Log.d("image", pro.getImages()[0].getMini_url());
 
         if (pro.getImages() != null) {
-            thumbNail.setImageUrl(Config.URL_STORE + pro.getImages()[0].getLarge_url(), imageLoader);
-            thumbNail.setBackgroundColor(Color.BLACK);
+            if (URLUtil.isValidUrl(pro.getImages()[0].getLarge_url())) {
+                thumbNail.setImageUrl(pro.getImages()[0].getLarge_url(), imageLoader);
+                thumbNail.setBackgroundColor(Color.BLACK);
+            } else {
+                thumbNail.setImageUrl(Config.URL_STORE + pro.getImages()[0].getLarge_url(), imageLoader);
+                thumbNail.setBackgroundColor(Color.BLACK);
+            }
         }
     }
 
@@ -310,28 +358,6 @@ public class EditProductActivity extends AppCompatActivity {
     }
 
 
-    //not to show menu items yet
-    /*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case R.id.action_settings:
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-    */
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -345,11 +371,11 @@ public class EditProductActivity extends AppCompatActivity {
 
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-//retrieve scan result
+        //retrieve scan result
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
 
         if (scanningResult != null) {
-//we have a result
+            //we have a result
             String scanContent = scanningResult.getContents();
             String scanFormat = scanningResult.getFormatName();
 
@@ -366,13 +392,23 @@ public class EditProductActivity extends AppCompatActivity {
         }
     }
 
+    private void presentShowcaseView(int withDelay) {
+        // sequence example
+        ShowcaseConfig config = new ShowcaseConfig();
+        config.setDelay(500); // half second between each showcase view
+
+        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(EditProductActivity.this, "qas");
+
+        sequence.setConfig(config);
+
+        sequence.addSequenceItem(imageButton,
+                "Use this button to upload a new image or scan a barcode ", "GOT IT");
+
+        sequence.addSequenceItem(editProductButton,
+                "Click this button once you have made changes to your product ", "GOT IT");
 
 
-
-
-
-
-
-
+        sequence.start();
+    }
 
 }

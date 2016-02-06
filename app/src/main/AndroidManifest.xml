@@ -28,58 +28,78 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
         <activity
-            android:name=".Activities.ShowWebView"
+            android:name=".Activities.CreateProductActivity"
             android:parentActivityName=".Activities.MainActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar">
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Activities.ShowWebView" />
+                android:value=".Activities.CreateProductActivity" />
         </activity>
-
         <activity
             android:name=".Activities.EditProductActivity"
             android:label="@string/title_activity_edit_product"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".Activities.MainActivity" >
+            android:parentActivityName=".Activities.MainActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.EditProductActivity" />
+            <intent-filter>
+                <action android:name="recode360.spreeadminapp.Activities.CreateProductActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
-
         <activity
             android:name=".Activities.LoginActivity"
             android:label="@string/title_activity_login"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".Activities.MainActivity" >
+            android:parentActivityName=".Activities.MainActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.LoginActivity" />
         </activity>
-
         <activity
             android:name=".Activities.BarcodeScanner"
             android:label="barcode scanner"
-            android:parentActivityName=".Activities.MainActivity" >
+            android:parentActivityName=".Activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.BarcodeScanner" />
         </activity>
-
-
         <activity
             android:name=".Activities.OrdersActivity"
             android:label="@string/title_activity_orders"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".Activities.MainActivity" >
+            android:parentActivityName=".Activities.MainActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.OrdersActivity" />
         </activity>
+        <activity
+            android:name=".Activities.ImageActivity"
+            android:label="Image Uploader"
+            android:parentActivityName=".Activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.ImageActivity" />
+        </activity>
+        <activity
+            android:name=".Activities.SettingsActivity"
+            android:label="@string/title_activity_settings"></activity>
+        <activity
+            android:name=".Activities.LicensesActivity"
+            android:label="@string/title_activity_licenses_activity"
+            android:parentActivityName=".Activities.MainActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.EditProductActivity" />
+            <intent-filter>
+                <action android:name="recode360.spreeadminapp.Activities.LicensesActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
 
+        </activity>
     </application>
 
 </manifest>

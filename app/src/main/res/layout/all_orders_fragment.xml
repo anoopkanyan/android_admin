@@ -4,14 +4,20 @@
     android:layout_height="match_parent"
     android:background="@color/list_divider">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/cardList"
+    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:background="?android:attr/selectableItemBackground"
-        android:focusable="true"
-        android:clickable="true"
-        />
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/cardList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingLeft="@dimen/card_margin"
+            android:paddingRight="@dimen/card_margin" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

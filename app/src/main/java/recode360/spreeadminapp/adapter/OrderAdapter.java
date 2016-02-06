@@ -43,6 +43,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
                 //first check if the order's state i.e ship,pending or cart and start a new activity correspondingly
                 Intent i = new Intent(activity, OrdersActivity.class);
                 i.putExtra("order_no", order.getNumber());
+                i.putExtra("shipment",order.getShipment_state());
                 activity.startActivity(i);
 
             }

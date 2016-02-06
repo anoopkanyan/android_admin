@@ -30,6 +30,26 @@ public class Orders {
     private int total_quantity;
     private String token;
 
+    private Address bill_address;
+
+    public Address getShip_address() {
+        return ship_address;
+    }
+
+    public void setShip_address(Address ship_address) {
+        this.ship_address = ship_address;
+    }
+
+    public Address getBill_address() {
+        return bill_address;
+    }
+
+    public void setBill_address(Address bill_address) {
+        this.bill_address = bill_address;
+    }
+
+    private Address ship_address;
+
 
     public String getState() {
         return state;

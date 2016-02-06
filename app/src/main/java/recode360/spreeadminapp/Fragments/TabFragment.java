@@ -94,9 +94,9 @@ public class TabFragment extends Fragment {
                 case 0 :
                     return "All Orders";
                 case 1 :
-                    return "Pending";
-                case 2 :
                     return "Ship";
+                case 2 :
+                    return "Completed";
 
             }
                 return null;

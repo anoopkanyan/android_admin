@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -48,13 +49,12 @@ public class LineItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     //    need to override this method
     @Override
     public int getItemViewType(int position) {
-        if(isPositionHeader(position))
+        if (isPositionHeader(position))
             return TYPE_HEADER;
         return TYPE_ITEM;
     }
 
-    private boolean isPositionHeader(int position)
-    {
+    private boolean isPositionHeader(int position) {
         return position == 0;
     }
 
@@ -93,8 +93,12 @@ public class LineItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             if (imageLoader == null)
                 imageLoader = AppController.getInstance().getImageLoader();
 
-            lineItemsViewHolder.image.setImageUrl(Config.URL_STORE + item.getTemp_img(), imageLoader);
+            if (URLUtil.isValidUrl(item.getTemp_img())) {
+                lineItemsViewHolder.image.setImageUrl( item.getTemp_img(), imageLoader);
+            } else {
+                lineItemsViewHolder.image.setImageUrl(Config.URL_STORE + item.getTemp_img(), imageLoader);
 
+            }
         }
     }
 

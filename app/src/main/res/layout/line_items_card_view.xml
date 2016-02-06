@@ -7,7 +7,9 @@
     android:background="?android:selectableItemBackground"
     android:clickable="true"
     android:elevation="100dp"
-    card_view:cardBackgroundColor="@color/white">
+    android:foreground="?android:attr/selectableItemBackground"
+    card_view:cardBackgroundColor="@color/white"
+    card_view:cardCornerRadius="@dimen/card_corner_radius">
 
         <RelativeLayout
             android:id="@+id/top_layout"

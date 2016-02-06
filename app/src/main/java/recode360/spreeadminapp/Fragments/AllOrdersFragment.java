@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,24 +37,27 @@ import recode360.spreeadminapp.app.Config;
 import recode360.spreeadminapp.models.Orders;
 
 
-public class AllOrdersFragment extends Fragment {
+public class AllOrdersFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private Toolbar toolbar;
+    private SwipeRefreshLayout swipeLayout;
 
     // To store all the orders
     private List<Orders> ordersList;
+    private List<Orders> tempList;
+
     // Progress dialog
     private ProgressDialog pDialog;
 
     private OrderAdapter adapter;
-
     private RecyclerView recList;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         View view = inflater.inflate(R.layout.all_orders_fragment, container, false);
         recList = (RecyclerView) view.findViewById(R.id.cardList);
         // recList.setHasFixedSize(true);
@@ -68,8 +72,11 @@ public class AllOrdersFragment extends Fragment {
         pDialog = new ProgressDialog(getActivity());
         pDialog.setCancelable(false);
 
-        ordersList = new ArrayList<Orders>();
+        swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+        swipeLayout.setColorSchemeResources(R.color.colorPrimary);
+        swipeLayout.setOnRefreshListener(this);
 
+        ordersList = new ArrayList<Orders>();
 
         fetchOrders();
         //  adapter= new OrderAdapter(ordersList);
@@ -81,13 +88,18 @@ public class AllOrdersFragment extends Fragment {
     //this is to fetch the requires JSON response regarding all the orders
     private void fetchOrders() {
 
-        // Showing progress dialog before making request
-        pDialog.setMessage("Fetching Orders...");
-        showpDialog();
+        if (!(swipeLayout.isRefreshing())) {
+            // Showing progress dialog before making request
+            pDialog.setMessage("Fetching products...");
+            showpDialog();
+        }
+
+        // ordersList.clear();
+        tempList = new ArrayList<Orders>();
 
         // Making json object request
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                "https://rails-tutorial-anoopkanyan.c9.io/api/orders.json?token=" + Config.API_KEY, null, new Response.Listener<JSONObject>() {
+                Config.URL_STORE + "/api/orders.json?token=" + Config.API_KEY, null, new Response.Listener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
@@ -104,7 +116,6 @@ public class AllOrdersFragment extends Fragment {
                         JSONObject order = (JSONObject) orders
                                 .get(i);
 
-
                         String number = order.getString("number");
                         String state = order.getString("state");
                         String total_quantity = order.getString("total_quantity");
@@ -120,11 +131,16 @@ public class AllOrdersFragment extends Fragment {
                         ord.setDisplay_total(display_total);
                         ord.setShipment_state(shipment_state);
 
-                        ordersList.add(ord);
+
+                        if (payment_state.equals("paid"))
+                            //ordersList.add(ord);
+                            tempList.add(ord);
                     }
 
                     // notifying adapter about data changes, so that the
                     // list renders with new data
+                    ordersList.clear();
+                    ordersList.addAll(tempList);
                     adapter = new OrderAdapter(ordersList, getActivity());
                     recList.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
@@ -138,6 +154,7 @@ public class AllOrdersFragment extends Fragment {
 
                 // hiding the progress dialog
                 hidepDialog();
+                swipeLayout.setRefreshing(false);
             }
         }, new Response.ErrorListener() {
 
@@ -148,6 +165,7 @@ public class AllOrdersFragment extends Fragment {
                         error.getMessage(), Toast.LENGTH_SHORT).show();
                 // hide the progress dialog
                 hidepDialog();
+                swipeLayout.setRefreshing(false);
             }
         });
 
@@ -157,7 +175,7 @@ public class AllOrdersFragment extends Fragment {
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-
+        jsonObjReq.setShouldCache(false);
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(jsonObjReq);
 
@@ -171,6 +189,11 @@ public class AllOrdersFragment extends Fragment {
     private void hidepDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
+    }
+
+    @Override
+    public void onRefresh() {
+        fetchOrders();
     }
 
 }

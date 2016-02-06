@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -35,13 +36,17 @@ import recode360.spreeadminapp.app.Config;
 import recode360.spreeadminapp.models.Orders;
 
 
-public class OrdersShipFragment extends Fragment {
+//This fragment shows a list of orders which are complete and have been shipped
+
+public class OrdersShipFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private Toolbar toolbar;
+    private SwipeRefreshLayout swipeLayout;
 
     // To store the pending orders,i.e. the payment is pending
     private List<Orders> ordersList;
+    private List<Orders> tempList;
 
     // Progress dialog
     private ProgressDialog pDialog;
@@ -62,9 +67,12 @@ public class OrdersShipFragment extends Fragment {
         recList.setLayoutManager(llm);
 
 
-
         pDialog = new ProgressDialog(getActivity());
         pDialog.setCancelable(false);
+
+        swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+        swipeLayout.setColorSchemeResources(R.color.colorPrimary);
+        swipeLayout.setOnRefreshListener(this);
 
         ordersList = new ArrayList<Orders>();
 
@@ -77,15 +85,20 @@ public class OrdersShipFragment extends Fragment {
     }
 
     //this is to fetch the requires JSON response regarding all the orders
-    private void fetchOrders(){
+    private void fetchOrders() {
 
-        // Showing progress dialog before making request
-        pDialog.setMessage("Fetching Orders...");
-        showpDialog();
+        if (!(swipeLayout.isRefreshing())) {
+            // Showing progress dialog before making request
+            pDialog.setMessage("Fetching products...");
+            showpDialog();
+        }
+
+        // ordersList.clear();
+        tempList = new ArrayList<Orders>();
 
         // Making json object request
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                "https://rails-tutorial-anoopkanyan.c9.io/api/orders.json?token=" + Config.API_KEY, null, new Response.Listener<JSONObject>() {
+                Config.URL_STORE + "/api/orders.json?token=" + Config.API_KEY, null, new Response.Listener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
@@ -103,14 +116,14 @@ public class OrdersShipFragment extends Fragment {
                                 .get(i);
 
 
-                        String number=order.getString("number");
-                        String state=order.getString("state");
-                        String total_quantity=order.getString("total_quantity");
-                        String payment_state=order.getString("payment_state");
-                        String display_total=order.getString("display_total");
-                        String shipment_state=order.getString("shipment_state");
+                        String number = order.getString("number");
+                        String state = order.getString("state");
+                        String total_quantity = order.getString("total_quantity");
+                        String payment_state = order.getString("payment_state");
+                        String display_total = order.getString("display_total");
+                        String shipment_state = order.getString("shipment_state");
 
-                        Orders ord= new Orders();
+                        Orders ord = new Orders();
                         ord.setNumber(number);
                         ord.setState(state);
                         ord.setTotal_quantity(Integer.parseInt(total_quantity));
@@ -119,13 +132,17 @@ public class OrdersShipFragment extends Fragment {
                         ord.setShipment_state(shipment_state);
 
                         //add only those orders whose payment is pending
-                        if(payment_state.equals("paid")&&shipment_state.equals("ready")){
-                            ordersList.add(ord);}
+                        if (payment_state.equals("paid") && shipment_state.equals("shipped")) {
+                            //ordersList.add(ord);
+                            tempList.add(ord);
+                        }
                     }
 
                     // notifying adapter about data changes, so that the
                     // list renders with new data
-                    adapter= new OrderAdapter(ordersList,getActivity());
+                    ordersList.clear();
+                    ordersList.addAll(tempList);
+                    adapter = new OrderAdapter(ordersList, getActivity());
                     recList.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
 
@@ -138,6 +155,7 @@ public class OrdersShipFragment extends Fragment {
 
                 // hiding the progress dialog
                 hidepDialog();
+                swipeLayout.setRefreshing(false);
             }
         }, new Response.ErrorListener() {
 
@@ -148,6 +166,7 @@ public class OrdersShipFragment extends Fragment {
                         error.getMessage(), Toast.LENGTH_SHORT).show();
                 // hide the progress dialog
                 hidepDialog();
+                swipeLayout.setRefreshing(false);
             }
         });
 
@@ -157,7 +176,7 @@ public class OrdersShipFragment extends Fragment {
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-
+        jsonObjReq.setShouldCache(false);
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(jsonObjReq);
 
@@ -171,6 +190,11 @@ public class OrdersShipFragment extends Fragment {
     private void hidepDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
+    }
+
+    @Override
+    public void onRefresh() {
+        fetchOrders();
     }
 
 }

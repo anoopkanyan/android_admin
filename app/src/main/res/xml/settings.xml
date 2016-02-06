@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="pref_profile"
+        android:title="ACCOUNT">
+        <EditTextPreference
+            android:icon="@drawable/ic_account_circle_black_24dp"
+            android:key="pref_username"
+            android:selectable="false"
+            android:summary=""
+            android:title=""></EditTextPreference>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="pref_orders"
+        android:title="ORDERS">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_notifications"
+            android:summary="Receive notifications when an order is created"
+            android:title="Notifications" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="pref_camera"
+        android:title="CAMERA">
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/listArray"
+            android:entryValues="@array/listValues"
+            android:key="pref_barcode_camera"
+            android:summary="Select the camera to use for barcodes  "
+            android:title="Barcode Scanner " />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="pref_key_storage_settings"
+        android:title="ABOUT">
+        <EditTextPreference
+            android:selectable="false"
+            android:summary="1.0.1"
+            android:title="Version"></EditTextPreference>
+        <Preference
+            android:summary="Open Source and Third Party Software"
+            android:title="Licenses">
+            <intent android:action="recode360.spreeadminapp.Activities.LicensesActivity" />
+        </Preference>
+    </PreferenceCategory>
+</PreferenceScreen>

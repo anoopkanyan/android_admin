@@ -21,13 +21,15 @@
             android:title="Orders" />
 
         <item
-            android:icon="@drawable/settings"
+            android:id="@+id/nav_item_settings"
+            android:icon="@drawable/ic_settings"
             android:title="Settings" />
+
         <item
-            android:icon="@drawable/help"
+            android:id="@+id/nav_item_help"
+            android:icon="@drawable/ic_help"
             android:title="Help" />
     </group>
-
 
 
 </menu>

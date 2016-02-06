@@ -1,5 +1,6 @@
 package recode360.spreeadminapp.Activities;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -10,6 +11,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,21 +20,24 @@ import com.amulyakhare.textdrawable.TextDrawable;
 import recode360.spreeadminapp.Fragments.PrimaryFragment;
 import recode360.spreeadminapp.Fragments.ProductsFragment;
 import recode360.spreeadminapp.Fragments.TabFragment;
-import recode360.spreeadminapp.Fragments.UploadImageFragment;
 import recode360.spreeadminapp.R;
 import recode360.spreeadminapp.app.Config;
 import recode360.spreeadminapp.models.sessions.AlertDialogManager;
 import recode360.spreeadminapp.models.sessions.SessionManager;
 import recode360.spreeadminapp.utils.Utils;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 public class MainActivity extends AppCompatActivity {
     DrawerLayout mDrawerLayout;
     NavigationView mNavigationView;
     FragmentManager mFragmentManager;
     FragmentTransaction mFragmentTransaction;
+    ActionBarDrawerToggle mDrawerToggle;
 
     private Toolbar toolbar;
 
+    private ProductsFragment frg;
     //for display of  name and email inside the navigation drawer header
     private TextView name_header;
     private TextView email_header;
@@ -72,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         name_header.setText(Config.USER_FULL_NAME);
         email_header.setText(Config.USER_EMAIL);
 
-        nameChar= Utils.parseName(Config.USER_FULL_NAME);
+        nameChar = Utils.parseName(Config.USER_FULL_NAME);
 
         TextDrawable drawable = TextDrawable.builder()
                 .buildRound(nameChar, Color.parseColor("#FF6F00"));
@@ -102,18 +107,23 @@ public class MainActivity extends AppCompatActivity {
 
                 if (menuItem.getItemId() == R.id.nav_item_product) {
                     FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.containerView, new ProductsFragment()).addToBackStack( "products fragment commit" ).commit();
+                    fragmentTransaction.replace(R.id.containerView, frg = new ProductsFragment()).addToBackStack("products fragment commit").commit();
 
                 }
 
                 if (menuItem.getItemId() == R.id.nav_item_home) {
                     FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
-                    xfragmentTransaction.replace(R.id.containerView, new UploadImageFragment()).addToBackStack( "home fragment commit" ).commit();
+                    xfragmentTransaction.replace(R.id.containerView, new PrimaryFragment()).addToBackStack("home fragment commit").commit();
                 }
 
                 if (menuItem.getItemId() == R.id.nav_item_order) {
                     FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
-                    xfragmentTransaction.replace(R.id.containerView, new TabFragment()).addToBackStack( "orders fragment commit" ).commit();
+                    xfragmentTransaction.replace(R.id.containerView, new TabFragment()).addToBackStack("orders fragment commit").commit();
+                }
+
+                if (menuItem.getItemId() == R.id.nav_item_settings) {
+                    Intent i = new Intent(MainActivity.this, SettingsActivity.class);
+                    startActivity(i);
                 }
 
 
@@ -128,12 +138,14 @@ public class MainActivity extends AppCompatActivity {
          */
 
 
-        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name,
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name,
                 R.string.app_name);
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         mDrawerToggle.syncState();
+
+        presentShowcaseView(500);
 
 
     }
@@ -145,6 +157,37 @@ public class MainActivity extends AppCompatActivity {
         } else {
             this.finish();
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        frg.onActivityResult(requestCode, resultCode, data);
+
+    }
+
+    private void presentShowcaseView(int withDelay) {
+        // sequence example
+        ShowcaseConfig config = new ShowcaseConfig();
+        config.setDelay(500); // half second between each showcase view
+
+        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, "tyui");
+
+        sequence.setConfig(config);
+
+        sequence.addSequenceItem(getNavButtonView(toolbar),
+                "Use this button to navigate between orders and products", "GOT IT");
+
+
+        sequence.start();
+    }
+
+    private ImageButton getNavButtonView(Toolbar toolbar) {
+        for (int i = 0; i < toolbar.getChildCount(); i++)
+            if (toolbar.getChildAt(i) instanceof ImageButton)
+                return (ImageButton) toolbar.getChildAt(i);
+
+        return null;
     }
 
 

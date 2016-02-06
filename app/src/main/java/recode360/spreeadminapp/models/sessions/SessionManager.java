@@ -40,13 +40,15 @@ public class SessionManager {
     public static final String KEY_EMAIL = "email";
 
     //make variable public to be accessed from outside
-    public static final String KEY_TOKEN="token";
+    public static final String KEY_TOKEN = "token";
 
-    public static final String KEY_URL="url";
+    public static final String KEY_URL = "url";
+
+    public static final String ONBOARDING_COMPLETE = "onboarding_complete";
 
 
     // Constructor
-    public SessionManager(Context context){
+    public SessionManager(Context context) {
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
@@ -54,10 +56,13 @@ public class SessionManager {
 
     /**
      * Create login session
-     * */
-    public void createLoginSession(String name, String email, String token,String url){
+     */
+    public void createLoginSession(String name, String email, String token, String url) {
         // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true);
+
+        //upon login the onborading is to be shown, so false
+        editor.putBoolean(ONBOARDING_COMPLETE, false);
 
         // Storing name in pref
         editor.putString(KEY_NAME, name);
@@ -65,9 +70,9 @@ public class SessionManager {
         // Storing email in pref
         editor.putString(KEY_EMAIL, email);
 
-        editor.putString(KEY_TOKEN,token);
+        editor.putString(KEY_TOKEN, token);
 
-        editor.putString(KEY_URL,url);
+        editor.putString(KEY_URL, url);
 
         // commit changes
         editor.commit();
@@ -77,10 +82,10 @@ public class SessionManager {
      * Check login method wil check user login status
      * If false it will redirect user to login page
      * Else won't do anything
-     * */
-    public void checkLogin(){
+     */
+    public void checkLogin() {
         // Check login status
-        if(!this.isLoggedIn()){
+        if (!this.isLoggedIn()) {
             // user is not logged in redirect him to Login Activity
             Intent i = new Intent(_context, LoginActivity.class);
             // Closing all the Activities
@@ -94,18 +99,18 @@ public class SessionManager {
         }
 
         //api key set getting it from pref if the user is logged in
-        Config.API_KEY=pref.getString(KEY_TOKEN,null);
-        Config.USER_FULL_NAME=pref.getString(KEY_NAME,null);
-        Config.USER_EMAIL=pref.getString(KEY_EMAIL,null);
-        Config.URL_STORE=pref.getString(KEY_URL,null);
+        Config.API_KEY = pref.getString(KEY_TOKEN, null);
+        Config.USER_FULL_NAME = pref.getString(KEY_NAME, null);
+        Config.USER_EMAIL = pref.getString(KEY_EMAIL, null);
+        Config.URL_STORE = pref.getString(KEY_URL, null);
 
     }
 
 
     /**
      * Get stored session data
-     * */
-    public HashMap<String, String> getUserDetails(){
+     */
+    public HashMap<String, String> getUserDetails() {
         HashMap<String, String> user = new HashMap<String, String>();
         // user name
         user.put(KEY_NAME, pref.getString(KEY_NAME, null));
@@ -114,17 +119,17 @@ public class SessionManager {
         user.put(KEY_EMAIL, pref.getString(KEY_EMAIL, null));
 
         //user token
-        user.put(KEY_TOKEN,pref.getString(KEY_TOKEN,null));
+        user.put(KEY_TOKEN, pref.getString(KEY_TOKEN, null));
 
-        user.put(KEY_URL,pref.getString(KEY_URL,null));
+        user.put(KEY_URL, pref.getString(KEY_URL, null));
         // return user
         return user;
     }
 
     /**
      * Clear session details
-     * */
-    public void logoutUser(){
+     */
+    public void logoutUser() {
         // Clearing all data from Shared Preferences
         editor.clear();
         editor.commit();
@@ -143,9 +148,10 @@ public class SessionManager {
 
     /**
      * Quick check for login
-     * **/
+     * *
+     */
     // Get Login State
-    public boolean isLoggedIn(){
+    public boolean isLoggedIn() {
         return pref.getBoolean(IS_LOGIN, false);
     }
 }

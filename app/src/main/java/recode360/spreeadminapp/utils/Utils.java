@@ -1,6 +1,7 @@
 package recode360.spreeadminapp.utils;
 
 import android.content.Context;
+import android.text.Html;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,7 +14,7 @@ import recode360.spreeadminapp.models.DetailedProduct;
 import recode360.spreeadminapp.models.Image;
 
 /*
-Helper static methods and methods to parse JSON data
+Helper static methods and methods to parse JSON data or HTML data or setting some properties at more than one place in the app.
  */
 
 
@@ -94,9 +95,10 @@ public class Utils {
         return tempProduct;
     }
 
+    //Returns the combination of first letters of FirstName and a SirName
     public static String parseName(String s) {
 
-        if(s!=null) {
+        if (s != null) {
             int i = 0;
             while (s.charAt(i) != ' ') {
                 i++;
@@ -106,4 +108,10 @@ public class Utils {
         }
         return "";
     }
+
+    //Removes the HTML tags if found in any response
+    public static String stripHtml(String html) {
+        return Html.fromHtml(html).toString();
+    }
+
 }

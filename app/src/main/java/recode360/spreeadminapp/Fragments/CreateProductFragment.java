@@ -45,7 +45,7 @@ public class CreateProductFragment extends Fragment {
     private int productId;
     private BigDecimal productPrice;
     private String TAG;
-    private String url = "https://rails-tutorial-anoopkanyan.c9.io/api/products?token=" + Config.API_KEY;
+    private String url = Config.URL_STORE+"/api/products?token=" + Config.API_KEY;
 
 
     @Nullable
@@ -54,7 +54,7 @@ public class CreateProductFragment extends Fragment {
 
         TAG = AppController.class
                 .getSimpleName();
-        View view = inflater.inflate(R.layout.product_create_layout, container, false);
+        View view = inflater.inflate(R.layout.activity_create_product, container, false);
 
         inputLayoutName = (TextInputLayout) view.findViewById(R.id.input_layout_product_name);
         inputName = (EditText) view.findViewById(R.id.input_product_name);
@@ -79,7 +79,7 @@ public class CreateProductFragment extends Fragment {
         });
 
         return view;
-        //   return inflater.inflate(R.layout.product_create_layout, null);
+        //   return inflater.inflate(R.layout.activity_create_product, null);
 
 
     }
