@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:theme="@style/AppTheme">
 
-
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/actions_group"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_item_home"
             android:icon="@drawable/ic_home"
@@ -21,6 +22,15 @@
             android:title="Orders" />
 
         <item
+            android:id="@+id/nav_item_taxonomy"
+            android:icon="@drawable/ic_action_tags"
+            android:title="Taxonomies" />
+
+    </group>
+    <group
+        android:id="@+id/settings_group"
+        android:checkableBehavior="single">
+        <item
             android:id="@+id/nav_item_settings"
             android:icon="@drawable/ic_settings"
             android:title="Settings" />
@@ -29,6 +39,8 @@
             android:id="@+id/nav_item_help"
             android:icon="@drawable/ic_help"
             android:title="Help" />
+
+
     </group>
 
 

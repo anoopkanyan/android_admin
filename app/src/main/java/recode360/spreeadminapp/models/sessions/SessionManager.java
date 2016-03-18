@@ -46,6 +46,8 @@ public class SessionManager {
 
     public static final String ONBOARDING_COMPLETE = "onboarding_complete";
 
+    public static String KEY_PASSWORD = "password";
+
 
     // Constructor
     public SessionManager(Context context) {
@@ -57,7 +59,7 @@ public class SessionManager {
     /**
      * Create login session
      */
-    public void createLoginSession(String name, String email, String token, String url) {
+    public void createLoginSession(String name, String email, String token, String url, String password) {
         // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true);
 
@@ -73,6 +75,8 @@ public class SessionManager {
         editor.putString(KEY_TOKEN, token);
 
         editor.putString(KEY_URL, url);
+
+        editor.putString(KEY_PASSWORD, password);
 
         // commit changes
         editor.commit();
@@ -103,6 +107,7 @@ public class SessionManager {
         Config.USER_FULL_NAME = pref.getString(KEY_NAME, null);
         Config.USER_EMAIL = pref.getString(KEY_EMAIL, null);
         Config.URL_STORE = pref.getString(KEY_URL, null);
+        Config.USER_PASSWORD = pref.getString(KEY_PASSWORD,null);
 
     }
 
@@ -122,6 +127,8 @@ public class SessionManager {
         user.put(KEY_TOKEN, pref.getString(KEY_TOKEN, null));
 
         user.put(KEY_URL, pref.getString(KEY_URL, null));
+
+        user.put(KEY_PASSWORD, pref.getString(KEY_PASSWORD,null));
         // return user
         return user;
     }

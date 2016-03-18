@@ -119,10 +119,10 @@ public class EditProductActivity extends AppCompatActivity {
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
-        if (  sp.getString("pref_barcode_camera", "0").equals("0")){
+        if (sp.getString("pref_barcode_camera", "0").equals("0")) {
 
             camera_int = 0;
-        }else{
+        } else {
             camera_int = 1;
         }
 
@@ -176,13 +176,11 @@ public class EditProductActivity extends AppCompatActivity {
             }
         };
 
+        jsonObjReq.setShouldCache(false);
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
 
-
         imageButton = (FloatingActionButton) findViewById(R.id.imageUploadButton);
-
-
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -240,34 +238,25 @@ public class EditProductActivity extends AppCompatActivity {
         editDescription.setText(Utils.stripHtml(pro.getDescription())); //strip HTML tags and put the data in description.
         editSku.setText(pro.getSku());
 
-        try {
+
+        if(pro.getCost_price()!=null) {
             editCostPrice.setText(pro.getCost_price().toString());
-        } catch (Exception e) {
-            editCostPrice.setText("0.0");
         }
 
         if (pro.getWeight() != null) {
             editWeight.setText(pro.getWeight().toString());
-        } else {
-            editWeight.setText("0.0");
         }
 
         if (pro.getHeight() != null) {
             editWeight.setText(pro.getWeight().toString());
-        } else {
-            editHeight.setText("0.0");
         }
 
         if (pro.getDepth() != null) {
             editWeight.setText(pro.getWeight().toString());
-        } else {
-            editDepth.setText("0.0");
         }
 
         if (pro.getWidth() != null) {
             editWeight.setText(pro.getWeight().toString());
-        } else {
-            editWidth.setText("0.0");
         }
 
         //set the image of the product at the top be extracting the image URL
@@ -297,7 +286,7 @@ public class EditProductActivity extends AppCompatActivity {
         // Tag used to cancel the request
         String tag_json_obj = "json_obj_req";
 
-        String url = Config.URL_STORE + "api/products/" + product_id;
+        String url = Config.URL_STORE + "api/products/" + product_id+"/variants/"+product.getId();
 
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
@@ -336,15 +325,15 @@ public class EditProductActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("product[name]", editName.getText().toString());
-                params.put("product[price]", editPrice.getText().toString());
-                params.put("product[sku]", editSku.getText().toString());
-                params.put("product[cost_price]", editCostPrice.getText().toString());
-                params.put("product[description]", editDescription.getText().toString());
-                params.put("product[weight]", editWeight.getText().toString());
-                params.put("product[height]", editHeight.getText().toString());
-                params.put("product[depth]", editDepth.getText().toString());
-                params.put("product[width]", editWidth.getText().toString());
+                params.put("variant[name]", editName.getText().toString());
+                params.put("variant[price]", editPrice.getText().toString());
+                params.put("variant[sku]", editSku.getText().toString());
+                params.put("variant[cost_price]", editCostPrice.getText().toString());
+                params.put("variant[description]", editDescription.getText().toString());
+                params.put("variant[weight]", editWeight.getText().toString());
+                params.put("variant[height]", editHeight.getText().toString());
+                params.put("variant[depth]", editDepth.getText().toString());
+                params.put("variant[width]", editWidth.getText().toString());
 
                 return params;
             }

@@ -67,6 +67,14 @@
                 android:value=".Activities.BarcodeScanner" />
         </activity>
         <activity
+            android:name=".Activities.CreateTaxonomyActivity"
+            android:label="Taxonomy Creation"
+            android:parentActivityName=".Activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.CreateTaxonomyActivity" />
+        </activity>
+        <activity
             android:name=".Activities.OrdersActivity"
             android:label="@string/title_activity_orders"
             android:parentActivityName=".Activities.MainActivity"

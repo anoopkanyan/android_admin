@@ -20,6 +20,7 @@ import com.amulyakhare.textdrawable.TextDrawable;
 import recode360.spreeadminapp.Fragments.PrimaryFragment;
 import recode360.spreeadminapp.Fragments.ProductsFragment;
 import recode360.spreeadminapp.Fragments.TabFragment;
+import recode360.spreeadminapp.Fragments.TaxonomyFragment;
 import recode360.spreeadminapp.R;
 import recode360.spreeadminapp.app.Config;
 import recode360.spreeadminapp.models.sessions.AlertDialogManager;
@@ -56,9 +57,7 @@ public class MainActivity extends AppCompatActivity {
         session = new SessionManager(getApplicationContext());
         session.checkLogin();
 
-
         setContentView(R.layout.activity_main);
-
 
         /**
          *Setup the DrawerLayout and NavigationView
@@ -80,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         nameChar = Utils.parseName(Config.USER_FULL_NAME);
 
         TextDrawable drawable = TextDrawable.builder()
-                .buildRound(nameChar, Color.parseColor("#FF6F00"));
+                .buildRound(nameChar, Color.parseColor("#FF4081"));
 
         ImageView image = (ImageView) findViewById(R.id.image_view_name);
         image.setImageDrawable(drawable);
@@ -104,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
                 menuItem.setChecked(true);
                 mDrawerLayout.closeDrawers();
 
-
                 if (menuItem.getItemId() == R.id.nav_item_product) {
                     FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.containerView, frg = new ProductsFragment()).addToBackStack("products fragment commit").commit();
@@ -124,6 +122,11 @@ public class MainActivity extends AppCompatActivity {
                 if (menuItem.getItemId() == R.id.nav_item_settings) {
                     Intent i = new Intent(MainActivity.this, SettingsActivity.class);
                     startActivity(i);
+                }
+
+                if (menuItem.getItemId() == R.id.nav_item_taxonomy) {
+                    FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
+                    xfragmentTransaction.replace(R.id.containerView, new TaxonomyFragment()).addToBackStack("taxonomies fragment commit").commit();
                 }
 
 

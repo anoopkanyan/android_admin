@@ -19,5 +19,8 @@ public class Config {
 
     public static String USER_EMAIL="";
 
+    //temporarily storing password, untill we figure out the image upload API
+    public static String USER_PASSWORD="";
+
 
 }

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -17,6 +18,9 @@ import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import recode360.spreeadminapp.R;
 import recode360.spreeadminapp.app.AppController;
@@ -68,14 +72,14 @@ public class LoginActivity extends Activity {
                 // Get username, password from EditText
                 final String username = txtEmail.getText().toString();
                 final String password = txtPassword.getText().toString();
-                final String URL = txtStoreURL.getText().toString();
+                final String URL = txtStoreURL.getText().toString().trim();
 
 
                 // Check if username, password is filled
                 if (username.trim().length() > 0 && password.trim().length() > 0 && URL.trim().length() > 0) {
                     // For testing puspose username, password is checked with sample data
 
-                    String details = "{\"user\":{\"email\":" + username + ",\"password\":" + password + "}}";
+                    final String details = "{\"user\":{\"email\":\"" + username + "\",\"password\":\"" + password + "\"}}";
 
                     try {
                         jsonBody = new JSONObject(details);
@@ -103,7 +107,7 @@ public class LoginActivity extends Activity {
                                     // For testing i am stroing name, email as follow
                                     // Use user real data
                                     try {
-                                        session.createLoginSession(response.getJSONObject("bill_address").getString("full_name"), username, response.getString("spree_api_key"), URL);
+                                        session.createLoginSession(response.getJSONObject("bill_address").getString("full_name"), username, response.getString("spree_api_key"), URL,password);
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
@@ -119,17 +123,32 @@ public class LoginActivity extends Activity {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             VolleyLog.d(TAG, "Error: " + error.getMessage());
+                            Log.e("JSON STRING:", details);
                             alert.showAlertDialog(LoginActivity.this, "Login failed..", "Shop URL/Username/Password is incorrect", false);
                             // hide the progress dialog
                             //pDialog.hide();
                         }
-                    });
+                    }) {
+                        @Override
+                        public Map<String, String> getHeaders() throws AuthFailureError {
+                            HashMap<String, String> headers = new HashMap<String, String>();
+                            headers.put("Accept", "application/json");
+                            headers.put("Content-Type", "application/json; charset=utf-8");
+                            return headers;
+                        }
+
+                        @Override
+                        public String getBodyContentType() {
+                            return "application/json; charset=utf-8";
+                        }
+
+                    };
 
                     // Adding request to request queue
                     AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
 
                 } else {
-                    // user didn't entered username or password
+                    // user didn't enter username or password
                     // Show alert asking him to enter the details
                     alert.showAlertDialog(LoginActivity.this, "Login failed..", "Please enter URL, username and password", false);
                 }

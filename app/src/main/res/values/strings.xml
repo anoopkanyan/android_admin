@@ -1,8 +1,14 @@
 <resources>
-    <string name="app_name">Spree Admin App</string>
+    <string name="app_name">Recode Commerce</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="product">Products</string>
+
+    <string name="taxonomies">Taxonomies</string>
+    <string name="hint_taxonomy_name">Taxonomy Name</string>
+    <string name="hint_taxon_name">Default Taxon</string>
+    <string name="btn_create_taxonomy">Create Taxonomy </string>
+
     <string name="hint_product_name">Product Name</string>
     <string name="hint_product_shipping_category_id">Shipping Category ID</string>
     <string name="hint_product_price">Price</string>

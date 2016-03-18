@@ -50,8 +50,6 @@ import recode360.spreeadminapp.app.Config;
 public class MainFragment extends Fragment {
 
 
-
-
     private static final String TAG = MainFragment.class.getSimpleName();
 
     public static final int INPUT_FILE_REQUEST_CODE = 1;
@@ -138,7 +136,7 @@ public class MainFragment extends Fragment {
 
             public void onProgressChanged(WebView view, int newProgress) {
 
-                if(newProgress == 0){
+                if (newProgress == 0) {
                     dialog.show();
                 }
 
@@ -147,8 +145,8 @@ public class MainFragment extends Fragment {
                     dialog.hide();
                     Log.d("yea", "the page is finished loading do your work now");
                     mWebView.loadUrl("javascript:(function() { try{" +
-                            "document.getElementById('spree_user_email').value = '" + "spree@example.com" + "';" +
-                            "document.getElementById('spree_user_password').value = '" + "spree123" + "';" +
+                            "document.getElementById('spree_user_email').value = '" + Config.USER_EMAIL + "';" +
+                            "document.getElementById('spree_user_password').value = '" + Config.USER_PASSWORD + "';" +
                             "document.forms['new_spree_user'].submit();}" +
                             "catch(err){}" +
                             "document.getElementsByClassName('logo navbar-brand')[0].style.display='none';" +
@@ -159,7 +157,7 @@ public class MainFragment extends Fragment {
                             "document.getElementById('cancel_link').style.display='none';" +
                             "document.getElementsByClassName('form-group')[1].style.display='none';" +
                             "document.getElementsByClassName('or')[0].style.display='none';" +
-                            "document.getElementsById('sidebar').style.display='none';"+
+                            "document.getElementsById('sidebar').style.display='none';" +
                             "document.getElementsByClassName('icon-link with-tip action-edit')[0].style.display='none';" +
                             "})()");
 

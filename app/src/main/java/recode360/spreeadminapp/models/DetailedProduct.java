@@ -1,5 +1,7 @@
 package recode360.spreeadminapp.models;
 
+import android.util.Log;
+
 import java.math.BigDecimal;
 
 /**
@@ -78,6 +80,7 @@ public class DetailedProduct {
     }
 
     public Float getWeight() {
+        Log.d("weight in the model is ",Float.toString(weight));
         return weight;
     }
 

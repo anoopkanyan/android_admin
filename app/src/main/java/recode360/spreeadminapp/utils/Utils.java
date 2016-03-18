@@ -51,13 +51,13 @@ public class Utils {
                 tempProduct.setWeight(Float.parseFloat(obj.getString("weight")));
             }
             if (obj.getString("height") != "null") {
-                tempProduct.setWeight(Float.parseFloat(obj.getString("height")));
+                tempProduct.setHeight(Float.parseFloat(obj.getString("height")));
             }
             if (obj.getString("depth") != "null") {
-                tempProduct.setWeight(Float.parseFloat(obj.getString("depth")));
+                tempProduct.setDepth(Float.parseFloat(obj.getString("depth")));
             }
             if (obj.getString("width") != "null") {
-                tempProduct.setWeight(Float.parseFloat(obj.getString("width")));
+                tempProduct.setWidth(Float.parseFloat(obj.getString("width")));
             }
 
             tempProduct.setDisplay_price(obj.getString("display_price"));
@@ -72,8 +72,6 @@ public class Utils {
             Image array_image[] = new Image[imageArray.length()];
             for (int i = 0; i < imageArray.length(); i++) {
                 JSONObject imageObject = imageArray.getJSONObject(i);
-
-
                 Image img = new Image();
                 img.setId(imageObject.getInt("id"));
                 img.setPosition(imageObject.getInt("position"));
@@ -81,11 +79,8 @@ public class Utils {
                 img.setSmall_url(imageObject.getString("small_url"));
                 img.setProduct_url(imageObject.getString("product_url"));
                 img.setLarge_url(imageObject.getString("large_url"));
-
                 array_image[i] = img;
-
                 tempProduct.setImages(array_image);
-
                 //    Log.d("image",tempProduct.getImages()[0].getMini_url());
             }
         } catch (JSONException e) {
