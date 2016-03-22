@@ -1,4 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -11,73 +13,113 @@
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="25dp"
-            android:layout_marginTop="100dp"
-            android:src="@drawable/ic_cart" />
-
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="25dp"
+            android:layout_marginTop="40dp"
+            android:fontFamily="sans-serif-thin"
             android:gravity="center_horizontal"
             android:inputType="textCapWords"
             android:paddingLeft="40dp"
             android:paddingRight="40dp"
-            android:text="@string/msg_enter_store_credentials"
-            android:textColor="@android:color/white"
-            android:textSize="14dp" />
+            android:text="RecodeCommerece"
+            android:textColor="@color/white"
+            android:textSize="28dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-
-            <EditText
-                android:id="@+id/inputURL"
-                android:layout_width="fill_parent"
+            <com.github.florent37.materialtextfield.MaterialTextField
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:background="@android:color/white"
-                android:fontFamily="sans-serif-light"
-                android:hint="Store URL"
-                android:inputType="textWebEmailAddress"
-                android:padding="5dp"
-                android:textColor="@color/colorPrimary"
-                android:textSize="18dp" />
+                android:layout_marginBottom="5dp"
+                app:mtf_image="@drawable/ic_action_link">
 
+                <EditText
+                    android:id="@+id/inputURL"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:fontFamily="sans-serif-light"
+                    android:hint="Store URL"
+                    android:inputType="textWebEmailAddress"
+                    android:textColor="#455A64"
+                    android:textColorHint="@color/white"
+                    android:textSize="18dp" />
+            </com.github.florent37.materialtextfield.MaterialTextField>
 
-            <EditText
-                android:id="@+id/inputEmail"
-                android:layout_width="fill_parent"
+            <com.github.florent37.materialtextfield.MaterialTextField
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:background="@android:color/white"
-                android:fontFamily="sans-serif-light"
-                android:hint="@string/lbl_email"
-                android:inputType="textEmailAddress"
-                android:padding="5dp"
-                android:singleLine="true"
-                android:textColor="@color/colorPrimary"
-                android:textSize="18dp" />
+                android:layout_marginBottom="5dp"
+                app:mtf_image="@drawable/ic_action_mail">
 
-            <EditText
-                android:id="@+id/inputPassword"
-                android:layout_width="fill_parent"
+                <EditText
+                    android:id="@+id/inputEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:fontFamily="sans-serif-light"
+                    android:hint="@string/lbl_email"
+                    android:inputType="textEmailAddress"
+                    android:singleLine="true"
+                    android:textColor="#455A64"
+                    android:textColorHint="@color/white"
+                    android:textSize="18dp" />
+            </com.github.florent37.materialtextfield.MaterialTextField>
+
+            <com.github.florent37.materialtextfield.MaterialTextField
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:background="@android:color/white"
-                android:fontFamily="sans-serif-light"
-                android:hint="@string/lbl_password"
-                android:inputType="textPassword"
-                android:padding="5dp"
-                android:textColor="@color/colorPrimary"
-                android:textSize="18dp" />
+                app:mtf_image="@drawable/ic_action_lock_open">
 
+                <EditText
+                    android:id="@+id/inputPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:fontFamily="sans-serif-light"
+                    android:hint="@string/lbl_password"
+                    android:inputType="textPassword"
+                    android:textColor="#455A64"
+                    android:textColorHint="@color/white"
+                    android:textSize="18dp" />
+            </com.github.florent37.materialtextfield.MaterialTextField>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:clipChildren="false"
+                android:clipToPadding="false">
+
+                <com.github.jorgecastilloprz.FABProgressCircle
+                    android:id="@+id/fabProgressCircle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:arcColor="@color/colorAccent"
+                    app:arcWidth="7dp"
+                    app:finalIcon="@drawable/ic_action_tick">
+
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/btn_login"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="40dp"
+                        android:layout_marginLeft="122dp"
+                        android:layout_marginRight="122dp"
+                        android:layout_marginTop="40dp"
+                        android:src="@drawable/ic_action_playback_play"
+                        app:backgroundTint="#455A64" />
+
+                </com.github.jorgecastilloprz.FABProgressCircle>
+            </RelativeLayout>
+
+            <!--
             <Button
                 android:id="@+id/btn_login"
                 android:layout_width="240dp"
@@ -88,6 +130,7 @@
                 android:text="@string/lbl_login"
                 android:textColor="@android:color/white"
                 android:textSize="14dp" />
+                -->
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -92,7 +92,7 @@ public class TabFragment extends Fragment {
 
             switch (position){
                 case 0 :
-                    return "All Orders";
+                    return "All orders";
                 case 1 :
                     return "Ship";
                 case 2 :

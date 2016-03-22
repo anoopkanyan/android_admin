@@ -7,7 +7,7 @@ import java.math.BigDecimal;
  */
 
 
-//don't need all the details of the Orders here, this is jut to display the orders in a list
+//don't need all the details of the orders here, this is jut to display the orders in a list
 
 public class Orders {
 

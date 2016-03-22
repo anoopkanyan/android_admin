@@ -2,6 +2,7 @@ package recode360.spreeadminapp.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,7 @@ public class PrimaryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.primary_layout, container, false);
-
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.dashboard);
 
         return rootView;
     }

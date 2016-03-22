@@ -10,6 +10,7 @@ import android.content.SharedPreferences.Editor;
 
 import java.util.HashMap;
 
+import recode360.spreeadminapp.Activities.BoardingActivity;
 import recode360.spreeadminapp.Activities.LoginActivity;
 import recode360.spreeadminapp.app.Config;
 
@@ -91,7 +92,7 @@ public class SessionManager {
         // Check login status
         if (!this.isLoggedIn()) {
             // user is not logged in redirect him to Login Activity
-            Intent i = new Intent(_context, LoginActivity.class);
+            Intent i = new Intent(_context, BoardingActivity.class);
             // Closing all the Activities
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
@@ -107,7 +108,7 @@ public class SessionManager {
         Config.USER_FULL_NAME = pref.getString(KEY_NAME, null);
         Config.USER_EMAIL = pref.getString(KEY_EMAIL, null);
         Config.URL_STORE = pref.getString(KEY_URL, null);
-        Config.USER_PASSWORD = pref.getString(KEY_PASSWORD,null);
+        Config.USER_PASSWORD = pref.getString(KEY_PASSWORD, null);
 
     }
 
@@ -128,7 +129,7 @@ public class SessionManager {
 
         user.put(KEY_URL, pref.getString(KEY_URL, null));
 
-        user.put(KEY_PASSWORD, pref.getString(KEY_PASSWORD,null));
+        user.put(KEY_PASSWORD, pref.getString(KEY_PASSWORD, null));
         // return user
         return user;
     }

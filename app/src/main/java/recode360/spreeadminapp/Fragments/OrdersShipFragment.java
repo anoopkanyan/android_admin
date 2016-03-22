@@ -89,7 +89,7 @@ public class OrdersShipFragment extends Fragment implements SwipeRefreshLayout.O
 
         if (!(swipeLayout.isRefreshing())) {
             // Showing progress dialog before making request
-            pDialog.setMessage("Fetching products...");
+            pDialog.setMessage("Fetching Orders...");
             showpDialog();
         }
 
@@ -98,7 +98,7 @@ public class OrdersShipFragment extends Fragment implements SwipeRefreshLayout.O
 
         // Making json object request
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                Config.URL_STORE + "/api/orders.json?q[s]=updated_at%20desc&token=" + Config.API_KEY, null, new Response.Listener<JSONObject>() {
+                Config.URL_STORE + "/api/orders.json?q[s]=updated_at%20desc&per_page=200&token=" + Config.API_KEY, null, new Response.Listener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {

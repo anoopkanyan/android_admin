@@ -69,7 +69,7 @@ import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 /**
- * Products Fragment
+ * products Fragment
  */
 
 public class ProductsFragment extends Fragment implements ProductListAdapterListener, SwipeRefreshLayout.OnRefreshListener {
@@ -177,6 +177,18 @@ public class ProductsFragment extends Fragment implements ProductListAdapterList
             }
         });
 
+        listView.setClickable(true);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                Log.d("Hat", "BC");
+                Product product = productsList.get(position);
+                onAddToCartPressed(product);
+
+            }
+        });
+
         searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
             @Override
             public void onSearchViewShown() {
@@ -224,7 +236,7 @@ public class ProductsFragment extends Fragment implements ProductListAdapterList
 
         // Making json object request
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                Config.URL_STORE + "/api/products.json?token=" + Config.API_KEY, null, new Response.Listener<JSONObject>() {
+                Config.URL_STORE + "/api/products.json?token=" + Config.API_KEY+"&per_page=200", null, new Response.Listener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {

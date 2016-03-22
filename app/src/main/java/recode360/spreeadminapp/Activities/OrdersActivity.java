@@ -136,7 +136,7 @@ public class OrdersActivity extends AppCompatActivity {
         lineItemsList = new ArrayList<LineItems>();
 
         String tag_json_obj = "json_obj_req";
-        String url = Config.URL_STORE + "api/orders/" + order_no + ".json";
+        String url = Config.URL_STORE + "/api/orders/" + order_no + ".json";
         Log.d("the url of the store is", url + Config.API_KEY);
 
         final ProgressDialog pDialog = new ProgressDialog(this);

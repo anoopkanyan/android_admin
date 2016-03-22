@@ -15,5 +15,4 @@
         android:textColor="@color/indicator"
         android:textSize="40sp" />
 
-
 </RelativeLayout>

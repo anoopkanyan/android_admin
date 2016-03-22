@@ -170,7 +170,7 @@ public class MainFragment extends Fragment {
         if (mWebView.getUrl() == null) {
             ImageActivity activity = (ImageActivity) getActivity();
             String product_id = activity.getProduct_Id();
-            mWebView.loadUrl(Config.URL_STORE + "admin/products/" + product_id + "/images/new");
+            mWebView.loadUrl(Config.URL_STORE + "/admin/products/" + product_id + "/images/new");
         }
 
         return rootView;

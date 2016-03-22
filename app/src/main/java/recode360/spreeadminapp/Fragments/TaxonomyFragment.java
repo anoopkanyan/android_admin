@@ -3,18 +3,19 @@ package recode360.spreeadminapp.Fragments;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -24,6 +25,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.melnykov.fab.FloatingActionButton;
+import com.unnamed.b.atv.model.TreeNode;
+import com.unnamed.b.atv.view.AndroidTreeView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,49 +38,43 @@ import java.util.List;
 import recode360.spreeadminapp.Activities.CreateTaxonomyActivity;
 import recode360.spreeadminapp.Activities.MainActivity;
 import recode360.spreeadminapp.R;
-import recode360.spreeadminapp.adapter.TaxonomiesAdapter;
+import recode360.spreeadminapp.adapter.IconTreeItemHolder;
 import recode360.spreeadminapp.app.AppController;
 import recode360.spreeadminapp.app.Config;
 import recode360.spreeadminapp.models.Taxonomies;
-import recode360.spreeadminapp.utils.DividerItemDecoration;
 
-
-public class TaxonomyFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
-
+public class TaxonomyFragment extends Fragment {
+    private TextView statusBar;
+    private AndroidTreeView tView;
     private static final String TAG = MainActivity.class.getSimpleName();
     private Toolbar toolbar;
-    private SwipeRefreshLayout swipeLayout;
 
     // To store all the orders
     private List<Taxonomies> taxonomiesList;
-    private List<Taxonomies> tempList;
 
     // Progress dialog
     private ProgressDialog pDialog;
     private FloatingActionButton fab;
 
-    private TaxonomiesAdapter adapter;
-    private RecyclerView recList;
+    private TreeNode root;
 
-    @Nullable
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
-        View view = inflater.inflate(R.layout.taxonomy_fragment, container, false);
-        recList = (RecyclerView) view.findViewById(R.id.taxonomies_recycler_view);
-        // recList.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recList.setLayoutManager(llm);
+        View rootView = inflater.inflate(R.layout.taxonomy_fragment, null, false);
+        final ViewGroup containerView = (ViewGroup) rootView.findViewById(R.id.container);
 
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        //set the title for the fragment
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.taxonomies);
 
-        pDialog = new ProgressDialog(getActivity());
-        pDialog.setCancelable(false);
-
-        fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
 
         fab.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
@@ -87,33 +84,16 @@ public class TaxonomyFragment extends Fragment implements SwipeRefreshLayout.OnR
         });
 
 
-        swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
-        swipeLayout.setColorSchemeResources(R.color.colorPrimary);
-        swipeLayout.setOnRefreshListener(this);
+        statusBar = (TextView) rootView.findViewById(R.id.status_bar);
+
+        root = TreeNode.root();
 
         taxonomiesList = new ArrayList<Taxonomies>();
-
-        fetchTaxonomies();
-        //  adapter= new OrderAdapter(ordersList);
-        //add the line separator
-        recList.addItemDecoration(new DividerItemDecoration(activity, LinearLayoutManager.VERTICAL));
-        recList.setAdapter(adapter);
-        fab.attachToRecyclerView(recList);
-
-        return view;
-    }
-
-    //fetch the JSON responses regarding all the taxonomies in our store
-    private void fetchTaxonomies() {
-
-        if (!(swipeLayout.isRefreshing())) {
-            // Showing progress dialog before making request
-            pDialog.setMessage("Fetching taxonomies");
-            showpDialog();
-        }
-
-        // ordersList.clear();
-        tempList = new ArrayList<Taxonomies>();
+        pDialog = new ProgressDialog(getActivity());
+        pDialog.setCancelable(false);
+        // Showing progress dialog before making request
+        pDialog.setMessage("Fetching taxonomies");
+        showpDialog();
 
         // Making json object request
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
@@ -133,24 +113,42 @@ public class TaxonomyFragment extends Fragment implements SwipeRefreshLayout.OnR
 
                         JSONObject taxonomy = (JSONObject) taxonomies
                                 .get(i);
-
                         String name = taxonomy.getString("name");
                         Integer id = taxonomy.getInt("id");
 
                         Taxonomies taxonomies_obj = new Taxonomies();
                         taxonomies_obj.setName(name);
                         taxonomies_obj.setId(id);
+                        taxonomiesList.add(taxonomies_obj);
 
-                        tempList.add(taxonomies_obj);
+                        //create the root for taxonomy
+                        TreeNode taxonRoot = new TreeNode(new IconTreeItemHolder.IconTreeItem(R.string.ic_folder, taxonomies_obj.getName()));
+
+                        //create further nodes for taxons
+                        JSONArray taxon_array = taxonomy.getJSONObject("root").getJSONArray("taxons");
+                        JSONObject taxon = taxonomy.getJSONObject("root");
+
+                        try {
+
+                            if (taxon.has("taxons")) {
+                                taxon_array = taxon.getJSONArray("taxons");
+                                for (int j = 0; j < taxon_array.length(); j++) {
+                                    taxon = (JSONObject) taxon_array.get(j);
+                                    //get name and id
+                                    String taxon_name = taxon.getString("name");
+                                    String taxon_id = taxon.getString("id");
+                                    TreeNode taxonNode = new TreeNode(new IconTreeItemHolder.IconTreeItem(R.string.ic_label_outline, taxon_name));
+                                    taxonRoot.addChildren(taxonNode);
+
+                                }
+
+                            }
+                        } catch (Exception e) {
+                            Log.d("Taxonomies error", e.getMessage().toString());
+                        }
+
+                        root.addChildren(taxonRoot);
                     }
-
-                    // notifying adapter about data changes, so that the
-                    // list renders with new data
-                    taxonomiesList.clear();
-                    taxonomiesList.addAll(tempList);
-                    adapter = new TaxonomiesAdapter(taxonomiesList);
-                    recList.setAdapter(adapter);
-                    adapter.notifyDataSetChanged();
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -159,9 +157,16 @@ public class TaxonomyFragment extends Fragment implements SwipeRefreshLayout.OnR
                             Toast.LENGTH_LONG).show();
                 }
 
+                tView = new AndroidTreeView(getActivity(), root);
+                tView.setDefaultAnimation(true);
+                tView.setDefaultContainerStyle(R.style.TreeNodeStyleCustom);
+                tView.setDefaultViewHolder(IconTreeItemHolder.class);
+                tView.setDefaultNodeClickListener(nodeClickListener);
+                tView.setDefaultNodeLongClickListener(nodeLongClickListener);
+
+                containerView.addView(tView.getView());
                 // hiding the progress dialog
                 hidepDialog();
-                swipeLayout.setRefreshing(false);
             }
         }, new Response.ErrorListener() {
 
@@ -172,7 +177,7 @@ public class TaxonomyFragment extends Fragment implements SwipeRefreshLayout.OnR
                         error.getMessage(), Toast.LENGTH_SHORT).show();
                 // hide the progress dialog
                 hidepDialog();
-                swipeLayout.setRefreshing(false);
+
             }
         });
 
@@ -186,6 +191,62 @@ public class TaxonomyFragment extends Fragment implements SwipeRefreshLayout.OnR
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(jsonObjReq);
 
+
+        if (savedInstanceState != null)
+
+        {
+            String state = savedInstanceState.getString("tState");
+            if (!TextUtils.isEmpty(state)) {
+                tView.restoreState(state);
+            }
+        }
+
+        return rootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.expandAll:
+                tView.expandAll();
+                break;
+
+            case R.id.collapseAll:
+                tView.collapseAll();
+                break;
+        }
+        return true;
+    }
+
+    private int counter = 0;
+
+    private TreeNode.TreeNodeClickListener nodeClickListener = new TreeNode.TreeNodeClickListener() {
+        @Override
+        public void onClick(TreeNode node, Object value) {
+            IconTreeItemHolder.IconTreeItem item = (IconTreeItemHolder.IconTreeItem) value;
+            statusBar.setText("Last clicked: " + item.text);
+        }
+    };
+
+    private TreeNode.TreeNodeLongClickListener nodeLongClickListener = new TreeNode.TreeNodeLongClickListener() {
+        @Override
+        public boolean onLongClick(TreeNode node, Object value) {
+            IconTreeItemHolder.IconTreeItem item = (IconTreeItemHolder.IconTreeItem) value;
+            Toast.makeText(getActivity(), "Long click: " + item.text, Toast.LENGTH_SHORT).show();
+            return true;
+        }
+    };
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("tState", tView.getSaveState());
     }
 
     private void showpDialog() {
@@ -196,11 +257,6 @@ public class TaxonomyFragment extends Fragment implements SwipeRefreshLayout.OnR
     private void hidepDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
-    }
-
-    @Override
-    public void onRefresh() {
-        fetchTaxonomies();
     }
 
 }

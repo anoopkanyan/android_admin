@@ -11,11 +11,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.github.johnkil.print.PrintConfig;
 
 import recode360.spreeadminapp.Fragments.PrimaryFragment;
 import recode360.spreeadminapp.Fragments.ProductsFragment;
@@ -32,6 +34,7 @@ import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 public class MainActivity extends AppCompatActivity {
     DrawerLayout mDrawerLayout;
     NavigationView mNavigationView;
+    View mHeader;
     FragmentManager mFragmentManager;
     FragmentTransaction mFragmentTransaction;
     ActionBarDrawerToggle mDrawerToggle;
@@ -63,15 +66,17 @@ public class MainActivity extends AppCompatActivity {
          *Setup the DrawerLayout and NavigationView
          */
 
+        PrintConfig.initDefault(getAssets(), "icons/material-icon-font.ttf");
+
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mNavigationView = (NavigationView) findViewById(R.id.shitstuff);
-
+        mHeader = mNavigationView.getHeaderView(0);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        name_header = (TextView) findViewById(R.id.name_header);
-        email_header = (TextView) findViewById(R.id.email_header);
+        name_header = (TextView) mHeader.findViewById(R.id.name_header);
+        email_header = (TextView) mHeader.findViewById(R.id.email_header);
 
         name_header.setText(Config.USER_FULL_NAME);
         email_header.setText(Config.USER_EMAIL);
@@ -81,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         TextDrawable drawable = TextDrawable.builder()
                 .buildRound(nameChar, Color.parseColor("#FF4081"));
 
-        ImageView image = (ImageView) findViewById(R.id.image_view_name);
+        ImageView image = (ImageView) mHeader.findViewById(R.id.image_view_name);
         image.setImageDrawable(drawable);
 
         /**

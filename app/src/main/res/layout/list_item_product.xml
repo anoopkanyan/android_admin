@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:paddingBottom="10dp" >
+    android:descendantFocusability="blocksDescendants"
+    android:paddingBottom="10dp">
 
     <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/productImage"
@@ -11,8 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_margin="8dp"
-        android:scaleType="fitCenter" >
-    </com.android.volley.toolbox.NetworkImageView>
+        android:scaleType="fitCenter"></com.android.volley.toolbox.NetworkImageView>
 
     <TextView
         android:id="@+id/productName"
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/productImage"
         android:padding="5dp"
-        android:textColor="@color/lbl_product_name"
+        android:textColor="@color/black"
         android:textSize="16dp"
         android:textStyle="bold" />
 
@@ -40,19 +40,7 @@
         android:layout_below="@id/productDescription"
         android:layout_toRightOf="@id/productImage"
         android:padding="5dp"
-        android:textColor="@color/lbl_product_description" />
+        android:textColor="@color/colorAccent" />
 
-    <Button
-        android:id="@+id/btnAddToCart"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_below="@id/productPrice"
-        android:layout_margin="5dp"
-        android:layout_toRightOf="@id/productImage"
-        android:background="#64d048"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:text="@string/edit_product"
-        android:textColor="@color/white" />
 
 </RelativeLayout>

@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -67,9 +66,6 @@ public class ProductListAdapter extends BaseAdapter {
         NetworkImageView image = (NetworkImageView) convertView
                 .findViewById(R.id.productImage);
 
-        Button btnAddToCart = (Button) convertView
-                .findViewById(R.id.btnAddToCart);
-
 
         final Product product = products.get(position);
 
@@ -82,22 +78,12 @@ public class ProductListAdapter extends BaseAdapter {
         // product picture
         image.setImageUrl(product.getImage(), imageLoader);
 
-        btnAddToCart.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                listener.onAddToCartPressed(product);
-            }
-        });
-
-
         return convertView;
     }
 
     public interface ProductListAdapterListener {
         public void onAddToCartPressed(Product product);
     }
-
 
 
 }
