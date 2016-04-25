@@ -29,8 +29,8 @@
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
         android:src="@drawable/ic_add"
-        fab:fab_colorNormal="@color/colorPrimary"
-        fab:fab_colorPressed="@color/colorPrimaryDark"
-        fab:fab_colorRipple="@color/colorPrimaryDark" />
+        fab:fab_colorNormal="@color/colorAccent"
+        fab:fab_colorPressed="@color/color_alizarin"
+        fab:fab_colorRipple="@color/color_alizarin" />
 
 </RelativeLayout>

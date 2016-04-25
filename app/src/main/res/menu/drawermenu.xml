@@ -22,9 +22,15 @@
             android:title="Orders" />
 
         <item
+            android:id="@+id/nav_item_carrier"
+            android:icon="@drawable/ic_ship"
+            android:title="Carriers" />
+
+        <item
             android:id="@+id/nav_item_taxonomy"
             android:icon="@drawable/ic_action_tags"
             android:title="Taxonomies" />
+
 
     </group>
     <group

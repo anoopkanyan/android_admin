@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         nameChar = Utils.parseName(Config.USER_FULL_NAME);
 
         TextDrawable drawable = TextDrawable.builder()
-                .buildRound(nameChar, Color.parseColor("#FF4081"));
+                .buildRound(nameChar, Color.parseColor("#e74c3c"));
 
         ImageView image = (ImageView) mHeader.findViewById(R.id.image_view_name);
         image.setImageDrawable(drawable);
@@ -126,6 +126,11 @@ public class MainActivity extends AppCompatActivity {
 
                 if (menuItem.getItemId() == R.id.nav_item_settings) {
                     Intent i = new Intent(MainActivity.this, SettingsActivity.class);
+                    startActivity(i);
+                }
+
+                if (menuItem.getItemId() == R.id.nav_item_carrier) {
+                    Intent i = new Intent(MainActivity.this, CarriersActivity.class);
                     startActivity(i);
                 }
 

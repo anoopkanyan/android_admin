@@ -96,8 +96,26 @@
                 android:value=".Activities.ImageActivity" />
         </activity>
         <activity
+            android:name=".Activities.CreateLabelActivity"
+            android:label="Create Label"
+            android:parentActivityName=".Activities.OrdersActivity"
+            android:windowSoftInputMode="adjustNothing">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.CreateLabelActivity" />
+        </activity>
+        <activity
             android:name=".Activities.SettingsActivity"
             android:label="@string/title_activity_settings"></activity>
+        <activity
+            android:name=".Activities.CarriersActivity"
+            android:parentActivityName=".Activities.MainActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.CreateLabelActivity" />
+        </activity>
         <activity
             android:name=".Activities.LicensesActivity"
             android:label="@string/title_activity_licenses_activity"
@@ -110,7 +128,6 @@
                 <action android:name="recode360.spreeadminapp.Activities.LicensesActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
         </activity>
     </application>
 

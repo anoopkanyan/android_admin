@@ -40,11 +40,10 @@ public class SettingsActivity extends PreferenceActivity {
         customPref.setTitle(Config.USER_FULL_NAME);
 
 
-
         ListView v = getListView();
         logOut = new Button(this);
         logOut.setText("Logout");
-        logOut.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+        logOut.setTextColor(getResources().getColor(R.color.color_alizarin));
         // logOut.setTextColor(Color.RED);
         logOut.setBackgroundColor(Color.WHITE);
         logOut.setTextSize(18);

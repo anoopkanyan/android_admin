@@ -1,9 +1,12 @@
 package recode360.spreeadminapp.models;
 
+import java.io.Serializable;
+
 /**
  * Model for bill or shipment address details of any particular order.
  */
-public class Address {
+@SuppressWarnings("serial")
+public class Address implements Serializable {
     private int id;
     private String firstname;
     private String lastname;

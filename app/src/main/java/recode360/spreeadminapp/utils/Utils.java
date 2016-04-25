@@ -98,8 +98,11 @@ public class Utils {
             while (s.charAt(i) != ' ') {
                 i++;
             }
+            while (s.charAt(i) == ' ') {
+                i++;
+            }
 
-            return "" + s.charAt(0) + s.charAt(i + 1);
+            return "" + s.charAt(0) + s.charAt(i);
         }
         return "";
     }

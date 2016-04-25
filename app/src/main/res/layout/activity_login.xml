@@ -100,7 +100,7 @@
                     android:id="@+id/fabProgressCircle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:arcColor="@color/colorAccent"
+                    app:arcColor="@color/color_alizarin"
                     app:arcWidth="7dp"
                     app:finalIcon="@drawable/ic_action_tick">
 
@@ -114,7 +114,7 @@
                         android:layout_marginRight="122dp"
                         android:layout_marginTop="40dp"
                         android:src="@drawable/ic_action_playback_play"
-                        app:backgroundTint="#455A64" />
+                        app:backgroundTint="@color/colorAccent" />
 
                 </com.github.jorgecastilloprz.FABProgressCircle>
             </RelativeLayout>

@@ -50,7 +50,7 @@
             android:id="@+id/btn_create_taxonomy"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/color_alizarin"
             android:text="@string/btn_create_taxonomy"
             android:textColor="@android:color/white" />
 

@@ -1,7 +1,9 @@
 package recode360.spreeadminapp.models;
 
+import java.io.Serializable;
 
-public class Country {
+@SuppressWarnings("serial")
+public class Country implements Serializable {
     private int id;
     private String iso_name;
     private String iso;

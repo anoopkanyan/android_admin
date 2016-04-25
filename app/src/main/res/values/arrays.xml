@@ -23,4 +23,11 @@
         <item>1</item>
     </string-array>
 
+    <string-array name="weight">
+        <item>lb</item>
+        <item>oz</item>
+        <item>g</item>
+        <item>kg</item>
+    </string-array>
+
 </resources>

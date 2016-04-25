@@ -88,9 +88,7 @@ public class OrdersActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(order_no);
 
-
         alert = new AlertDialogManager();
-
 
         recList = (RecyclerView) findViewById(R.id.cardLineItemsList);
         LinearLayoutManager llm = new LinearLayoutManager(getBaseContext());
@@ -122,7 +120,7 @@ public class OrdersActivity extends AppCompatActivity {
         final FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
 
         programFab1.setButtonSize(FloatingActionButton.SIZE_MINI);
-        programFab1.setLabelText("Mark Shipped");
+        programFab1.setLabelText("Create Label");
         programFab1.setImageResource(R.drawable.ic_done);
         programFab1.setColorNormalResId(R.color.colorPrimary);
         programFab1.setColorPressedResId(R.color.colorPrimaryDark);
@@ -168,16 +166,20 @@ public class OrdersActivity extends AppCompatActivity {
                             bill_addr.setAddress1(bill_address.getString("address1"));
                             bill_addr.setAddress2(bill_address.getString("address2"));
                             bill_addr.setCity(bill_address.getString("city"));
+                            bill_addr.setPhone(bill_address.getString("phone"));
 
                             JSONObject bill_country = bill_address.getJSONObject("country"); //country details for the bill address
                             Country bill_ctry = new Country();
                             bill_ctry.setName(bill_country.getString("name"));
+                            bill_ctry.setIso(bill_country.getString("iso"));
                             bill_addr.setCountry(bill_ctry);    //put country object to the bill object
 
                             JSONObject bill_state = bill_address.getJSONObject("state");     //state details for the bill address
                             State bill_st = new State();
                             bill_st.setName(bill_state.getString("name"));
+                            bill_st.setAbbr(bill_state.getString("abbr"));
                             bill_addr.setState(bill_st);    //put state object to the bill object
+
 
                             order.setBill_address(bill_addr);   //finally put bill address in the order object
 
@@ -188,18 +190,22 @@ public class OrdersActivity extends AppCompatActivity {
                             Address ship_addr = new Address();
                             ship_addr.setId(bill_address.getInt("id"));
                             ship_addr.setFull_name(bill_address.getString("full_name"));
+                            ship_addr.setCompany(bill_address.getString("company"));
                             ship_addr.setAddress1(bill_address.getString("address1"));
                             ship_addr.setAddress2(bill_address.getString("address2"));
                             ship_addr.setCity(bill_address.getString("city"));
+                            ship_addr.setZipcode(bill_address.getInt("zipcode"));
 
                             JSONObject ship_country = bill_address.getJSONObject("country"); //country details for the ship address
                             Country ship_ctry = new Country();
                             ship_ctry.setName(bill_country.getString("name"));
+                            ship_ctry.setIso(bill_country.getString("iso"));
                             ship_addr.setCountry(bill_ctry);    //put country object to the ship object
 
                             JSONObject ship_state = bill_address.getJSONObject("state");     //state details for the ship address
                             State ship_st = new State();
                             ship_st.setName(bill_state.getString("name"));
+                            ship_st.setAbbr(bill_state.getString("abbr"));
                             ship_addr.setState(bill_st);    //put state object to the bill object
 
                             order.setShip_address(ship_addr);   //finally put ship address in the order object
@@ -290,6 +296,20 @@ public class OrdersActivity extends AppCompatActivity {
             public void onClick(View v) {
                 alert.showAlertDialog(OrdersActivity.this, "Shipment Details", "Name:  " + order.getShip_address().getFull_name() + "\nAddress:  " + order.getShip_address().getAddress1() + " " + order.getShip_address().getAddress2()
                         + "\nCity:  " + order.getBill_address().getCity() + "\nState:  " + order.getShip_address().getState().getName() + "\nCountry:  " + order.getShip_address().getCountry().getName(), true);
+            }
+        });
+
+        programFab1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(OrdersActivity.this, CreateLabelActivity.class);
+                intent.putExtra("ShipAddress", order.getShip_address());
+                Log.d("random shit", order.getShip_address().getCountry().getIso());
+                intent.putExtra("country", order.getShip_address().getCountry().getIso());
+                intent.putExtra("state", order.getShip_address().getState().getAbbr());
+
+                // intent.putExtra("key", value); //put Order and shipment details
+                startActivity(intent);
             }
         });
 

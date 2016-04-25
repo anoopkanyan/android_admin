@@ -233,8 +233,7 @@
         android:clickable="true"
         android:src="@drawable/ic_menu"
         app:layout_anchor="@+id/appbar"
-        app:layout_anchorGravity="bottom|right|end"
-        app:theme="@style/AppBarTheme" />
+        app:layout_anchorGravity="bottom|right|end" />
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -245,7 +244,7 @@
             android:id="@+id/btn_edit_product"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/color_alizarin"
             android:text="Confirm Changes"
             android:textColor="@android:color/white" />
 

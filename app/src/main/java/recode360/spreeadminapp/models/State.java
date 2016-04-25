@@ -1,7 +1,10 @@
 package recode360.spreeadminapp.models;
 
 
-public class State {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class State implements Serializable {
     private int id;
 
     public String getName() {

@@ -15,10 +15,10 @@
     <color name="indicator">#FF6F00</color>
     <color name="colorAccent">#c8e8ff</color>
     -->
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="indicator">#FF4081</color>
+    <color name="colorPrimary">#34495e</color>
+    <color name="colorPrimaryDark">#2c3e50</color>
+    <color name="colorAccent">#FF5722</color>
+    <color name="indicator">#FF5722</color>
 
     <color name="green">#ff33a93c</color>
 
@@ -35,6 +35,7 @@
     <color name="text_msg_input">#626262</color>
     <color name="lblFromName">#777777</color>
     <color name="color_alizarin">#e74c3c</color>
+    <color name="dark_alz">#b92b27</color>
 
 
 </resources>

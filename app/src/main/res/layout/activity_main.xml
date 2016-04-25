@@ -30,7 +30,8 @@
             <recode360.spreeadminapp.utils.MaterialSearchView
                 android:id="@+id/search_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                />
 
         </RelativeLayout>
 
@@ -60,7 +61,8 @@
         app:headerLayout="@layout/header"
         app:itemIconTint="@drawable/state_list"
         app:itemTextColor="@drawable/state_list"
-        app:menu="@menu/drawermenu" />
+        app:menu="@menu/drawermenu"
+         />
 
 </android.support.v4.widget.DrawerLayout>
 
