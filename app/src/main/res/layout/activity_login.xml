@@ -23,7 +23,7 @@
             android:inputType="textCapWords"
             android:paddingLeft="40dp"
             android:paddingRight="40dp"
-            android:text="RecodeCommerece"
+            android:text="RecodeCommerce"
             android:textColor="@color/white"
             android:textSize="28dp" />
 

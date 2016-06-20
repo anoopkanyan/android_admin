@@ -9,8 +9,6 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -78,16 +76,13 @@ public class ProductsFragment extends Fragment implements ProductListAdapterList
 
     private ListView listView;
 
-    private Toolbar toolbar;
-
     private MenuItem mSearchAction;
     private boolean isSearchOpened = false;
     private EditText edtSeach;
     private MaterialSearchView searchView;
 
 
-    FragmentManager mFragmentManager;
-    FragmentTransaction mFragmentTransaction;
+
 
     // To store all the products
     private List<Product> productsList;

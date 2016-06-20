@@ -1,0 +1,86 @@
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_ship"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginTop="5dp"
+    card_view:cardCornerRadius="5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/shipmentNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textColor="@color/lbl_product_name"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/shipmentStateLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/shipmentNumber"
+                android:padding="5dp"
+                android:text="State:"
+                android:textColor="@color/lbl_product_description" />
+
+
+            <TextView
+                android:id="@+id/shipmentState"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/shipmentNumber"
+                android:layout_toRightOf="@+id/shipmentStateLabel"
+                android:padding="5dp"
+                android:textColor="@color/lbl_product_description" />
+
+
+            <TextView
+                android:id="@+id/stockLocationLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/shipmentStateLabel"
+                android:padding="5dp"
+                android:text="Stock Location:"
+                android:textColor="@color/lbl_product_description" />
+
+
+            <TextView
+                android:id="@+id/stockLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/shipmentState"
+                android:layout_toRightOf="@+id/stockLocationLabel"
+                android:padding="5dp"
+                android:textColor="@color/lbl_product_description" />
+
+            <Button
+                android:id="@+id/labelButton"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/stockLocation"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:text="Create Label"
+                android:textColor="@color/colorAccent" />
+
+
+        </RelativeLayout>
+    </LinearLayout>
+
+
+</android.support.v7.widget.CardView>

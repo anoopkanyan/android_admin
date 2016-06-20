@@ -12,20 +12,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.shippo.Shippo;
 import com.shippo.exception.ShippoException;
@@ -37,7 +36,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +65,8 @@ public class CreateLabelActivity extends AppCompatActivity {
     private String weight_unit;
     private Address stockLocation;
     private Shipment shipment;
-
+    private ImageButton carrierButton;
+    private ImageButton boxesButton;
     private ArrayAdapter<String> arrayAdapter;
 
     private Map<String, Object> toAddressMap;
@@ -83,9 +82,9 @@ public class CreateLabelActivity extends AppCompatActivity {
     //get rates for the shipment object and the id of that Shipment object
     //finally make payment
 
-    private List<String> PACKAGES;
     private List<Rate> rates;
     private Rate rate;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,35 +103,30 @@ public class CreateLabelActivity extends AppCompatActivity {
         Intent i = getIntent();
         final Address shipAddress = (Address) i.getSerializableExtra("ShipAddress");
 
-        autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
         weight = (EditText) findViewById(R.id.packageWeight);
         submitbtn = (Button) findViewById(R.id.btn_create_label);
 
+        carrierButton = (ImageButton) findViewById(R.id.imageButton);
+        carrierButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(CreateLabelActivity.this, CarriersActivity.class);
+                startActivity(i);
+            }
+        });
+
+        boxesButton = (ImageButton) findViewById(R.id.imageButton1);
+        boxesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(CreateLabelActivity.this, PackagesActivity.class);
+                startActivityForResult(i, 1);
+            }
+        });
+
+
         spinner = (Spinner) findViewById(R.id.spinner);
 
-        PACKAGES = new ArrayList<String>();
-        arrayAdapter = new ArrayAdapter<String>(CreateLabelActivity.this, android.R.layout.simple_dropdown_item_1line, PACKAGES);
-
-        autoCompleteTextView.setThreshold(0);
-
-        autoCompleteTextView.setAdapter(arrayAdapter);
-
-        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                pos = position;
-                selectedname = (String) parent.getItemAtPosition(position);
-            }
-        });
-
-        autoCompleteTextView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                autoCompleteTextView.showDropDown();
-                return false;
-            }
-        });
 
         submitbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,9 +138,6 @@ public class CreateLabelActivity extends AppCompatActivity {
 
         //get the Stock Location
         stockLocation = getStockLocation();
-
-        //get all the default package types
-        getPackages();
 
     }
 
@@ -204,10 +195,10 @@ public class CreateLabelActivity extends AppCompatActivity {
         //create  parcel based on User Input
         parcelMap = new HashMap<String, Object>();
         try {
-            parcelMap.put("length", resp.getJSONObject(pos).getString("dimension_length"));
-            parcelMap.put("width", resp.getJSONObject(pos).getString("dimension_width"));
-            parcelMap.put("height", resp.getJSONObject(pos).getString("dimension_height"));
-            parcelMap.put("distance_unit", resp.getJSONObject(pos).getString("dimension_unit"));
+            parcelMap.put("length", "15.81");
+            parcelMap.put("width", "12.94");
+            parcelMap.put("height", "10.19");
+            parcelMap.put("distance_unit", "in");
             parcelMap.put("weight", weight.getText().toString());
             parcelMap.put("mass_unit", weight_unit);
 
@@ -305,56 +296,6 @@ public class CreateLabelActivity extends AppCompatActivity {
         }
     }
 
-    private void getPackages() {
-        //get all the default package type from the Spree Store
-        String tag_json_obj = "default_packages_request";
-
-        String url = Config.URL_STORE + "/api/goshipments/package.json";
-
-        final ProgressDialog pDialog = new ProgressDialog(this);
-        pDialog.setMessage("Loading...");
-        pDialog.show();
-
-        JsonArrayRequest req = new JsonArrayRequest(
-                url,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        Log.d("Package type responses", response.toString());
-                        for (int i = 0; i < response.length(); i++) {
-                            try {
-                                PACKAGES.add(response.getJSONObject(i).getString("parcel"));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        resp = response;
-                        arrayAdapter.notifyDataSetChanged();
-                        pDialog.hide();
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.d("Package Type", "Error: " + error.getMessage());
-                pDialog.hide();
-            }
-        }) {
-
-            /**
-             * Passing some request headers
-             * */
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("X-Spree-Token", Config.API_KEY);
-                return headers;
-            }
-
-        };
-
-        // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(req, tag_json_obj);
-    }
 
     private Address getStockLocation() {
         //gets the stock location
@@ -552,6 +493,17 @@ public class CreateLabelActivity extends AppCompatActivity {
         protected void onProgressUpdate(String... text) {
 
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            Log.e("data", data.toString());
+            //Do something useful with data
+        }
+
+
     }
 
 }

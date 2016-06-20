@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -17,13 +18,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.github.johnkil.print.PrintConfig;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import recode360.spreeadminapp.Fragments.PrimaryFragment;
 import recode360.spreeadminapp.Fragments.ProductsFragment;
 import recode360.spreeadminapp.Fragments.TabFragment;
-import recode360.spreeadminapp.Fragments.TaxonomyFragment;
 import recode360.spreeadminapp.R;
+import recode360.spreeadminapp.app.AppController;
 import recode360.spreeadminapp.app.Config;
 import recode360.spreeadminapp.models.sessions.AlertDialogManager;
 import recode360.spreeadminapp.models.sessions.SessionManager;
@@ -89,6 +102,8 @@ public class MainActivity extends AppCompatActivity {
         ImageView image = (ImageView) mHeader.findViewById(R.id.image_view_name);
         image.setImageDrawable(drawable);
 
+        getStoreAttributes();
+
         /**
          * Lets inflate the very first fragment
          * Here , we are inflating the TabFragment as the first Fragment
@@ -127,18 +142,8 @@ public class MainActivity extends AppCompatActivity {
                 if (menuItem.getItemId() == R.id.nav_item_settings) {
                     Intent i = new Intent(MainActivity.this, SettingsActivity.class);
                     startActivity(i);
-                }
 
-                if (menuItem.getItemId() == R.id.nav_item_carrier) {
-                    Intent i = new Intent(MainActivity.this, CarriersActivity.class);
-                    startActivity(i);
                 }
-
-                if (menuItem.getItemId() == R.id.nav_item_taxonomy) {
-                    FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
-                    xfragmentTransaction.replace(R.id.containerView, new TaxonomyFragment()).addToBackStack("taxonomies fragment commit").commit();
-                }
-
 
                 return true;
             }
@@ -203,5 +208,58 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
+
+    //get store attributes such as store name, goshippo api tokens, and mail address
+
+    public void getStoreAttributes() {
+
+        String url = Config.URL_STORE + "/api/stores";
+        final String TAG = "Store attributes request";
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+                url, null,
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, response.toString());
+
+                        try {
+                            Config.USER_SHIPPO_KEY = response.getJSONArray("stores").getJSONObject(0).getString("goshippo_api");
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Accept", "application/json");
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                headers.put("X-Spree-Token", Config.API_KEY);
+                return headers;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+        };
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(jsonObjReq, "goshippo_api request");
+
+
+    }
 
 }

@@ -23,7 +23,7 @@ public class Config {
     public static String USER_PASSWORD = "";
 
     //Shippo API Key
-    public static String USER_SHIPPO_KEY = "12a58b0b0d7f958a34ef4b349908ae9588c14972";
+    public static String USER_SHIPPO_KEY = "";
 
 
 }

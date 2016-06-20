@@ -120,11 +120,11 @@ public class OrdersActivity extends AppCompatActivity {
         final FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
 
         programFab1.setButtonSize(FloatingActionButton.SIZE_MINI);
-        programFab1.setLabelText("Create Label");
+        programFab1.setLabelText("View Shipments");
         programFab1.setImageResource(R.drawable.ic_done);
-        programFab1.setColorNormalResId(R.color.colorPrimary);
-        programFab1.setColorPressedResId(R.color.colorPrimaryDark);
-        programFab1.setColorRippleResId(R.color.colorPrimaryDark);
+        programFab1.setColorNormalResId(R.color.colorAccent);
+        programFab1.setColorPressedResId(R.color.color_alizarin);
+        programFab1.setColorRippleResId(R.color.color_alizarin);
 
 
         //this is store details related to the whole order
@@ -302,6 +302,7 @@ public class OrdersActivity extends AppCompatActivity {
         programFab1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
                 Intent intent = new Intent(OrdersActivity.this, CreateLabelActivity.class);
                 intent.putExtra("ShipAddress", order.getShip_address());
                 Log.d("random shit", order.getShip_address().getCountry().getIso());
@@ -309,6 +310,11 @@ public class OrdersActivity extends AppCompatActivity {
                 intent.putExtra("state", order.getShip_address().getState().getAbbr());
 
                 // intent.putExtra("key", value); //put Order and shipment details
+                startActivity(intent);
+                */
+
+                Intent intent = new Intent(OrdersActivity.this, ShipmentsActivity.class);
+                intent.putExtra("order_no", order_no);
                 startActivity(intent);
             }
         });

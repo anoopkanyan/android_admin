@@ -32,22 +32,21 @@ import recode360.spreeadminapp.app.Config;
 import recode360.spreeadminapp.models.Carrier;
 
 /**
- * Let's us choose among the different carrier accounts available on GoShippo
+ * Let's us choose from different shipping rates offered by different carriers
  */
 public class CarriersActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
-
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private Button btnSelection;
 
     private List<Carrier> carrierList;
 
     //collection of carrier accounts from Shippo
     private List<CarrierAccount> col;
 
-    private Button btnSelection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -234,7 +233,9 @@ public class CarriersActivity extends AppCompatActivity {
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+
                             dialog.dismiss();
+                            finish();
                         }
                     });
 

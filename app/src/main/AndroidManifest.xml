@@ -129,6 +129,21 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".Activities.PackagesActivity"
+            android:parentActivityName=".Activities.CreateLabelActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.PackagesActivity" />
+        </activity>
+        <activity
+            android:name=".Activities.ShipmentsActivity"
+            android:parentActivityName=".Activities.OrdersActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.PackagesActivity" />
+        </activity>
+
     </application>
 
 </manifest>

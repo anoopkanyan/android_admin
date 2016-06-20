@@ -47,8 +47,9 @@ public class LoginActivity extends Activity implements FABProgressListener {
     SessionManager session;
 
     //JSONObject to send the user details
-    JSONObject jsonBody;
-    String URL;
+    private JSONObject jsonBody;
+    private String URL;
+    private String url;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,8 +100,12 @@ public class LoginActivity extends Activity implements FABProgressListener {
                     }
                     String tag_json_obj = "json_obj_req";
 
-                    final String url = URL + "/api/users/sign_in";
 
+                    if (URL.endsWith("/")) {
+                        url = URL + "api/users/sign_in";
+                    } else {
+                        url = URL + "/api/users/sign_in";
+                    }
 
                     //  final ProgressDialog pDialog = new ProgressDialog(getBaseContext());
                     // pDialog.setMessage("Verfying");
@@ -178,4 +183,6 @@ public class LoginActivity extends Activity implements FABProgressListener {
     public void onBackPressed() {
         //do nothing, rather just block it
     }
+
+
 }
