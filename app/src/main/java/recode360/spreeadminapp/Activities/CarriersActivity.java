@@ -1,5 +1,11 @@
 package recode360.spreeadminapp.Activities;
 
+/**
+ * The activity updates a user's preferences regarding the carriers on the GoShippo backend. Only those
+ * rates will be shown which belong to the carriers selected by the user.
+ **/
+
+
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -31,9 +37,7 @@ import recode360.spreeadminapp.adapter.CarrierAdapter;
 import recode360.spreeadminapp.app.Config;
 import recode360.spreeadminapp.models.Carrier;
 
-/**
- * Let's us choose from different shipping rates offered by different carriers
- */
+
 public class CarriersActivity extends AppCompatActivity {
 
     private Toolbar toolbar;

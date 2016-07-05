@@ -25,7 +25,7 @@ public class LicensesActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private String TAG;
 
-    private List<Licenses> licensesList = new ArrayList<>();
+    private List<Licenses> licensesList = new ArrayList<Licenses>();
     private RecyclerView recyclerView;
     private LicensesAdapter mAdapter;
 

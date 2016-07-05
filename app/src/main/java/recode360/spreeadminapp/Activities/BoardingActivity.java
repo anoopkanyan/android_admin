@@ -1,5 +1,12 @@
 package recode360.spreeadminapp.Activities;
 
+
+/**
+ * Provides intoduction to the app using slides made using viewpager. This activity is disabled
+ * in the current version, but might be required in the next version.
+ **/
+
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -24,10 +31,10 @@ public class BoardingActivity extends AppIntro2 {
 
         // Instead of fragments, you can also use our default slide
         // Just set a title, description, background and image. AppIntro will do the rest.
-        addSlide(AppIntroFragment.newInstance("Products", "Fetch all your products, update them, or even create new ones.", R.drawable.product_slide, Color.parseColor("#3F51B5")));
-         addSlide(AppIntroFragment.newInstance("Orders", "Keep track of what is being ordered from your store and by whom.", R.drawable.order_slide, Color.parseColor("#455A64")));
-        addSlide(AppIntroFragment.newInstance("Payments", "Choose from multiple payment methods, and keep track of the payments made on your store.", R.drawable.payment_slide, Color.parseColor("#3F51B5")));
-        addSlide(AppIntroFragment.newInstance("Shipments", "Create shipping labels and get all the shipping information you need. ", R.drawable.delivery_slide, Color.parseColor("#455A64")));
+        addSlide(AppIntroFragment.newInstance("", "Fetch all your products, update them, or even create new ones.", R.drawable.logo, Color.parseColor("#FFFFFF")));
+        //addSlide(AppIntroFragment.newInstance("Orders", "Keep track of what is being ordered from your store and by whom.", R.drawable.order_slide, Color.parseColor("#455A64")));
+        //addSlide(AppIntroFragment.newInstance("Payments", "Choose from multiple payment methods, and keep track of the payments made on your store.", R.drawable.payment_slide, Color.parseColor("#3F51B5")));
+        //addSlide(AppIntroFragment.newInstance("Shipments", "Create shipping labels and get all the shipping information you need. ", R.drawable.delivery_slide, Color.parseColor("#455A64")));
 
         setProgressButtonEnabled(true);
 

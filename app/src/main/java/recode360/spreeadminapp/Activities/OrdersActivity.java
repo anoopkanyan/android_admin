@@ -158,6 +158,8 @@ public class OrdersActivity extends AppCompatActivity {
                             order.setTotal_quantity(response.getInt("total_quantity"));
                             order.setNumber(response.getString("number"));
 
+                            shipment = response.getString("shipment_state");
+
                             //set payment details(bill address)
                             JSONObject bill_address = response.getJSONObject("bill_address");
                             Address bill_addr = new Address();
@@ -272,16 +274,15 @@ public class OrdersActivity extends AppCompatActivity {
 
         //set button if shipment is pending, otherwise not
 
-        if (shipment.equals("ready")) {
 
-            menu1.addMenuButton(programFab1);
-            programFab1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        menu1.addMenuButton(programFab1);
+        programFab1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-                }
-            });
-        }
+            }
+        });
+
 
         fab1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -313,9 +314,21 @@ public class OrdersActivity extends AppCompatActivity {
                 startActivity(intent);
                 */
 
-                Intent intent = new Intent(OrdersActivity.this, ShipmentsActivity.class);
-                intent.putExtra("order_no", order_no);
-                startActivity(intent);
+                if (shipment.equalsIgnoreCase("shipped")) {
+
+                    Intent intent = new Intent(OrdersActivity.this, ShippedShipmentsActivity.class);
+                    intent.putExtra("order_no", order_no);
+                    Log.d("Actaully -------"," it has been shipped");
+                    startActivity(intent);
+
+                } else {
+
+                    Intent intent = new Intent(OrdersActivity.this, ReadyShipmentsActivity.class);
+                    intent.putExtra("order_no", order_no);
+                    startActivity(intent);
+
+
+                }
             }
         });
 

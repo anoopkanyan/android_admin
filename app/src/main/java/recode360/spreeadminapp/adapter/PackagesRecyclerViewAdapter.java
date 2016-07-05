@@ -2,8 +2,9 @@ package recode360.spreeadminapp.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,9 +48,21 @@ public class PackagesRecyclerViewAdapter extends RecyclerView.Adapter<PackagesVi
             @Override
             public void onClick(View view) {
                 packageList.get(position).getName();
-                Intent returnIntent = new Intent();
-                returnIntent.putExtra("result", packageList.get(position).getName());
+
+                Log.d("The PACKAGE IS",packageList.get(position).getName());
+                SharedPreferences spppp = context.getSharedPreferences("package_details", 0);
+                SharedPreferences.Editor editors = spppp.edit();
+                editors.putString("length", packageList.get(position).getDimension_length());
+                editors.putString("width", packageList.get(position).getDimension_width());
+                editors.putString("height", packageList.get(position).getDimension_height());
+                editors.putString("distance_unit", packageList.get(position).getDimension_unit());
+                editors.putString("template", packageList.get(position).getName());
+                editors.commit();
+
+                //Intent returnIntent = new Intent();
+                //returnIntent.putExtra("result", packageList.get(position).getName());
                 ((Activity) context).finish();
+
             }
         });
 

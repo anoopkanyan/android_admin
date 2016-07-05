@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -48,7 +49,8 @@ public class AllOrdersFragment extends Fragment implements SwipeRefreshLayout.On
     private List<Orders> tempList;
 
     // Progress dialog
-    private ProgressDialog pDialog;
+    //private ProgressDialog pDialog;
+    private MaterialDialog dialog;
 
     private OrderAdapter adapter;
     private RecyclerView recList;
@@ -69,8 +71,16 @@ public class AllOrdersFragment extends Fragment implements SwipeRefreshLayout.On
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.orders);
 
-        pDialog = new ProgressDialog(getActivity());
-        pDialog.setCancelable(false);
+        //pDialog = new ProgressDialog(getActivity());
+        //pDialog.setCancelable(false);
+
+        dialog = new MaterialDialog.Builder(getContext())
+                .content("Fetching Orders")
+                .contentColor(getResources().getColor(R.color.colorPrimary))
+                .progress(true, 0)
+                .widgetColor(getResources().getColor(R.color.colorAccent))
+                .cancelable(false)
+                .show();
 
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
         swipeLayout.setColorSchemeResources(R.color.colorPrimary);
@@ -90,8 +100,9 @@ public class AllOrdersFragment extends Fragment implements SwipeRefreshLayout.On
 
         if (!(swipeLayout.isRefreshing())) {
             // Showing progress dialog before making request
-            pDialog.setMessage("Fetching Orders...");
-            showpDialog();
+           // pDialog.setMessage("Fetching Orders...");
+           dialog.show();
+           // showpDialog();
         }
 
         // ordersList.clear();
@@ -122,14 +133,16 @@ public class AllOrdersFragment extends Fragment implements SwipeRefreshLayout.On
                         String payment_state = order.getString("payment_state");
                         String display_total = order.getString("display_total");
                         String shipment_state = order.getString("shipment_state");
-
+                        String updated_at = order.getString("updated_at");
                         Orders ord = new Orders();
+
                         ord.setNumber(number);
                         ord.setState(state);
                         ord.setTotal_quantity(Integer.parseInt(total_quantity));
                         ord.setPayment_state(payment_state);
                         ord.setDisplay_total(display_total);
                         ord.setShipment_state(shipment_state);
+                        ord.setUpdated_at(updated_at);
 
 
                         if (payment_state.equals("paid"))
@@ -153,7 +166,8 @@ public class AllOrdersFragment extends Fragment implements SwipeRefreshLayout.On
                 }
 
                 // hiding the progress dialog
-                hidepDialog();
+                //hidepDialog();
+                dialog.hide();
                 swipeLayout.setRefreshing(false);
             }
         }, new Response.ErrorListener() {
@@ -164,7 +178,8 @@ public class AllOrdersFragment extends Fragment implements SwipeRefreshLayout.On
                 Toast.makeText(getActivity(),
                         error.getMessage(), Toast.LENGTH_SHORT).show();
                 // hide the progress dialog
-                hidepDialog();
+                //hidepDialog();
+                dialog.hide();
                 swipeLayout.setRefreshing(false);
             }
         });
@@ -181,15 +196,6 @@ public class AllOrdersFragment extends Fragment implements SwipeRefreshLayout.On
 
     }
 
-    private void showpDialog() {
-        if (!pDialog.isShowing())
-            pDialog.show();
-    }
-
-    private void hidepDialog() {
-        if (pDialog.isShowing())
-            pDialog.dismiss();
-    }
 
     @Override
     public void onRefresh() {

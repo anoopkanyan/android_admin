@@ -3,10 +3,12 @@ package recode360.spreeadminapp.Activities;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.widget.CheckBox;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
@@ -36,10 +38,11 @@ public class PackagesActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
 
 
-    private StaggeredGridLayoutManager gaggeredGridLayoutManager;
+    private GridLayoutManager gaggeredGridLayoutManager;
     private List<Packages> packageList;
     private ProgressDialog pDialog;
     private static String url = Config.URL_STORE + "/api/goshipments/package.json";
+
 
 
     @Override
@@ -56,7 +59,7 @@ public class PackagesActivity extends AppCompatActivity {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
 
-        gaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
+        gaggeredGridLayoutManager = new GridLayoutManager(this,2);
         recyclerView.setLayoutManager(gaggeredGridLayoutManager);
         packageList = new ArrayList<Packages>();
 
@@ -83,10 +86,10 @@ public class PackagesActivity extends AppCompatActivity {
                                 JSONObject obj = response.getJSONObject(i);
                                 Packages pack = new Packages();
                                 pack.setName(obj.getString("parcel"));
-                                pack.setDimension_height("dimension_height");
-                                pack.setDimension_length("dimension_length");
-                                pack.setDimension_width("dimension_width");
-                                pack.setDimension_unit("dimension_unit");
+                                pack.setDimension_height(obj.getString("dimension_height"));
+                                pack.setDimension_length(obj.getString("dimension_length"));
+                                pack.setDimension_width(obj.getString("dimension_width"));
+                                pack.setDimension_unit(obj.getString("dimension_unit"));
                                 String image_url = (obj.getString("image_url"));
 
                                 if (image_url.equals("null")) {

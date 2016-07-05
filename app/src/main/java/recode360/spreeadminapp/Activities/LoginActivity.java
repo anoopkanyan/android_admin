@@ -4,19 +4,23 @@ package recode360.spreeadminapp.Activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputLayout;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.github.jorgecastilloprz.FABProgressCircle;
-import com.github.jorgecastilloprz.listeners.FABProgressListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,19 +33,23 @@ import recode360.spreeadminapp.app.AppController;
 import recode360.spreeadminapp.models.sessions.AlertDialogManager;
 import recode360.spreeadminapp.models.sessions.SessionManager;
 
-public class LoginActivity extends Activity implements FABProgressListener {
+public class LoginActivity extends Activity {
 
     public static final String TAG = AppController.class
             .getSimpleName();
+
+    private TextInputLayout inputLayoutUrl, inputLayoutEmail, inputLayoutPassword;
+
     // Email, password edittext
-    EditText txtEmail, txtPassword, txtStoreURL;
+    private EditText txtEmail, txtPassword, txtStoreURL;
+
 
     // login button
-    FloatingActionButton btnLogin;
-    FABProgressCircle fabProgressCircle;
+    Button btnLogin;
 
     // Alert Dialog Manager
     AlertDialogManager alert = new AlertDialogManager();
+    private MaterialDialog dialog;
 
     // Session Manager Class
     SessionManager session;
@@ -54,10 +62,18 @@ public class LoginActivity extends Activity implements FABProgressListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_login);
+
 
         // Session Manager
         session = new SessionManager(getApplicationContext());
+
+
+        inputLayoutUrl = (TextInputLayout) findViewById(R.id.input_layout_url);
+        inputLayoutEmail = (TextInputLayout) findViewById(R.id.input_layout_email);
+        inputLayoutPassword = (TextInputLayout) findViewById(R.id.input_layout_password);
+
 
         // Email, Password input text
         txtEmail = (EditText) findViewById(R.id.inputEmail);
@@ -65,16 +81,29 @@ public class LoginActivity extends Activity implements FABProgressListener {
         txtStoreURL = (EditText) findViewById(R.id.inputURL);
 
 
+        txtStoreURL.addTextChangedListener(new MyTextWatcher(txtStoreURL));
+        txtEmail.addTextChangedListener(new MyTextWatcher(txtEmail));
+        txtPassword.addTextChangedListener(new MyTextWatcher(txtPassword));
+
+
         // Login button
-        btnLogin = (FloatingActionButton) findViewById(R.id.btn_login);
-        fabProgressCircle = (FABProgressCircle) findViewById(R.id.fabProgressCircle);
-        fabProgressCircle.attachListener(this);
+        btnLogin = (Button) findViewById(R.id.btn_login);
+
 
         // Login button click event
         btnLogin.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
+
+
+                if (!validateEmail()) {
+                    return;
+                }
+
+                if (!validatePassword()) {
+                    return;
+                }
 
 
                 // Get username, password from EditText
@@ -89,8 +118,7 @@ public class LoginActivity extends Activity implements FABProgressListener {
 
                 // Check if username, password is filled
                 if (username.trim().length() > 0 && password.trim().length() > 0 && URL.trim().length() > 0) {
-                    // For testing puspose username, password is checked with sample data
-                    fabProgressCircle.show();
+
                     final String details = "{\"user\":{\"email\":\"" + username + "\",\"password\":\"" + password + "\"}}";
 
                     try {
@@ -111,6 +139,18 @@ public class LoginActivity extends Activity implements FABProgressListener {
                     // pDialog.setMessage("Verfying");
                     // pDialog.show();
 
+
+                      dialog = new MaterialDialog.Builder(LoginActivity.this)
+                            .title("Sign In")
+                            .content("Reaching your store")
+                            .progress(true, 0)
+                            .progressIndeterminateStyle(true)
+                            .titleColor(getResources().getColor(R.color.colorPrimaryDark))
+                              .widgetColor(getResources().getColor(R.color.colorAccent))
+                              .contentColor(getResources().getColor(R.color.colorPrimary))
+                              .autoDismiss(false)
+                            .show();
+
                     JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
                             url, jsonBody,
                             new Response.Listener<JSONObject>() {
@@ -128,8 +168,9 @@ public class LoginActivity extends Activity implements FABProgressListener {
                                         e.printStackTrace();
                                     }
 
-                                    fabProgressCircle.beginFinalAnimation();
-
+                                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                                    startActivity(i);
+                                    finish();
 
                                 }
                             }, new Response.ErrorListener() {
@@ -139,9 +180,10 @@ public class LoginActivity extends Activity implements FABProgressListener {
                             VolleyLog.d(TAG, "Error: " + error.getMessage());
                             Log.e(url, details);
                             alert.showAlertDialog(LoginActivity.this, "Login failed..", "Shop URL/Username/Password is incorrect", false);
-                            fabProgressCircle.hide();
+
                             // hide the progress dialog
                             //pDialog.hide();
+                            dialog.cancel();
                         }
                     }) {
                         @Override
@@ -163,6 +205,7 @@ public class LoginActivity extends Activity implements FABProgressListener {
                     AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
 
                 } else {
+                    dialog.cancel();
                     // user didn't enter username or password
                     // Show alert asking him to enter the details
                     alert.showAlertDialog(LoginActivity.this, "Login failed..", "Please enter URL, username and password", false);
@@ -172,16 +215,84 @@ public class LoginActivity extends Activity implements FABProgressListener {
         });
     }
 
-    @Override
-    public void onFABProgressAnimationEnd() {
-        Intent i = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(i);
-        finish();
-    }
 
     @Override
     public void onBackPressed() {
-        //do nothing, rather just block it
+
+        //don't go back to the previous activity, rather minimize the app
+
+
+    }
+
+
+    private boolean validatePassword() {
+        if (txtPassword.getText().toString().trim().isEmpty()) {
+            inputLayoutPassword.setError(("Password is empty"));
+            requestFocus(txtPassword);
+            return false;
+        } else {
+            inputLayoutPassword.setErrorEnabled(false);
+            if (txtPassword.getText().toString().length() > 4) {
+                btnLogin.setBackgroundColor(getResources().getColor(R.color.primary));
+                btnLogin.setTextColor(getResources().getColor(R.color.white));
+            } else {
+                btnLogin.setBackgroundColor(getResources().getColor(R.color.white));
+                btnLogin.setTextColor(getResources().getColor(R.color.primary));
+            }
+        }
+
+        return true;
+    }
+
+    private static boolean isValidEmail(String email) {
+        return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    private void requestFocus(View view) {
+        if (view.requestFocus()) {
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
+    }
+
+    private class MyTextWatcher implements TextWatcher {
+
+        private View view;
+
+        private MyTextWatcher(View view) {
+            this.view = view;
+        }
+
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        public void afterTextChanged(Editable editable) {
+            switch (view.getId()) {
+                case R.id.inputEmail:
+                    validateEmail();
+                    break;
+                case R.id.inputPassword:
+                    validatePassword();
+                    break;
+            }
+        }
+    }
+
+
+    private boolean validateEmail() {
+        String email = txtEmail.getText().toString().trim();
+
+        if (email.isEmpty() || !isValidEmail(email)) {
+            inputLayoutEmail.setError("Email not valid");
+            requestFocus(txtEmail);
+            return false;
+        } else {
+            inputLayoutEmail.setErrorEnabled(false);
+        }
+
+        return true;
     }
 
 

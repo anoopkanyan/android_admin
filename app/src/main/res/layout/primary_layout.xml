@@ -1,18 +1,324 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:fontFamily="sans-serif"
+    >
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_orders"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:gravity="center"
-        android:text="Admin\nDashboard"
-        android:textColor="@color/indicator"
-        android:textSize="40sp" />
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/white"
+        card_view:cardCornerRadius="2dp">
 
-</RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/ordersText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="24dp"
+                    android:paddingTop="8dp"
+                    android:text="MONTHLY ORDERS"
+                    android:textColor="@color/lbl_product_name"
+                    android:textSize="16dp" />
+
+
+                <TextView
+                    android:id="@+id/ordersQty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ordersText"
+                    android:paddingLeft="24dp"
+                    android:paddingRight="40dp"
+                    android:paddingTop="16dp"
+                    android:textColor="@color/lbl_product_description"
+                    android:textSize="24dp" />
+
+
+                <TextView
+                    android:id="@+id/ordersRevenue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ordersText"
+                    android:layout_toEndOf="@+id/ordersQtyTag"
+                    android:layout_toRightOf="@+id/ordersQtyTag"
+                    android:paddingLeft="40dp"
+                    android:paddingRight="24dp"
+                    android:paddingTop="16dp"
+                    android:textColor="@color/lbl_product_description"
+                    android:textSize="24dp" />
+
+
+                <TextView
+                    android:id="@+id/ordersQtyTag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/ordersQty"
+                    android:layout_marginTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="24dp"
+                    android:paddingRight="40dp"
+                    android:text="New Orders"
+                    android:textColor="@color/colorPrimary" />
+
+
+                <TextView
+                    android:id="@+id/ordersRevenueTag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/ordersButton"
+                    android:layout_toEndOf="@+id/ordersQtyTag"
+                    android:layout_toRightOf="@+id/ordersQtyTag"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="40dp"
+                    android:paddingRight="24dp"
+                    android:text="Total Order Value"
+                    android:textColor="@color/colorPrimary" />
+
+                <Button
+                    android:id="@+id/ordersButton"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@+id/ordersQtyTag"
+                    android:layout_centerHorizontal="true"
+                    android:paddingLeft="24dp"
+                    android:text="VIEW ALL ORDERS"
+                    android:textColor="@color/colorAccent" />
+
+
+            </RelativeLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_shipping"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/white"
+        card_view:cardCornerRadius="2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/shippingsText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="24dp"
+                    android:paddingTop="8dp"
+                    android:text="SHIPMENTS"
+                    android:textColor="@color/lbl_product_name"
+                    android:textSize="16dp" />
+
+
+                <TextView
+                    android:id="@+id/shippingsExpenditure"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/shippingsText"
+                    android:paddingLeft="24dp"
+                    android:paddingRight="40dp"
+                    android:paddingTop="16dp"
+                    android:textColor="@color/lbl_product_description"
+                    android:textSize="24dp" />
+
+
+                <TextView
+                    android:id="@+id/shippingsRevenue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="40dp"
+                    android:paddingRight="24dp"
+                    android:paddingTop="16dp"
+                    android:textColor="@color/lbl_product_description"
+                    android:textSize="24dp"
+                    android:layout_above="@+id/shippingsExpenditureTag"
+                    android:layout_alignLeft="@+id/shippingsRevenueTag"
+                    android:layout_alignStart="@+id/shippingsRevenueTag" />
+
+
+                <TextView
+                    android:id="@+id/shippingsExpenditureTag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/shippingsExpenditure"
+                    android:layout_marginTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="24dp"
+                    android:paddingRight="40dp"
+                    android:text="Shipping Costs"
+                    android:textColor="@color/colorPrimary" />
+
+
+                <TextView
+                    android:id="@+id/shippingsRevenueTag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="40dp"
+                    android:paddingRight="24dp"
+                    android:text="Shipping Revenue"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_alignTop="@+id/shippingsExpenditureTag"
+                    android:layout_toRightOf="@+id/shippingsExpenditureTag"
+                    android:layout_toEndOf="@+id/shippingsExpenditureTag" />
+
+
+                <Button
+                    android:id="@+id/shippingsButton"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@+id/shippingsExpenditureTag"
+                    android:layout_centerHorizontal="true"
+                    android:paddingLeft="24dp"
+                    android:text="VIEW SHIPMENTS"
+                    android:textColor="@color/colorAccent" />
+
+
+            </RelativeLayout>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_listings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/white"
+        card_view:cardCornerRadius="2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/listingsText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="24dp"
+                    android:paddingTop="8dp"
+                    android:text="LISTINGS"
+                    android:textColor="@color/lbl_product_name"
+                    android:textSize="16dp" />
+
+
+                <TextView
+                    android:id="@+id/listingsStock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/listingsText"
+                    android:paddingLeft="24dp"
+                    android:paddingRight="40dp"
+                    android:paddingTop="16dp"
+                    android:textColor="@color/lbl_product_description"
+                    android:textSize="24dp" />
+
+
+                <TextView
+                    android:id="@+id/listingsNoStock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="40dp"
+                    android:paddingRight="24dp"
+                    android:paddingTop="16dp"
+                    android:textColor="@color/lbl_product_description"
+                    android:textSize="24dp"
+                    android:layout_alignTop="@+id/listingsStock"
+                    android:layout_toRightOf="@+id/listingsStockTag"
+                    android:layout_toEndOf="@+id/listingsStockTag" />
+
+
+                <TextView
+                    android:id="@+id/listingsStockTag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/listingsStock"
+                    android:layout_marginTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="24dp"
+                    android:paddingRight="40dp"
+                    android:text="In Stock"
+                    android:textColor="@color/colorPrimary" />
+
+
+                <TextView
+                    android:id="@+id/listingsNoStockTag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/listingsButton"
+                    android:layout_toEndOf="@+id/listingsStockTag"
+                    android:layout_toRightOf="@+id/listingsStockTag"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="40dp"
+                    android:paddingRight="24dp"
+                    android:text="Out of Stock"
+                    android:textColor="@color/colorPrimary" />
+
+                <Button
+                android:id="@+id/listingsButton"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/listingsStockTag"
+                android:layout_centerHorizontal="true"
+                android:paddingLeft="24dp"
+                android:text="VIEW LISTINGS"
+                android:textColor="@color/colorAccent" />
+
+
+            </RelativeLayout>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+
+</LinearLayout>

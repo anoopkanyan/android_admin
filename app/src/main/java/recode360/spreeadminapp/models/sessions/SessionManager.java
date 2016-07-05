@@ -11,7 +11,9 @@ import android.content.SharedPreferences.Editor;
 import java.util.HashMap;
 
 import recode360.spreeadminapp.Activities.BoardingActivity;
+import recode360.spreeadminapp.Activities.LaunchScreenActivity;
 import recode360.spreeadminapp.Activities.LoginActivity;
+import recode360.spreeadminapp.Activities.OnboardingWithCenterAnimationActivity;
 import recode360.spreeadminapp.app.Config;
 
 
@@ -92,7 +94,7 @@ public class SessionManager {
         // Check login status
         if (!this.isLoggedIn()) {
             // user is not logged in redirect him to Login Activity
-            Intent i = new Intent(_context, BoardingActivity.class);
+            Intent i = new Intent(_context, OnboardingWithCenterAnimationActivity.class);
             // Closing all the Activities
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
@@ -142,8 +144,8 @@ public class SessionManager {
         editor.clear();
         editor.commit();
 
-        // After logout redirect user to Loing Activity
-        Intent i = new Intent(_context, LoginActivity.class);
+        // After logout redirect user to Logging Activity
+        Intent i = new Intent(_context, OnboardingWithCenterAnimationActivity.class);
         // Closing all the Activities
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 

@@ -37,7 +37,7 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
                 FilterResults filterResults = new FilterResults();
                 if (!TextUtils.isEmpty(constraint)) {
                     // Retrieve the autocomplete results.
-                    List<String> searchData = new ArrayList<>();
+                    List<String> searchData = new ArrayList<String>();
 
                     for (String str : typeAheadData) {
                         if (str.toLowerCase().startsWith(constraint.toString().toLowerCase())) {

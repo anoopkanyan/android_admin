@@ -21,6 +21,25 @@ public class Shipments {
     private String order_id;
     private String stock_location_name;
 
+    public String getOrder_no() {
+        return order_no;
+    }
+
+    public void setOrder_no(String order_no) {
+        this.order_no = order_no;
+    }
+
+    public Address getTemp_addr() {
+        return temp_addr;
+    }
+
+    public void setTemp_addr(Address temp_addr) {
+        this.temp_addr = temp_addr;
+    }
+
+    private String order_no;
+    private Address temp_addr;
+
     public String getNumber() {
         return number;
     }

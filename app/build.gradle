@@ -71,6 +71,10 @@ dependencies {
     compile 'com.github.florent37:materialtextfield:1.0.1@aar'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.goshippo:shippo-java-client:1.1.4'
+    compile 'com.afollestad.material-dialogs:core:0.8.6.1'
+    compile('com.mikepenz:materialdrawer:5.3.1@aar') {
+        transitive = true
+    }
 }
 
 

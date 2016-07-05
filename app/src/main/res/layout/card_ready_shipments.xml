@@ -3,27 +3,32 @@
     android:id="@+id/card_ship"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/white"
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
     android:layout_marginTop="5dp"
-    card_view:cardCornerRadius="5dp">
+    card_view:cardCornerRadius="2dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="16dp"
+            >
 
             <TextView
                 android:id="@+id/shipmentNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:textColor="@color/lbl_product_name"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="16dp"
                 android:textStyle="bold" />
 
@@ -35,7 +40,7 @@
                 android:layout_below="@+id/shipmentNumber"
                 android:padding="5dp"
                 android:text="State:"
-                android:textColor="@color/lbl_product_description" />
+                android:textColor="@color/colorPrimary" />
 
 
             <TextView
@@ -45,7 +50,7 @@
                 android:layout_below="@+id/shipmentNumber"
                 android:layout_toRightOf="@+id/shipmentStateLabel"
                 android:padding="5dp"
-                android:textColor="@color/lbl_product_description" />
+                android:textColor="@color/colorPrimary" />
 
 
             <TextView
@@ -55,7 +60,7 @@
                 android:layout_below="@+id/shipmentStateLabel"
                 android:padding="5dp"
                 android:text="Stock Location:"
-                android:textColor="@color/lbl_product_description" />
+                android:textColor="@color/colorPrimary" />
 
 
             <TextView
@@ -65,7 +70,27 @@
                 android:layout_below="@+id/shipmentState"
                 android:layout_toRightOf="@+id/stockLocationLabel"
                 android:padding="5dp"
-                android:textColor="@color/lbl_product_description" />
+                android:textColor="@color/colorPrimary" />
+
+            <TextView
+                android:id="@+id/orderIdLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/stockLocationLabel"
+                android:padding="5dp"
+                android:text="Order Id:"
+                android:textColor="@color/colorPrimary" />
+
+
+            <TextView
+                android:id="@+id/orderId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/stockLocation"
+                android:layout_toRightOf="@+id/orderIdLabel"
+                android:padding="5dp"
+                android:textColor="@color/colorPrimary" />
+
 
             <Button
                 android:id="@+id/labelButton"
@@ -74,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/stockLocation"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="32dp"
                 android:text="Create Label"
                 android:textColor="@color/colorAccent" />
 

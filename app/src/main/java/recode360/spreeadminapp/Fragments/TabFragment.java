@@ -40,6 +40,7 @@ import java.util.List;
 
 import recode360.spreeadminapp.Activities.EditProductActivity;
 import recode360.spreeadminapp.Activities.MainActivity;
+import recode360.spreeadminapp.Activities.OrdersActivity;
 import recode360.spreeadminapp.R;
 import recode360.spreeadminapp.adapter.SearchAdapter;
 import recode360.spreeadminapp.app.AppController;
@@ -162,8 +163,9 @@ public class TabFragment extends Fragment {
 
                 String query = parent.getAdapter().getItem(position).toString();
 
-                Intent intent = new Intent(getActivity(), EditProductActivity.class);
+                Intent intent = new Intent(getActivity(), OrdersActivity.class);
                 intent.putExtra("order_no", ordersList.get(Arrays.asList(order_numbers).indexOf(query)).getNumber());
+                intent.putExtra("shipment", ordersList.get(Arrays.asList(order_numbers).indexOf(query)).getShipment_state());
                 startActivity(intent);
 
             }
@@ -244,7 +246,6 @@ public class TabFragment extends Fragment {
             super.getActivity().onBackPressed();
         }
     }
-
 
 
     Activity getAct() {

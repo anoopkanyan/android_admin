@@ -73,7 +73,7 @@ public class ProductListAdapter extends BaseAdapter {
 
         description.setText(product.getDescription());
 
-        price.setText("Price: $" + product.getPrice());
+        price.setText("$" + product.getPrice());
 
         // product picture
         image.setImageUrl(product.getImage(), imageLoader);

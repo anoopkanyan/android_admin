@@ -62,8 +62,8 @@ public class CreateProductFragment extends Fragment {
         inputLayoutPrice = (TextInputLayout) view.findViewById(R.id.input_layout_product_price);
         inputPrice = (EditText) view.findViewById(R.id.input_product_price);
 
-        inputLayoutId = (TextInputLayout) view.findViewById(R.id.input_layout_product_shipping_category_id);
-        inputId = (EditText) view.findViewById(R.id.input_product_shipping_category_id);
+        //inputLayoutId = (TextInputLayout) view.findViewById(R.id.input_layout_product_shipping_category_id);
+        //inputId = (EditText) view.findViewById(R.id.input_product_shipping_category_id);
 
         inputName.addTextChangedListener(new MyTextWatcher(inputName));
         inputPrice.addTextChangedListener(new MyTextWatcher(inputPrice));
@@ -198,9 +198,9 @@ public class CreateProductFragment extends Fragment {
                 case R.id.input_product_price:
                     validatePrice();
                     break;
-                case R.id.input_product_shipping_category_id:
-                    validateId();
-                    break;
+              //  case R.id.input_product_shipping_category_id:
+                //    validateId();
+                  //  break;
             }
         }
     }

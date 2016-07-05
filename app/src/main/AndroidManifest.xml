@@ -35,6 +35,7 @@
         <activity
             android:name=".Activities.CreateProductActivity"
             android:parentActivityName=".Activities.MainActivity"
+            android:windowSoftInputMode="adjustResize|stateVisible"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -56,6 +57,7 @@
         <activity
             android:name=".Activities.LoginActivity"
             android:label="@string/title_activity_login"
+            android:windowSoftInputMode="adjustResize|stateVisible"
             android:parentActivityName=".Activities.MainActivity"
             android:screenOrientation="portrait">
             <meta-data
@@ -137,13 +139,33 @@
                 android:value=".Activities.PackagesActivity" />
         </activity>
         <activity
-            android:name=".Activities.ShipmentsActivity"
+            android:name=".Activities.ReadyShipmentsActivity"
             android:parentActivityName=".Activities.OrdersActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.PackagesActivity" />
         </activity>
 
+        <activity
+            android:name=".Activities.ShippedShipmentsActivity"
+            android:parentActivityName=".Activities.OrdersActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.PackagesActivity" />
+        </activity>
+
+        <activity android:name=".Activities.LaunchScreenActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Activities.OnboardingWithCenterAnimationActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

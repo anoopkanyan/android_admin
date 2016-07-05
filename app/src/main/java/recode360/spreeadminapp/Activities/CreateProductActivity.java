@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -47,6 +48,8 @@ public class CreateProductActivity extends AppCompatActivity {
     private String TAG;
     private String url = Config.URL_STORE + "/api/products" ;
 
+    private MaterialDialog dialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,12 +71,12 @@ public class CreateProductActivity extends AppCompatActivity {
         inputLayoutPrice = (TextInputLayout) findViewById(R.id.input_layout_product_price);
         inputPrice = (EditText) findViewById(R.id.input_product_price);
 
-        inputLayoutId = (TextInputLayout) findViewById(R.id.input_layout_product_shipping_category_id);
-        inputId = (EditText) findViewById(R.id.input_product_shipping_category_id);
+        //inputLayoutId = (TextInputLayout) findViewById(R.id.input_layout_product_shipping_category_id);
+        //inputId = (EditText) findViewById(R.id.input_product_shipping_category_id);
 
         inputName.addTextChangedListener(new MyTextWatcher(inputName));
         inputPrice.addTextChangedListener(new MyTextWatcher(inputPrice));
-        inputId.addTextChangedListener(new MyTextWatcher(inputId));
+        //inputId.addTextChangedListener(new MyTextWatcher(inputId));
 
         btnCreateProduct = (Button) findViewById(R.id.btn_create_product);
 
@@ -98,18 +101,28 @@ public class CreateProductActivity extends AppCompatActivity {
             return;
         }
 
+        /*
         if (!validateId()) {
             return;
         }
+        */
 
         String tag_json_obj = "json_obj_req";
 
 
 
-        final ProgressDialog pDialog = new ProgressDialog(this);
-        pDialog.setMessage("Loading...");
-        pDialog.show();
+        //final ProgressDialog pDialog = new ProgressDialog(this);
+        //pDialog.setMessage("Loading...");
+        //pDialog.show();
 
+
+        dialog = new MaterialDialog.Builder(this)
+                .content("Creating Product")
+                .contentColor(getResources().getColor(R.color.colorPrimary))
+                .progress(true, 0)
+                .widgetColor(getResources().getColor(R.color.colorAccent))
+                .cancelable(false)
+                .show();
 
         CustomRequest jsonObjReq = new CustomRequest(Request.Method.POST,
                 url, null,
@@ -118,7 +131,8 @@ public class CreateProductActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d(TAG, response.toString());
-                        pDialog.hide();
+                        //pDialog.hide();
+                        dialog.dismiss();
                         Toast.makeText(getApplicationContext(), "Product Created Successfully", Toast.LENGTH_SHORT).show();
                     }
                 }, new Response.ErrorListener() {
@@ -126,7 +140,8 @@ public class CreateProductActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
-                pDialog.hide();
+                //pDialog.hide();
+                dialog.dismiss();
             }
         })
         {
@@ -143,7 +158,7 @@ public class CreateProductActivity extends AppCompatActivity {
             Map<String, String> params = new HashMap<String, String>();
             params.put("product[name]", inputName.getText().toString());
             params.put("product[price]", inputPrice.getText().toString());
-            params.put("product[shipping_category_id]", inputId.getText().toString());
+            params.put("product[shipping_category_id]", "1");
 
             return params;
         }
@@ -183,6 +198,7 @@ public class CreateProductActivity extends AppCompatActivity {
         return true;
     }
 
+    /*
     private boolean validateId() {
         if (inputId.getText().toString().trim().isEmpty()) {
             inputLayoutId.setError(getString(R.string.err_msg_product_id));
@@ -193,6 +209,7 @@ public class CreateProductActivity extends AppCompatActivity {
         }
         return true;
     }
+    */
 
     private void requestFocus(View view) {
         if (view.requestFocus()) {
@@ -223,9 +240,9 @@ public class CreateProductActivity extends AppCompatActivity {
                 case R.id.input_product_price:
                     validatePrice();
                     break;
-                case R.id.input_product_shipping_category_id:
-                    validateId();
-                    break;
+              //  case R.id.input_product_shipping_category_id:
+                //    validateId();
+                  //  break;
             }
         }
     }

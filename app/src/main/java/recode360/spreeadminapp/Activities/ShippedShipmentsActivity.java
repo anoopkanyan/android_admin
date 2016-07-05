@@ -1,5 +1,9 @@
 package recode360.spreeadminapp.Activities;
 
+/**
+ * Activity to display all the information regarding shipped items such as label_url, tracking url,label coste etc.
+ */
+
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -10,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -31,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 import recode360.spreeadminapp.R;
-import recode360.spreeadminapp.adapter.ShipmentsAdapter;
+import recode360.spreeadminapp.adapter.ShippedShipmentsAdapter;
 import recode360.spreeadminapp.app.AppController;
 import recode360.spreeadminapp.app.Config;
 import recode360.spreeadminapp.models.Address;
@@ -40,7 +45,11 @@ import recode360.spreeadminapp.models.Orders;
 import recode360.spreeadminapp.models.Shipments;
 import recode360.spreeadminapp.models.State;
 
-public class ShipmentsActivity extends AppCompatActivity {
+
+//Deals with a particular order's shipment, given that the order has been approved and is ready to be shipped
+
+
+public class ShippedShipmentsActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
 
@@ -49,23 +58,23 @@ public class ShipmentsActivity extends AppCompatActivity {
     private List<Shipments> shipmentsList;
     private Orders order;
     private JsonObjectRequest jsonObjReq;
-    private ShipmentsAdapter shipmentsAdapter;
+    private ShippedShipmentsAdapter shipmentsAdapter;
     private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //get the order no
+        //get the order no, as it gives us all the shipments corresponding to a particular oreder
         Intent intent = getIntent();
         order_no = intent.getStringExtra("order_no");
 
-        setContentView(R.layout.activity_shipments);
+        setContentView(R.layout.activity_shipped_shipments);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Shipments");
+        getSupportActionBar().setTitle("Shipment");
 
 
         initViews();
@@ -73,7 +82,8 @@ public class ShipmentsActivity extends AppCompatActivity {
 
 
     private void initViews() {
-        recyclerView = (RecyclerView) findViewById(R.id.shipments_recycler_view);
+
+        recyclerView = (RecyclerView) findViewById(R.id.shipped_shipments_recycler_view);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
@@ -169,26 +179,8 @@ public class ShipmentsActivity extends AppCompatActivity {
                             order.setShip_address(ship_addr);   //finally put ship address in the order object
 
 
-                            //parse Line item details
-                            /** line items not need here for the time being
-                             JSONArray items = response.getJSONArray("line_items");
-                             for (int i = 0; i < items.length(); i++) {
-                             LineItems item = new LineItems();
-                             item.setId(items.getJSONObject(i).getInt("id"));
-                             item.setName(items.getJSONObject(i).getJSONObject("variant").getString("name"));
-                             item.setQuantity(items.getJSONObject(i).getInt("quantity"));
-                             item.setDisplay_price(items.getJSONObject(i).getString("display_amount"));
-                             item.setSingle_display_amount(items.getJSONObject(i).getString("single_display_amount"));
-                             item.setSku((items.getJSONObject(i).getJSONObject("variant").getString("sku")));
+                            //line items are also available in the response, but they are not required at present
 
-                             String image_url = items.getJSONObject(i).getJSONObject("variant").getJSONArray("images").getJSONObject(0).getString("product_url");
-
-
-                             item.setTemp_img(image_url);
-
-                             lineItemsList.add(item);
-                             }
-                             **/
 
                             JSONArray shipments = response.getJSONArray("shipments");
                             for (int i = 0; i < shipments.length(); i++) {
@@ -196,12 +188,25 @@ public class ShipmentsActivity extends AppCompatActivity {
                                 shipment.setNumber(shipments.getJSONObject(i).getString("number"));
                                 shipment.setState(shipments.getJSONObject(i).getString("state"));
                                 shipment.setStock_location_name(shipments.getJSONObject(i).getString("stock_location_name"));
+                                shipment.setOrder_id(order_no);
+                                shipment.setTemp_addr(order.getShip_address());
+
+
+                                //if GoShippo is used then present the GoShippo attributes to the user
+                                if (shipments.getJSONObject(i).getString("label_url").length() > 0) {
+                                    shipment.setLabel_url(shipments.getJSONObject(i).getString("label_url"));
+                                    shipment.setCost(shipments.getJSONObject(i).getString("label_cost"));
+                                    shipment.setTracking(shipments.getJSONObject(i).getString("tracking"));
+                                    shipment.setParcel_object_id(shipments.getJSONObject(i).getString("parcel_object_id"));
+                                    // shipment.setTransaction_obj_id(shipments.getJSONObject(i).getString("transaction_object_id"));
+                                }
+
                                 shipmentsList.add(shipment);
 
                             }
 
 
-                            shipmentsAdapter = new ShipmentsAdapter(shipmentsList, ship_addr, ShipmentsActivity.this);
+                            shipmentsAdapter = new ShippedShipmentsAdapter(shipmentsList, ship_addr, ShippedShipmentsActivity.this);
                             recyclerView.setAdapter(shipmentsAdapter);
                             shipmentsAdapter.notifyDataSetChanged();
 
@@ -274,4 +279,17 @@ public class ShipmentsActivity extends AppCompatActivity {
             }
         });
     }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                super.onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

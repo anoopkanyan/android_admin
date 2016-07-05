@@ -1,136 +1,95 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:fab="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/photography">
 
 
-    <LinearLayout
-        android:id="@+id/layout_sms"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@color/colorPrimary"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
 
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="25dp"
-            android:layout_marginTop="40dp"
-            android:fontFamily="sans-serif-thin"
-            android:gravity="center_horizontal"
-            android:inputType="textCapWords"
-            android:paddingLeft="40dp"
-            android:paddingRight="40dp"
-            android:text="RecodeCommerce"
-            android:textColor="@color/white"
-            android:textSize="28dp" />
+    <FrameLayout android:id="@+id/my_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginTop="?attr/actionBarSize"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="40dp">
 
-            <com.github.florent37.materialtextfield.MaterialTextField
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                app:mtf_image="@drawable/ic_action_link">
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_url"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <EditText
                     android:id="@+id/inputURL"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/white"
-                    android:fontFamily="sans-serif-light"
                     android:hint="Store URL"
                     android:inputType="textWebEmailAddress"
-                    android:textColor="#455A64"
-                    android:textColorHint="@color/white"
-                    android:textSize="18dp" />
-            </com.github.florent37.materialtextfield.MaterialTextField>
+                    android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
 
-            <com.github.florent37.materialtextfield.MaterialTextField
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                app:mtf_image="@drawable/ic_action_mail">
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <EditText
                     android:id="@+id/inputEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/white"
-                    android:fontFamily="sans-serif-light"
                     android:hint="@string/lbl_email"
                     android:inputType="textEmailAddress"
-                    android:singleLine="true"
-                    android:textColor="#455A64"
-                    android:textColorHint="@color/white"
-                    android:textSize="18dp" />
-            </com.github.florent37.materialtextfield.MaterialTextField>
+                    android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
 
-            <com.github.florent37.materialtextfield.MaterialTextField
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                app:mtf_image="@drawable/ic_action_lock_open">
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <EditText
                     android:id="@+id/inputPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/white"
-                    android:fontFamily="sans-serif-light"
                     android:hint="@string/lbl_password"
-                    android:inputType="textPassword"
-                    android:textColor="#455A64"
-                    android:textColorHint="@color/white"
-                    android:textSize="18dp" />
-            </com.github.florent37.materialtextfield.MaterialTextField>
+                    android:inputType="textPassword" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:clipChildren="false"
-                android:clipToPadding="false">
 
-                <com.github.jorgecastilloprz.FABProgressCircle
-                    android:id="@+id/fabProgressCircle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:arcColor="@color/color_alizarin"
-                    app:arcWidth="7dp"
-                    app:finalIcon="@drawable/ic_action_tick">
+            </android.support.design.widget.TextInputLayout>
 
-                    <android.support.design.widget.FloatingActionButton
-                        android:id="@+id/btn_login"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="40dp"
-                        android:layout_marginLeft="122dp"
-                        android:layout_marginRight="122dp"
-                        android:layout_marginTop="40dp"
-                        android:src="@drawable/ic_action_playback_play"
-                        app:backgroundTint="@color/colorAccent" />
-
-                </com.github.jorgecastilloprz.FABProgressCircle>
-            </RelativeLayout>
-
-            <!--
-            <Button
-                android:id="@+id/btn_login"
-                android:layout_width="240dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="25dp"
-                android:background="@color/colorPrimaryDark"
-                android:text="@string/lbl_login"
-                android:textColor="@android:color/white"
-                android:textSize="14dp" />
-                -->
         </LinearLayout>
-    </LinearLayout>
+
+    </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+
+        <Button
+            android:layout_marginTop="40dp"
+            android:id="@+id/btn_login"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            android:clickable="false"
+            android:text="@string/lbl_login"
+            android:textColor="@color/colorPrimary" />
+
+        </LinearLayout>
+
+
+
 </LinearLayout>
+
+

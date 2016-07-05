@@ -9,7 +9,7 @@
     <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/productImage"
         android:layout_width="100dp"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:layout_alignParentLeft="true"
         android:layout_margin="8dp"
         android:scaleType="fitCenter"></com.android.volley.toolbox.NetworkImageView>
@@ -20,8 +20,8 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/productImage"
         android:padding="5dp"
-        android:textColor="@color/black"
-        android:textSize="16dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="17dp"
         android:textStyle="bold" />
 
     <TextView
@@ -30,8 +30,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/productName"
         android:layout_toRightOf="@id/productImage"
-        android:padding="5dp"
-        android:textColor="@color/lbl_product_description" />
+        android:paddingTop="0dp"
+        android:paddingBottom="5dp"
+        android:paddingRight="5dp"
+        android:paddingLeft="5dp"
+        android:textSize="13dp"
+        android:textColor="@color/colorPrimary" />
 
     <TextView
         android:id="@+id/productPrice"
@@ -39,7 +43,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/productDescription"
         android:layout_toRightOf="@id/productImage"
-        android:padding="5dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="5dp"
+        android:paddingRight="5dp"
+        android:paddingLeft="5dp"
+        android:textSize="15dp"
         android:textColor="@color/colorAccent" />
 
 

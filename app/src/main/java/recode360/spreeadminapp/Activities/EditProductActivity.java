@@ -1,8 +1,6 @@
 package recode360.spreeadminapp.Activities;
 
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -10,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -23,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -31,16 +29,12 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
-import com.cocosw.bottomsheet.BottomSheet;
-import com.github.clans.fab.FloatingActionMenu;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import recode360.spreeadminapp.R;
@@ -61,7 +55,7 @@ public class EditProductActivity extends AppCompatActivity {
     SimpleRecyclerAdapter simpleRecyclerAdapter;
     private Toolbar toolbar;
 
-    private List<FloatingActionMenu> menus = new ArrayList<>();
+    //private List<FloatingActionMenu> menus = new ArrayList<FloatingActionMenu>();
     private Handler mUiHandler = new Handler();
 
     private int product_id;
@@ -80,10 +74,15 @@ public class EditProductActivity extends AppCompatActivity {
     private ImageView header;
 
     private Button editProductButton;
-    private FloatingActionButton imageButton;
+    //private FloatingActionButton imageButton;
     AlertDialogManager alert;
+    private MaterialDialog dialog;
 
     private int camera_int;
+
+
+    private Button imageButton;
+    private Button skuButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,9 +131,18 @@ public class EditProductActivity extends AppCompatActivity {
         String url = Config.URL_STORE + "/api/products/" + product_id + ".json";
         Log.d("the url of the store is", url);
 
-        final ProgressDialog pDialog = new ProgressDialog(this);
-        pDialog.setMessage("Loading...");
-        pDialog.show();
+        //final ProgressDialog pDialog = new ProgressDialog(this);
+        //pDialog.setMessage("Loading...");
+        //pDialog.show();
+
+
+        dialog = new MaterialDialog.Builder(this)
+                .content("Loading")
+                .contentColor(getResources().getColor(R.color.colorPrimary))
+                .progress(true, 0)
+                .widgetColor(getResources().getColor(R.color.colorAccent))
+                .cancelable(false)
+                .show();
 
 
         //Request product details
@@ -154,14 +162,16 @@ public class EditProductActivity extends AppCompatActivity {
 
                         //auto fill the editable details
                         fillData(product);
-                        pDialog.hide();
+                        //pDialog.hide();
+                        dialog.hide();
                     }
                 }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d(getApplicationContext().toString(), "Error: " + error.getMessage());
-                pDialog.hide();
+                //pDialog.hide();
+                dialog.hide();
             }
         }) {
 
@@ -180,43 +190,37 @@ public class EditProductActivity extends AppCompatActivity {
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
 
-        imageButton = (FloatingActionButton) findViewById(R.id.imageUploadButton);
+        imageButton = (Button) findViewById(R.id.imageButton);
+
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                new BottomSheet.Builder(EditProductActivity.this).title("Choose Action").sheet(R.menu.list).listener(new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case R.id.scan:
-                                //Barcode scanner activity launched here to get the SKU
-                                IntentIntegrator integrator = new IntentIntegrator(EditProductActivity.this);
-                                integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);
-                                integrator.setPrompt("Scan a barcode");
-                                integrator.setBeepEnabled(true);
-                                integrator.setOrientationLocked(true);
-                                integrator.setCameraId(camera_int);  // Use a specific camera of the device
-                                integrator.initiateScan();
-                                break;
-
-                            case R.id.upload:
-                                //activity for image upload launched here
-                                Intent intent = new Intent(EditProductActivity.this, ImageActivity.class);
-                                intent.putExtra("product_id", Integer.toString(product_id));
-                                startActivity(intent);
-                        }
-                    }
-                }).show();
-
-
-                Log.d("test", "Scan button works!");
-
-
+                //activity for image upload launched here
+                Intent intent = new Intent(EditProductActivity.this, ImageActivity.class);
+                intent.putExtra("product_id", Integer.toString(product_id));
+                startActivity(intent);
             }
         });
 
+        skuButton = (Button) findViewById(R.id.skuButton);
+
+        skuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Barcode scanner activity launched here to get the SKU
+                IntentIntegrator integrator = new IntentIntegrator(EditProductActivity.this);
+                integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);
+                integrator.setPrompt("Scan a barcode");
+                integrator.setBeepEnabled(true);
+                integrator.setOrientationLocked(true);
+                integrator.setCameraId(camera_int);  // Use a specific camera of the device
+                integrator.initiateScan();
+            }
+        });
+
+
         editProductButton = (Button) findViewById(R.id.btn_edit_product);
+
         editProductButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -239,7 +243,7 @@ public class EditProductActivity extends AppCompatActivity {
         editSku.setText(pro.getSku());
 
 
-        if(pro.getCost_price()!=null) {
+        if (pro.getCost_price() != null) {
             editCostPrice.setText(pro.getCost_price().toString());
         }
 
@@ -286,11 +290,19 @@ public class EditProductActivity extends AppCompatActivity {
         // Tag used to cancel the request
         String tag_json_obj = "json_obj_req";
 
-        String url = Config.URL_STORE + "api/products/" + product_id+"/variants/"+product.getId();
+        String url = Config.URL_STORE + "api/products/" + product_id + "/variants/" + product.getId();
 
-        final ProgressDialog pDialog = new ProgressDialog(this);
-        pDialog.setMessage("Loading...");
-        pDialog.show();
+        // final ProgressDialog pDialog = new ProgressDialog(this);
+        // pDialog.setMessage("Loading...");
+        // pDialog.show();
+
+        dialog = new MaterialDialog.Builder(this)
+                .content("Updating")
+                .contentColor(getResources().getColor(R.color.colorPrimary))
+                .progress(true, 0)
+                .widgetColor(getResources().getColor(R.color.colorAccent))
+                .cancelable(false)
+                .show();
 
         CustomRequest jsonObjReq = new CustomRequest(Request.Method.PUT,
                 url, null,
@@ -299,7 +311,8 @@ public class EditProductActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d("OnSubmitResponse", response.toString());
-                        pDialog.hide();
+                        //pDialog.hide();
+                        dialog.hide();
                         alert.showAlertDialog(EditProductActivity.this, "Success..", "Product edited successfully", true);
                     }
                 }, new Response.ErrorListener() {
@@ -307,7 +320,8 @@ public class EditProductActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d("OnSubmitError", "Error: " + error.getMessage());
-                pDialog.hide();
+                //pDialog.hide();
+                dialog.hide();
                 alert.showAlertDialog(EditProductActivity.this, "Error..", "Editing product did not succeed", false);
             }
         }) {
@@ -391,7 +405,10 @@ public class EditProductActivity extends AppCompatActivity {
         sequence.setConfig(config);
 
         sequence.addSequenceItem(imageButton,
-                "Use this button to upload a new image or scan a barcode ", "GOT IT");
+                "Use this button to upload a new image", "GOT IT");
+
+        sequence.addSequenceItem(skuButton,
+                "Use this button scan a barcode", "GOT IT");
 
         sequence.addSequenceItem(editProductButton,
                 "Click this button once you have made changes to your product ", "GOT IT");
@@ -401,3 +418,6 @@ public class EditProductActivity extends AppCompatActivity {
     }
 
 }
+
+
+

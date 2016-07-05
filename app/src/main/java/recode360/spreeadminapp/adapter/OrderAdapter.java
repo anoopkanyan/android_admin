@@ -1,6 +1,7 @@
 package recode360.spreeadminapp.adapter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
@@ -51,7 +52,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
         orderViewHolder.vNumber.setText((order.getNumber()));
         orderViewHolder.vState.setText(order.getState());
-        orderViewHolder.vQuantity.setText(Integer.toString(order.getTotal_quantity()));
+        orderViewHolder.vDate.setText(order.getUpdated_at().toString().substring(0,10));
 
         if (order.getPayment_state().equals("balance_due")) {
             orderViewHolder.vPayment.setTextColor(Color.RED);
@@ -65,10 +66,12 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             orderViewHolder.vShipment.setTextColor(Color.RED);
             orderViewHolder.vShipment.setText("shipment " + order.getShipment_state());
         } else if (order.getShipment_state().equals("ready")) {
+            //if the order is in ready state, text color is set green to indicate it's still active
             orderViewHolder.vShipment.setTextColor(Color.parseColor("#ff33a93c"));
             orderViewHolder.vShipment.setText("shipment " + order.getShipment_state());
         } else if (order.getShipment_state().equals("shipped")) {
-            orderViewHolder.vShipment.setTextColor(Color.parseColor("#ff33a93c"));
+            //show normal text color if the order has been shipped already
+            orderViewHolder.vShipment.setTextColor((activity.getResources().getColor(R.color.colorPrimary)));
             orderViewHolder.vShipment.setText(order.getShipment_state());
         }
 
@@ -95,7 +98,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     public static class OrderViewHolder extends RecyclerView.ViewHolder {
         protected TextView vNumber;
         protected TextView vState;
-        protected TextView vQuantity;
+        protected TextView vDate;
         protected TextView vTitle;
         protected TextView vPayment;
         protected TextView vDisplayTotal;
@@ -105,7 +108,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             super(v);
             vNumber = (TextView) v.findViewById(R.id.orderNumber);
             vState = (TextView) v.findViewById(R.id.orderState);
-            vQuantity = (TextView) v.findViewById(R.id.orderQuantity);
+            vDate = (TextView) v.findViewById(R.id.orderDate);
             vTitle = (TextView) v.findViewById(R.id.title);
             vPayment = (TextView) v.findViewById(R.id.orderPaymentState);
             vDisplayTotal = (TextView) v.findViewById(R.id.orderDisplayTotal);

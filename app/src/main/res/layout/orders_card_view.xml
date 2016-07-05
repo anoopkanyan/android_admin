@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:textColor="@color/lbl_product_name"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="16dp"
                 android:textStyle="bold" />
 
@@ -40,7 +40,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:padding="5dp"
-                android:textColor="@color/lbl_product_name"
+                android:textColor="@color/colorPrimary"
                 android:textSize="16dp"
                 android:textStyle="bold" />
 
@@ -52,7 +52,7 @@
                 android:layout_below="@+id/orderNumber"
                 android:padding="5dp"
                 android:text="State:"
-                android:textColor="@color/lbl_product_description" />
+                android:textColor="@color/colorPrimary" />
 
 
             <TextView
@@ -62,7 +62,7 @@
                 android:layout_below="@+id/orderNumber"
                 android:layout_toRightOf="@+id/orderStateLabel"
                 android:padding="5dp"
-                android:textColor="@color/lbl_product_description" />
+                android:textColor="@color/colorPrimary" />
 
             <TextView
                 android:id="@+id/orderPaymentState"
@@ -71,26 +71,26 @@
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/orderNumber"
                 android:padding="5dp"
-                android:textColor="@color/lbl_product_description" />
+                android:textColor="@color/colorPrimary" />
 
             <TextView
-                android:id="@+id/orderQuantityLabel"
+                android:id="@+id/orderDateLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/orderStateLabel"
                 android:padding="5dp"
-                android:text="Quantity:"
-                android:textColor="@color/lbl_product_description" />
+                android:text="Order Date:"
+                android:textColor="@color/colorPrimary" />
 
 
             <TextView
-                android:id="@+id/orderQuantity"
+                android:id="@+id/orderDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/orderState"
-                android:layout_toRightOf="@+id/orderQuantityLabel"
+                android:layout_toRightOf="@+id/orderDateLabel"
                 android:padding="5dp"
-                android:textColor="@color/lbl_product_description" />
+                android:textColor="@color/colorPrimary" />
 
             <TextView
                 android:id="@+id/orderShipmentState"
@@ -99,7 +99,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/orderState"
                 android:padding="5dp"
-                android:textColor="@color/lbl_product_description" />
+                android:textColor="@color/colorPrimary" />
 
 
         </RelativeLayout>

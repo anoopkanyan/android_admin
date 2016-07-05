@@ -33,6 +33,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -82,8 +83,6 @@ public class ProductsFragment extends Fragment implements ProductListAdapterList
     private MaterialSearchView searchView;
 
 
-
-
     // To store all the products
     private List<Product> productsList;
     private List<Product> tempList;
@@ -94,7 +93,9 @@ public class ProductsFragment extends Fragment implements ProductListAdapterList
 
     // Progress dialog
     private ProgressDialog pDialog;
+    private MaterialDialog dialog;
     private FloatingActionButton fab;
+
 
     SwipeRefreshLayout swipeLayout;
 
@@ -133,8 +134,8 @@ public class ProductsFragment extends Fragment implements ProductListAdapterList
 
         listView.setAdapter(adapter);
 
-        pDialog = new ProgressDialog(getActivity());
-        pDialog.setCancelable(false);
+        //pDialog = new ProgressDialog(getActivity());
+        //pDialog.setCancelable(false);
 
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
         swipeLayout.setColorSchemeResources(R.color.colorPrimary);
@@ -223,15 +224,25 @@ public class ProductsFragment extends Fragment implements ProductListAdapterList
 
         if (!(swipeLayout.isRefreshing())) {
             // Showing progress dialog before making request
-            pDialog.setMessage("Fetching products...");
-            showpDialog();
+            //pDialog.setMessage("Fetching products...");
+            //showpDialog();
+
+            dialog = new MaterialDialog.Builder(getContext())
+                    .content("Fetching products")
+                    .contentColor(getResources().getColor(R.color.colorPrimary))
+                    .progress(true, 0)
+                    .widgetColor(getResources().getColor(R.color.colorAccent))
+                    .cancelable(false)
+                    .show();
+
+
         }
         //productsList.clear();
         tempList = new ArrayList<Product>();
 
         // Making json object request
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                Config.URL_STORE + "/api/products.json?token=" + Config.API_KEY+"&per_page=200", null, new Response.Listener<JSONObject>() {
+                Config.URL_STORE + "/api/products.json?token=" + Config.API_KEY + "&per_page=200", null, new Response.Listener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
@@ -253,8 +264,11 @@ public class ProductsFragment extends Fragment implements ProductListAdapterList
                         String id = product.getString("id");
                         String name = product.getString("name");
                         product_names[i] = name;
-                        String description = Utils.stripHtml(product
-                                .getString("description"));     //removes HTML tags if any in the response
+                        String description = "SKU: " + Utils.stripHtml(product.getJSONObject("master")
+                                .getString("sku"));
+                        description = description.replaceAll("(?s)<!--.*?-->", "");
+
+                        //removes HTML tags if any in the response
                         //    String image = product.getString("image");
                         BigDecimal price = new BigDecimal(product
                                 .getString("price"));
@@ -303,7 +317,8 @@ public class ProductsFragment extends Fragment implements ProductListAdapterList
                 }
 
                 // hiding the progress dialog
-                hidepDialog();
+                //hidepDialog();
+                dialog.hide();
                 swipeLayout.setRefreshing(false);
             }
         }, new Response.ErrorListener() {
@@ -314,7 +329,8 @@ public class ProductsFragment extends Fragment implements ProductListAdapterList
                 Toast.makeText(getActivity(),
                         error.getMessage(), Toast.LENGTH_SHORT).show();
                 // hide the progress dialog
-                hidepDialog();
+                //hidepDialog();
+                dialog.hide();
                 swipeLayout.setRefreshing(false);
             }
         });
@@ -377,7 +393,7 @@ public class ProductsFragment extends Fragment implements ProductListAdapterList
             imm.hideSoftInputFromWindow(edtSeach.getWindowToken(), 0);
 
             //add the search icon in the action bar
-            mSearchAction.setIcon(getResources().getDrawable(R.drawable.abc_ic_search_api_mtrl_alpha));
+            mSearchAction.setIcon(getResources().getDrawable(R.drawable.ic_search));
 
             isSearchOpened = false;
         } else { //open the search entry
@@ -411,7 +427,7 @@ public class ProductsFragment extends Fragment implements ProductListAdapterList
 
 
             //add the close icon
-            mSearchAction.setIcon(getResources().getDrawable(R.drawable.abc_ic_clear_mtrl_alpha));
+            mSearchAction.setIcon(getResources().getDrawable(R.drawable.bs_ic_clear));
 
             isSearchOpened = true;
         }
@@ -426,8 +442,9 @@ public class ProductsFragment extends Fragment implements ProductListAdapterList
     }
 
     private void doSearch(String query) {
-        pDialog.setMessage("Searching");
-        showpDialog();
+        // pDialog.setMessage("Searching");
+        // showpDialog();
+        dialog.show();
     }
 
     @Override
