@@ -47,6 +47,7 @@ import java.util.Map;
 import recode360.spreeadminapp.Fragments.PrimaryFragment;
 import recode360.spreeadminapp.Fragments.ProductsFragment;
 import recode360.spreeadminapp.Fragments.TabFragment;
+import recode360.spreeadminapp.Fragments.pos.CheckoutPosFragment;
 import recode360.spreeadminapp.R;
 import recode360.spreeadminapp.app.AppController;
 import recode360.spreeadminapp.app.Config;
@@ -193,9 +194,10 @@ public class MainActivity extends AppCompatActivity {
                         new PrimaryDrawerItem().withName(R.string.product).withIcon(R.drawable.ic_products).withIdentifier(2).withSelectable(true).withSelectedTextColor(getResources().getColor(R.color.accent)).withSelectedIconColor(getResources().getColor(R.color.accent)).withIconTintingEnabled(true).withTextColor(getResources().getColor(R.color.colorPrimaryDark)).withIconColor(getResources().getColor(R.color.colorPrimaryDark)).withTypeface(Typeface.SANS_SERIF),
                         new PrimaryDrawerItem().withName(R.string.orders).withIcon(R.drawable.ic_orders).withIdentifier(3).withSelectable(true).withSelectedTextColor(getResources().getColor(R.color.accent)).withSelectedIconColor(getResources().getColor(R.color.accent)).withIconTintingEnabled(true).withTextColor(getResources().getColor(R.color.colorPrimaryDark)).withIconColor(getResources().getColor(R.color.colorPrimaryDark)).withTypeface(Typeface.SANS_SERIF),
                         new PrimaryDrawerItem().withName("Visit Store").withIcon(R.drawable.ic_cart).withIdentifier(4).withSelectable(true).withSelectedTextColor(getResources().getColor(R.color.accent)).withSelectedIconColor(getResources().getColor(R.color.accent)).withIconTintingEnabled(true).withTextColor(getResources().getColor(R.color.colorPrimaryDark)).withIconColor(getResources().getColor(R.color.colorPrimaryDark)).withTypeface(Typeface.SANS_SERIF),
+                        new PrimaryDrawerItem().withName("POS").withIcon(R.drawable.ic_bill).withIdentifier(5).withSelectable(true).withSelectedTextColor(getResources().getColor(R.color.accent)).withSelectedIconColor(getResources().getColor(R.color.accent)).withIconTintingEnabled(true).withTextColor(getResources().getColor(R.color.colorPrimaryDark)).withIconColor(getResources().getColor(R.color.colorPrimaryDark)).withTypeface(Typeface.SANS_SERIF),
                         new DividerDrawerItem(),
-                        new PrimaryDrawerItem().withName("Settings").withIcon(R.drawable.ic_settings).withIdentifier(5).withSelectable(true).withSelectedTextColor(getResources().getColor(R.color.accent)).withSelectedIconColor(getResources().getColor(R.color.accent)).withIconTintingEnabled(true).withTextColor(getResources().getColor(R.color.colorPrimaryDark)).withIconColor(getResources().getColor(R.color.colorPrimaryDark)).withTypeface(Typeface.SANS_SERIF),
-                        new PrimaryDrawerItem().withName("Help").withIcon(R.drawable.ic_help).withIdentifier(6).withSelectable(true).withSelectedTextColor(getResources().getColor(R.color.accent)).withSelectedIconColor(getResources().getColor(R.color.accent)).withIconTintingEnabled(true).withTextColor(getResources().getColor(R.color.colorPrimaryDark)).withIconColor(getResources().getColor(R.color.colorPrimaryDark)).withTypeface(Typeface.SANS_SERIF)
+                        new PrimaryDrawerItem().withName("Settings").withIcon(R.drawable.ic_settings).withIdentifier(6).withSelectable(true).withSelectedTextColor(getResources().getColor(R.color.accent)).withSelectedIconColor(getResources().getColor(R.color.accent)).withIconTintingEnabled(true).withTextColor(getResources().getColor(R.color.colorPrimaryDark)).withIconColor(getResources().getColor(R.color.colorPrimaryDark)).withTypeface(Typeface.SANS_SERIF),
+                        new PrimaryDrawerItem().withName("Help").withIcon(R.drawable.ic_help).withIdentifier(7).withSelectable(true).withSelectedTextColor(getResources().getColor(R.color.accent)).withSelectedIconColor(getResources().getColor(R.color.accent)).withIconTintingEnabled(true).withTextColor(getResources().getColor(R.color.colorPrimaryDark)).withIconColor(getResources().getColor(R.color.colorPrimaryDark)).withTypeface(Typeface.SANS_SERIF)
                 )// add the items we want to use with our Drawer
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -226,10 +228,16 @@ public class MainActivity extends AppCompatActivity {
                                 //webview still to be decided
 
                             } else if (drawerItem.getIdentifier() == 5) {
+
+                                FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
+                                xfragmentTransaction.replace(R.id.containerView, new CheckoutPosFragment()).addToBackStack("pos_fragment commit").commit();
+
+
+                            } else if (drawerItem.getIdentifier() == 6) {
                                 intent = new Intent(MainActivity.this, SettingsActivity.class);
                                 startActivity(intent);
 
-                            } else if (drawerItem.getIdentifier() == 6) {
+                            } else if (drawerItem.getIdentifier() == 7) {
                                 // help
 
                             }

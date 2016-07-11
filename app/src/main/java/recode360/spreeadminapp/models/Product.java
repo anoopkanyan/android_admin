@@ -1,6 +1,7 @@
 package recode360.spreeadminapp.models;
 
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  * Not for master/variant, DetailedProduct to deal with master/variants.
  */
 
-public class Product {
+public class Product implements Serializable{
     private int id;
     private String name;
     private String description;
@@ -22,6 +23,16 @@ public class Product {
     String image;   //to get the url of master product image's URL to display in the ListView
     private int total_on_hand;
     private boolean has_variants;
+
+    private int cart_qty;
+
+    public int getCart_qty() {
+        return cart_qty;
+    }
+
+    public void setCart_qty(int cart_qty) {
+        this.cart_qty = cart_qty;
+    }
 
     private ProductProperties product_properties;
     private OptionTypes option_types;

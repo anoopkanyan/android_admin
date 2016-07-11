@@ -35,8 +35,8 @@
         <activity
             android:name=".Activities.CreateProductActivity"
             android:parentActivityName=".Activities.MainActivity"
-            android:windowSoftInputMode="adjustResize|stateVisible"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateVisible">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.CreateProductActivity" />
@@ -49,17 +49,19 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.EditProductActivity" />
+
             <intent-filter>
                 <action android:name="recode360.spreeadminapp.Activities.CreateProductActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
             android:name=".Activities.LoginActivity"
             android:label="@string/title_activity_login"
-            android:windowSoftInputMode="adjustResize|stateVisible"
             android:parentActivityName=".Activities.MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateVisible">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.LoginActivity" />
@@ -102,14 +104,13 @@
             android:label="Create Label"
             android:parentActivityName=".Activities.OrdersActivity"
             android:windowSoftInputMode="adjustNothing">
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.CreateLabelActivity" />
         </activity>
         <activity
             android:name=".Activities.SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
+            android:label="@string/title_activity_settings" />
         <activity
             android:name=".Activities.CarriersActivity"
             android:parentActivityName=".Activities.MainActivity"
@@ -126,8 +127,10 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.EditProductActivity" />
+
             <intent-filter>
                 <action android:name="recode360.spreeadminapp.Activities.LicensesActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -145,7 +148,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.PackagesActivity" />
         </activity>
-
         <activity
             android:name=".Activities.ShippedShipmentsActivity"
             android:parentActivityName=".Activities.OrdersActivity">
@@ -153,19 +155,23 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.PackagesActivity" />
         </activity>
-
         <activity android:name=".Activities.LaunchScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".Activities.OnboardingWithCenterAnimationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Activities.pos.OrderPosActivity" />
+        <activity android:name=".Activities.pos.PaymentActivity" />
+        <activity android:name=".Activities.pos.CashPaymentActivity"></activity>
     </application>
 
 </manifest>
