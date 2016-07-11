@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -122,6 +123,13 @@ public class CashPaymentActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d("Cash Payment Activity", "Error: " + error.getMessage());
                 pDialog.hide();
+
+                MaterialDialog dialog = new MaterialDialog.Builder(CashPaymentActivity.this)
+                        .title("COMPLETE")
+                        .content("Order #" + order_no.toString() + " sucessfully created")
+                        .positiveText("Ok")
+                        .show();
+
             }
         }) {
 
@@ -209,7 +217,18 @@ public class CashPaymentActivity extends AppCompatActivity {
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
 
+    }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                super.onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 
