@@ -116,10 +116,8 @@ public class PaymentActivity extends AppCompatActivity {
         }
 
         dialog = new MaterialDialog.Builder(PaymentActivity.this)
-                .title("New Order")
-                .content("Creating your Order")
+                .content("Loading")
                 .progress(true, 0)
-                .progressIndeterminateStyle(true)
                 .titleColor(getResources().getColor(R.color.colorPrimaryDark))
                 .widgetColor(getResources().getColor(R.color.colorAccent))
                 .contentColor(getResources().getColor(R.color.colorPrimary))

@@ -101,7 +101,7 @@
                     android:layout_below="@+id/ordersQtyTag"
                     android:layout_centerHorizontal="true"
                     android:paddingLeft="24dp"
-                    android:text="VIEW ALL ORDERS"
+                    android:text="VIEW NEW ORDERS"
                     android:textColor="@color/colorAccent" />
 
 
@@ -242,7 +242,7 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="24dp"
                     android:paddingTop="8dp"
-                    android:text="LISTINGS"
+                    android:text="PRODUCTS"
                     android:textColor="@color/lbl_product_name"
                     android:textSize="16dp" />
 
@@ -310,7 +310,7 @@
                 android:layout_below="@+id/listingsStockTag"
                 android:layout_centerHorizontal="true"
                 android:paddingLeft="24dp"
-                android:text="VIEW LISTINGS"
+                android:text="VIEW OUT OF STOCK"
                 android:textColor="@color/colorAccent" />
 
 

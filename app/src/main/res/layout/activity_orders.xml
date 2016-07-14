@@ -31,48 +31,6 @@
             android:paddingLeft="@dimen/card_margin"
             android:paddingRight="@dimen/card_margin" />
 
-        <com.github.clans.fab.FloatingActionMenu
-            android:id="@+id/menu1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:paddingBottom="10dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:src="@drawable/ic_menu"
-            fab:menu_backgroundColor="#ccffffff"
-            fab:menu_colorNormal="@color/colorAccent"
-            fab:menu_colorPressed="@color/color_alizarin"
-            fab:menu_colorRipple="@color/color_alizarin"
-            fab:menu_icon="@drawable/ic_menu"
-            fab:menu_labels_ellipsize="end"
-            fab:menu_labels_singleLine="true">
-
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/fab1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_bill"
-                fab:fab_colorNormal="@color/colorAccent"
-                fab:fab_colorPressed="@color/color_alizarin"
-                fab:fab_colorRipple="@color/color_alizarin"
-                fab:fab_label="Billing Details"
-                fab:fab_size="mini" />
-
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/fab2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_ship"
-                fab:fab_colorNormal="@color/colorAccent"
-                fab:fab_colorPressed="@color/color_alizarin"
-                fab:fab_colorRipple="@color/color_alizarin"
-                fab:fab_label="Shipping Details"
-                fab:fab_size="mini" />
-
-
-        </com.github.clans.fab.FloatingActionMenu>
 
     </RelativeLayout>
 </LinearLayout>

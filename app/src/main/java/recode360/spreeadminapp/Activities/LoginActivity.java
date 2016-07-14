@@ -58,6 +58,7 @@ public class LoginActivity extends Activity {
     private JSONObject jsonBody;
     private String URL;
     private String url;
+    private String token;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -140,15 +141,15 @@ public class LoginActivity extends Activity {
                     // pDialog.show();
 
 
-                      dialog = new MaterialDialog.Builder(LoginActivity.this)
+                    dialog = new MaterialDialog.Builder(LoginActivity.this)
                             .title("Sign In")
                             .content("Reaching your store")
                             .progress(true, 0)
                             .progressIndeterminateStyle(true)
                             .titleColor(getResources().getColor(R.color.colorPrimaryDark))
-                              .widgetColor(getResources().getColor(R.color.colorAccent))
-                              .contentColor(getResources().getColor(R.color.colorPrimary))
-                              .autoDismiss(false)
+                            .widgetColor(getResources().getColor(R.color.colorAccent))
+                            .contentColor(getResources().getColor(R.color.colorPrimary))
+                            .autoDismiss(false)
                             .show();
 
                     JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
@@ -164,13 +165,12 @@ public class LoginActivity extends Activity {
                                     // Use user real data
                                     try {
                                         session.createLoginSession(response.getJSONObject("bill_address").getString("full_name"), username, response.getString("spree_api_key"), URL, password);
+                                        token = response.getString("spree_api_key");
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
 
-                                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                                    startActivity(i);
-                                    finish();
+                                    getStoreAttributes();
 
                                 }
                             }, new Response.ErrorListener() {
@@ -293,6 +293,67 @@ public class LoginActivity extends Activity {
         }
 
         return true;
+    }
+
+
+    //get store attributes such as store name, goshippo api tokens, and mail address
+
+    public void getStoreAttributes() {
+
+        String url = URL + "/api/stores";
+        final String TAG = "Store attributes request";
+
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+                url, null,
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, response.toString());
+
+                        try {
+                            String token = response.getJSONArray("stores").getJSONObject(0).getString("goshippo_api");
+                            SessionManager session = new SessionManager(getApplicationContext());
+                            session.addGoshippoKey(token);
+
+
+                            Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(i);
+                            finish();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Accept", "application/json");
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                headers.put("X-Spree-Token", token);
+                return headers;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+        };
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(jsonObjReq, "store_attributes request");
+
     }
 
 

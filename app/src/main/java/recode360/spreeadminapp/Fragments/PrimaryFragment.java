@@ -1,5 +1,6 @@
 package recode360.spreeadminapp.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -29,6 +30,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import recode360.spreeadminapp.Activities.AllShipmentsActivity;
+import recode360.spreeadminapp.Activities.MainActivity;
 import recode360.spreeadminapp.R;
 import recode360.spreeadminapp.app.AppController;
 import recode360.spreeadminapp.app.Config;
@@ -77,52 +80,63 @@ public class PrimaryFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.primary_layout, container, false);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.dashboard);
 
-
-        ordersButton = (Button) rootView.findViewById(R.id.ordersButton);
-        shipButton = (Button) rootView.findViewById(R.id.shippingsButton);
-        listingsButton = (Button) rootView.findViewById(R.id.listingsButton);
-
-        getListingStats();
-        getOrderStats();
-
-        in_stock = (TextView) rootView.findViewById(R.id.listingsStock);
-        out_stock = (TextView) rootView.findViewById(R.id.listingsNoStock);
-
-        orders_count_text = (TextView) rootView.findViewById(R.id.ordersQty);
-        orders_revenue_text = (TextView) rootView.findViewById(R.id.ordersRevenue);
-
-        shipments_revenue_text = (TextView) rootView.findViewById(R.id.shippingsRevenue);
-        shipments_expenditure_text = (TextView) rootView.findViewById(R.id.shippingsExpenditure);
+        try {
 
 
-        mFragmentManager = getActivity().getSupportFragmentManager();
-        mFragmentTransaction = mFragmentManager.beginTransaction();
+            ordersButton = (Button) rootView.findViewById(R.id.ordersButton);
+            shipButton = (Button) rootView.findViewById(R.id.shippingsButton);
+            listingsButton = (Button) rootView.findViewById(R.id.listingsButton);
 
-        ordersButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // launch Orders fragment
-                mFragmentTransaction.replace(R.id.containerView, new TabFragment()).commit();
+            getListingStats();
+            getOrderStats();
 
-            }
-        });
+            in_stock = (TextView) rootView.findViewById(R.id.listingsStock);
+            out_stock = (TextView) rootView.findViewById(R.id.listingsNoStock);
 
-        shipButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            orders_count_text = (TextView) rootView.findViewById(R.id.ordersQty);
+            orders_revenue_text = (TextView) rootView.findViewById(R.id.ordersRevenue);
+
+            shipments_revenue_text = (TextView) rootView.findViewById(R.id.shippingsRevenue);
+            shipments_expenditure_text = (TextView) rootView.findViewById(R.id.shippingsExpenditure);
 
 
-            }
-        });
+            mFragmentManager = getActivity().getSupportFragmentManager();
+            mFragmentTransaction = mFragmentManager.beginTransaction();
 
-        listingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //launch shipments fragment
-                mFragmentTransaction.replace(R.id.containerView, new ProductsFragment()).commit();
+            ordersButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // launch Orders fragment
+                    mFragmentTransaction.replace(R.id.containerView, new TabFragment()).commit();
 
-            }
-        });
+                }
+            });
+
+            shipButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getActivity(), AllShipmentsActivity.class);
+                    getActivity().startActivity(intent);
+                }
+            });
+
+            listingsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //launch shipments fragment
+                    MainActivity act = (MainActivity) getActivity();
+                    act.setOutofStock(true);
+                    mFragmentTransaction.replace(R.id.containerView, new ProductsFragment()).commit();
+
+                }
+            });
+
+
+        }
+        catch (Exception e){
+
+            //screw you
+        }
 
         return rootView;
     }
@@ -133,10 +147,8 @@ public class PrimaryFragment extends Fragment {
 
 
         dialog = new MaterialDialog.Builder(getContext())
-                .title("Dashboard")
-                .content("Updating the statistics")
+                .content("Updating Dashboard")
                 .progress(true, 0)
-                .progressIndeterminateStyle(true)
                 .titleColor(getResources().getColor(R.color.colorPrimaryDark))
                 .widgetColor(getResources().getColor(R.color.colorAccent))
                 .contentColor(getResources().getColor(R.color.colorPrimary))
@@ -355,11 +367,7 @@ public class PrimaryFragment extends Fragment {
 
     }
 
-    public static void onBackPressed(){
-
-
-
-
+    public static void onBackPressed() {
 
 
     }

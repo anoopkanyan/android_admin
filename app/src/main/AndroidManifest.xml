@@ -155,23 +155,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.PackagesActivity" />
         </activity>
-        <activity android:name=".Activities.LaunchScreenActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        <activity android:name=".Activities.LaunchScreenActivity"></activity>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".Activities.OnboardingWithCenterAnimationActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        <activity android:name=".Activities.OnboardingWithCenterAnimationActivity"></activity>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity android:name=".Activities.pos.OrderPosActivity" />
         <activity android:name=".Activities.pos.PaymentActivity" />
-        <activity android:name=".Activities.pos.CashPaymentActivity"></activity>
+        <activity android:name=".Activities.pos.CashPaymentActivity" />
+        <activity android:name=".Activities.AllShipmentsActivity"></activity>
     </application>
 
 </manifest>

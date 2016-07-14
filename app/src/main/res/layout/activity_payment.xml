@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="40dp">
+        android:padding="24dp">
 
         <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/credit_card"
@@ -33,19 +33,20 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
-                android:layout_marginLeft="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="16dp"
                 android:orientation="vertical">
 
             <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
                 android:src="@drawable/credit_card" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:textColor="@color/colorAccent"
                 android:text="CREDIT CARD"
                 android:paddingBottom="8dp"/>
 
@@ -66,13 +67,13 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
-                android:layout_marginLeft="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="16dp"
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
                     android:src="@drawable/notes" />
 
                 <TextView
@@ -80,6 +81,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="CASH"
+                    android:textColor="@color/colorAccent"
                     android:paddingBottom="8dp"/>
 
             </LinearLayout>
@@ -102,13 +104,13 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
-                android:layout_marginLeft="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="16dp"
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
                     android:src="@drawable/terminal" />
 
                 <TextView
@@ -116,6 +118,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="TERMINAL"
+                    android:textColor="@color/colorAccent"
                     android:paddingBottom="8dp"/>
 
             </LinearLayout>

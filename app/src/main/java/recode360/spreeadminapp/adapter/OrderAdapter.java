@@ -1,7 +1,6 @@
 package recode360.spreeadminapp.adapter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
@@ -44,35 +43,35 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
                 //first check if the order's state i.e ship,pending or cart and start a new activity correspondingly
                 Intent i = new Intent(activity, OrdersActivity.class);
                 i.putExtra("order_no", order.getNumber());
-                i.putExtra("shipment",order.getShipment_state());
+                i.putExtra("shipment", order.getShipment_state());
                 activity.startActivity(i);
 
             }
         });
 
         orderViewHolder.vNumber.setText((order.getNumber()));
-        orderViewHolder.vState.setText(order.getState());
-        orderViewHolder.vDate.setText(order.getUpdated_at().toString().substring(0,10));
+        orderViewHolder.vState.setText(order.getState().substring(0, 1).toUpperCase() + order.getState().substring(1).toLowerCase());
+        orderViewHolder.vDate.setText(order.getUpdated_at().toString().substring(0, 10));
 
         if (order.getPayment_state().equals("balance_due")) {
             orderViewHolder.vPayment.setTextColor(Color.RED);
-            orderViewHolder.vPayment.setText(order.getPayment_state());
+            orderViewHolder.vPayment.setText("Balance Due");
         } else if (order.getPayment_state().equals("paid")) {
             orderViewHolder.vPayment.setTextColor(Color.parseColor("#ff33a93c"));
-            orderViewHolder.vPayment.setText(order.getPayment_state());
+            orderViewHolder.vPayment.setText("Paid");
         }
 
         if (order.getShipment_state().equals("pending")) {
             orderViewHolder.vShipment.setTextColor(Color.RED);
-            orderViewHolder.vShipment.setText("shipment " + order.getShipment_state());
+            orderViewHolder.vShipment.setText("Pending Shipment");
         } else if (order.getShipment_state().equals("ready")) {
             //if the order is in ready state, text color is set green to indicate it's still active
-            orderViewHolder.vShipment.setTextColor(Color.parseColor("#ff33a93c"));
-            orderViewHolder.vShipment.setText("shipment " + order.getShipment_state());
+            orderViewHolder.vShipment.setTextColor(Color.parseColor("#FF5722"));
+            orderViewHolder.vShipment.setText("Ready to Ship");
         } else if (order.getShipment_state().equals("shipped")) {
             //show normal text color if the order has been shipped already
             orderViewHolder.vShipment.setTextColor((activity.getResources().getColor(R.color.colorPrimary)));
-            orderViewHolder.vShipment.setText(order.getShipment_state());
+            orderViewHolder.vShipment.setText("Shipped");
         }
 
         orderViewHolder.vDisplayTotal.setText(order.getDisplay_total());

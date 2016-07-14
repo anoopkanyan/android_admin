@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -31,6 +32,8 @@ public class LineItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private Orders order;   //for header of the list
     private Activity activity;
     ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+
+    private EditPlayerAdapterCallback callback;
 
 
     public LineItemsAdapter(Orders order, List<LineItems> LineItemsList, Activity activity) {
@@ -70,6 +73,28 @@ public class LineItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             VHheader.txtTotal.setText(order.getDisplay_total());
             VHheader.txtTotal.setText(order.getDisplay_total());
             VHheader.txtItemTotal.setText(order.getDisplay_item_total());
+
+
+            VHheader.shipmentsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //shipments button clicked, notify the activity about it
+                    callback.shipmentsButtonPressed();
+
+                }
+            });
+
+
+            VHheader.billDetailsButton.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    //bill details button clicked, notify the adapter about it
+                    callback.billDetailsButtonPressed();
+                }
+            });
+
+
         } else if (holder instanceof LineItemsViewHolder) {
 
             final LineItems item = LineItemsList.get(i - 1);
@@ -94,7 +119,7 @@ public class LineItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 imageLoader = AppController.getInstance().getImageLoader();
 
             if (URLUtil.isValidUrl(item.getTemp_img())) {
-                lineItemsViewHolder.image.setImageUrl( item.getTemp_img(), imageLoader);
+                lineItemsViewHolder.image.setImageUrl(item.getTemp_img(), imageLoader);
             } else {
                 lineItemsViewHolder.image.setImageUrl(Config.URL_STORE + item.getTemp_img(), imageLoader);
 
@@ -162,6 +187,8 @@ public class LineItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         protected TextView txtItemTotal;
         protected TextView txtQuantity;
         protected TextView txtTotal;
+        protected Button shipmentsButton;
+        protected Button billDetailsButton;
 
         public VHHeader(View itemView) {
             super(itemView);
@@ -170,6 +197,10 @@ public class LineItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             this.txtItemTotal = (TextView) itemView.findViewById(R.id.item_total);
             this.txtQuantity = (TextView) itemView.findViewById(R.id.quantity);
             this.txtTotal = (TextView) itemView.findViewById(R.id.total);
+            this.shipmentsButton = (Button) itemView.findViewById(R.id.shipments_button);
+            this.billDetailsButton = (Button) itemView.findViewById(R.id.bill_details_button);
+
+
         }
     }
 
@@ -184,5 +215,19 @@ public class LineItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         };
     }
 
+
+    public void setCallback(EditPlayerAdapterCallback callback) {
+
+        this.callback = callback;
+    }
+
+
+    public interface EditPlayerAdapterCallback {
+
+        public void shipmentsButtonPressed();
+
+        public void billDetailsButtonPressed();
+
+    }
 
 }

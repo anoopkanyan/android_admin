@@ -1,16 +1,19 @@
 package recode360.spreeadminapp.Activities.pos;
 
-import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -35,7 +38,8 @@ public class CashPaymentActivity extends AppCompatActivity {
     private String order_no;
     private String order_state;
     private Float totalPrice;
-    private TextView totalPriceView;
+    private EditText totalPriceView;
+    private Float totalPaid, changeAmt;
     private Toolbar toolbar;
     private Button payButton;
 
@@ -44,7 +48,10 @@ public class CashPaymentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cash_payment);
 
-        totalPriceView = (TextView) findViewById(R.id.cash_price);
+        ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+
+
+        totalPriceView = (EditText) findViewById(R.id.cash_price);
         payButton = (Button) findViewById(R.id.paid_button);
 
         Intent intent = this.getIntent();
@@ -57,14 +64,37 @@ public class CashPaymentActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("PAY $" + totalPrice.toString());
 
 
-        totalPriceView.setText("$" + totalPrice.toString());
+        totalPriceView.setText(totalPrice.toString());
+        totalPriceView.setSelection(totalPrice.toString().length());
 
 
         payButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                cartToAddress();
+
+                totalPaid = Float.parseFloat(totalPriceView.getText().toString());
+
+                changeAmt = totalPrice - totalPaid;
+
+                MaterialDialog dialog = new MaterialDialog.Builder(CashPaymentActivity.this)
+                        .title("Cash Payment")
+                        .titleColor(getResources().getColor(R.color.colorPrimaryDark))
+                        .content("Total Paid       $" + totalPaid + "\n" + "Balance Due    $" + changeAmt)
+                        .positiveText("CONFIRM")
+                        .positiveColor(getResources().getColor(R.color.accent))
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(totalPriceView.getWindowToken(), 0);
+                                dialog.dismiss();
+                                cartToAddress();
+
+                            }
+                        })
+                        .negativeText("CANCEL")
+                        .show();
+
             }
 
         });
@@ -83,9 +113,12 @@ public class CashPaymentActivity extends AppCompatActivity {
         String tag_json_obj = "stock_locations_request";
         String url = Config.URL_STORE + "/api/checkouts/" + order_no + "/next.json?token=" + Config.API_KEY;
 
-        final ProgressDialog pDialog = new ProgressDialog(this);
-        pDialog.setMessage("Loading...");
-        pDialog.show();
+        final MaterialDialog pDialog = new MaterialDialog.Builder(this)
+                .content("Recording payment")
+                .widgetColor(getResources().getColor(R.color.colorAccent))
+                .contentColor(getResources().getColor(R.color.colorPrimary))
+                .progress(true, 0)
+                .show();
 
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.PUT,
                 url, null,
@@ -101,8 +134,10 @@ public class CashPaymentActivity extends AppCompatActivity {
                             } else if (order_state.toString().equals("complete")) {
 
                                 MaterialDialog dialog = new MaterialDialog.Builder(CashPaymentActivity.this)
-                                        .title("COMPLETE")
-                                        .content("Order #" + order_no.toString() + " sucessfully created")
+                                        .title(order_no.toString())
+                                        .titleColor(getResources().getColor(R.color.colorPrimaryDark))
+                                        .content("Sale recorded successfully.")
+                                        .positiveColor(getResources().getColor(R.color.colorAccent))
                                         .positiveText("Ok")
                                         .show();
 
@@ -125,8 +160,10 @@ public class CashPaymentActivity extends AppCompatActivity {
                 pDialog.hide();
 
                 MaterialDialog dialog = new MaterialDialog.Builder(CashPaymentActivity.this)
-                        .title("COMPLETE")
-                        .content("Order #" + order_no.toString() + " sucessfully created")
+                        .title(order_no.toString())
+                        .titleColor(getResources().getColor(R.color.colorPrimaryDark))
+                        .content("Sale recorded successfully.")
+                        .positiveColor(getResources().getColor(R.color.colorAccent))
                         .positiveText("Ok")
                         .show();
 
@@ -156,9 +193,13 @@ public class CashPaymentActivity extends AppCompatActivity {
         String tag_json_obj = "order_update_request";
         String url = Config.URL_STORE + "/api/orders/" + order_no + ".json?token=" + Config.API_KEY;
 
-        final ProgressDialog pDialog = new ProgressDialog(this);
-        pDialog.setMessage("Loading...");
-        pDialog.show();
+
+        final MaterialDialog pDialog = new MaterialDialog.Builder(this)
+                .content("Recording payment")
+                .widgetColor(getResources().getColor(R.color.colorAccent))
+                .contentColor(getResources().getColor(R.color.colorPrimary))
+                .progress(true, 0)
+                .show();
 
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.PUT,

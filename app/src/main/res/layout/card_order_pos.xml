@@ -57,10 +57,10 @@
         <ImageView
             android:layout_width="32dip"
             android:layout_height="32dip"
-            android:id="@+id/plus_button"
+            android:id="@+id/minus_button"
             android:layout_alignParentBottom="true"
             android:layout_toLeftOf="@+id/product_quantity_cart"
-            android:src="@drawable/ic_plus_cart"/>
+            android:src="@drawable/ic_minus_cart"/>
 
         <TextView
             android:id="@+id/product_quantity_cart"
@@ -72,14 +72,14 @@
             android:textSize="17dip"
             android:textStyle="bold"
             android:layout_alignParentBottom="true"
-            android:layout_toLeftOf="@+id/minus_button"
-            android:layout_toStartOf="@+id/minus_button" />
+            android:layout_toLeftOf="@+id/plus_button"
+            android:layout_toStartOf="@+id/plus_button" />
 
         <ImageView
-            android:id="@+id/minus_button"
+            android:id="@+id/plus_button"
             android:layout_width="32dip"
             android:layout_height="32dip"
-            android:src="@drawable/ic_minus_cart"
+            android:src="@drawable/ic_plus_cart"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"/>
 
