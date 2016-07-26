@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name=".app.AppController"
@@ -155,14 +156,34 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.PackagesActivity" />
         </activity>
-        <activity android:name=".Activities.LaunchScreenActivity"></activity>
-
-        <activity android:name=".Activities.OnboardingWithCenterAnimationActivity"></activity>
-
+        <activity android:name=".Activities.LaunchScreenActivity" />
+        <activity android:name=".Activities.OnboardingWithCenterAnimationActivity" />
         <activity android:name=".Activities.pos.OrderPosActivity" />
-        <activity android:name=".Activities.pos.PaymentActivity" />
+        <activity android:name=".Activities.pos.PaymentPosActivity" />
         <activity android:name=".Activities.pos.CashPaymentActivity" />
-        <activity android:name=".Activities.AllShipmentsActivity"></activity>
+        <activity android:name=".Activities.AllShipmentsActivity" />
+        <activity android:name=".Activities.pos.OrderPosAddressActivity" />
+        <activity
+            android:name="com.cooltechworks.creditcarddesign.CardEditActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Activities.pos.CardPaymentActivity" />
+
+        <service
+            android:name="com.paypal.android.sdk.payments.PayPalService"
+            android:exported="false" />
+
+        <activity android:name="com.paypal.android.sdk.payments.PaymentActivity" />
+        <activity android:name="com.paypal.android.sdk.payments.LoginActivity" />
+        <activity android:name="com.paypal.android.sdk.payments.PaymentMethodActivity" />
+        <activity android:name="com.paypal.android.sdk.payments.PaymentConfirmActivity" />
+        <activity
+            android:name="io.card.payment.CardIOActivity"
+            android:configChanges="keyboardHidden|orientation" />
+        <activity android:name="io.card.payment.DataEntryActivity" />
+        <activity
+            android:name=".Activities.pos.AddCustomerActivity"
+            android:label="@string/title_activity_add_customer"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

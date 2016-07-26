@@ -19,7 +19,7 @@
         android:id="@+id/cart_pos_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@+id/cart_view"
         android:clipToPadding="false"
         android:scrollbars="vertical" />
 
@@ -27,13 +27,11 @@
     <RelativeLayout
         android:id="@+id/cart_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/colorAccent"
+        android:layout_height="@dimen/product_image_height"
+        android:layout_below="@+id/toolbar"
+        android:background="@color/cardview_light_background"
         android:elevation="7dp"
-        android:outlineProvider="background"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp">
+        android:outlineProvider="background">
 
 
         <TextView
@@ -43,7 +41,6 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
             android:background="@drawable/rounded_corner_cart"
-            android:backgroundTint="@color/color_alizarin"
             android:text="0"
             android:textAlignment="center"
             android:textColor="@color/white"
@@ -58,7 +55,7 @@
             android:gravity="center_vertical"
             android:paddingLeft="30dp"
             android:text="$0.00"
-            android:textColor="@color/white"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_large" />
 
         <TextView
@@ -70,8 +67,9 @@
             android:layout_marginRight="20dp"
             android:text="CHECK OUT"
             android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_small" />
+            android:textColor="@color/colorPrimary"
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 

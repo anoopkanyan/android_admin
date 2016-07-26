@@ -27,6 +27,7 @@ public class OrderPosActivity extends AppCompatActivity implements CartAdapter.E
     private Toolbar toolbar;
     private TextView totalPriceView;
     private TextView totalQtyView;
+    private TextView subTotalView;
     private int done = 0;
 
     @Override
@@ -41,10 +42,11 @@ public class OrderPosActivity extends AppCompatActivity implements CartAdapter.E
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Order Summary");
+        getSupportActionBar().setTitle("Cart Summary");
 
         totalPriceView = (TextView) findViewById(R.id.cart_item_price);
         totalQtyView = (TextView) findViewById(R.id.cart_item_no);
+
 
         recyclerView = (RecyclerView) findViewById(R.id.cart_pos_recycler_view);
         adapter = new CartAdapter(this, items);
@@ -96,7 +98,7 @@ public class OrderPosActivity extends AppCompatActivity implements CartAdapter.E
 
         ArrayList<Product> cart_products = (ArrayList<Product>) adapter.getProductList();
         information.putSerializable("products", cart_products);
-        Intent intent = new Intent(OrderPosActivity.this, PaymentActivity.class);
+        Intent intent = new Intent(OrderPosActivity.this, OrderPosAddressActivity.class);
         intent.putExtras(information);
         intent.putExtra("quantity", adapter.getQtyTotal());
         intent.putExtra("price", adapter.getPriceTotal());

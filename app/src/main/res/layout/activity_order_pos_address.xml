@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/product_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+
+    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:local="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:elevation="7dp"
+        local:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        local:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/cart_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:outlineProvider="background"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp">
+
+                <TextView
+                    android:id="@+id/cart_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:backgroundTint="@color/white"
+                    android:text="Cart Total"
+                    android:textColor="@color/white"
+                    android:textSize="19dp" />
+
+
+                <TextView
+                    android:id="@+id/cart_item_no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:layout_toRightOf="@+id/cart_text"
+                    android:background="@drawable/rounded_corner_cart"
+                    android:backgroundTint="@color/white"
+                    android:text="0"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="19dp" />
+
+
+                <TextView
+                    android:id="@+id/cart_checkout_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="20dp"
+                    android:text="PAY"
+                    android:typeface="sans"
+                    android:textAlignment="center"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:textSize="19dp" />
+
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/cart_item_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/cart_view"
+                android:paddingBottom="8dp"
+                android:paddingLeft="20dp"
+                android:paddingTop="8dp"
+                android:text="$ 100.00"
+                android:textColor="@color/white"
+                android:textSize="29dp" />
+
+        </RelativeLayout>
+
+
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/myScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/cart_pos_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:scrollbars="vertical"
+                android:visibility="gone" />
+
+
+            <RelativeLayout
+                android:id="@+id/tax"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cart_pos_recycler_view"
+                android:layout_margin="8dp"
+                android:padding="8dp">
+
+
+                <TextView
+                    android:id="@+id/subtotal_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="12dp"
+                    android:text="Subtotal"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="21dp" />
+
+                <TextView
+                    android:id="@+id/subtotal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:paddingBottom="12dp"
+                    android:text="$40.00"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="21dp" />
+
+
+                <TextView
+                    android:id="@+id/tax_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/subtotal_tag"
+                    android:paddingBottom="4dp"
+                    android:text="Sales Tax"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="19dp" />
+
+
+                <TextView
+                    android:id="@+id/tax_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/subtotal"
+                    android:paddingBottom="4dp"
+                    android:text="$0.00"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="19dp" />
+
+                <TextView
+                    android:id="@+id/ship_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tax_tag"
+                    android:paddingBottom="4dp"
+                    android:text="Shipping Cost"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="19dp" />
+
+
+                <TextView
+                    android:id="@+id/ship_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/tax_total"
+                    android:paddingBottom="4dp"
+                    android:text="$0.00"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="19dp" />
+
+                <TextView
+                    android:id="@+id/total_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ship_tag"
+                    android:paddingTop="12dp"
+                    android:text="Total"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="23dp" />
+
+                <TextView
+                    android:id="@+id/total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/ship_total"
+                    android:paddingTop="12dp"
+                    android:text="$40.00"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="23dp" />
+
+
+            </RelativeLayout>
+
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/expandableButton1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tax"
+                android:layout_margin="16dp"
+                android:onClick="expandableButton1"
+                android:text="Enable Shipping"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="19dp" />
+
+            <com.github.aakira.expandablelayout.ExpandableRelativeLayout
+                android:id="@+id/expandableLayout1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/expandableButton1"
+                android:padding="16dp"
+                app:ael_duration="400"
+                app:ael_expanded="false"
+                app:ael_interpolator="bounce"
+                app:ael_orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                    <!-- disable google maps api for the time being
+
+                    <com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
+                        android:id="@+id/places_autocomplete"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:hint="Shipping Address"
+                        android:scrollHorizontally="true"
+                        android:scrollbarAlwaysDrawHorizontalTrack="true"
+                        android:scrollbars="horizontal"
+                        android:textAlignment="gravity"
+                        app:pacv_googleMapsApiKey="AIzaSyD4YO9kW2OC8UA6yZfrzkT8QIU2vnACNkM" />
+
+                        -->
+
+                    <include
+                        layout="@layout/spree_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/places_autocomplete" />
+                </LinearLayout>
+
+
+            </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
+
+
+        </RelativeLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+</RelativeLayout>

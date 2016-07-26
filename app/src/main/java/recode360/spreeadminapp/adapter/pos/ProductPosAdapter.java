@@ -139,7 +139,12 @@ public class ProductPosAdapter extends RecyclerView.Adapter<ProductPosAdapter.My
                     pr.setCart_qty(pr.getCart_qty() + 1);
                     productList.remove(position);
                     productList.add(position, pr);
-                    passList.add(position, pr);
+                    if (passList.size() > 0) {
+                        passList.add(position, pr);
+                    } else {
+                        passList.add(pr);
+                    }
+
                     priceTotal = priceTotal + pr.getPrice().floatValue();
                     qtyTotal++;
                     holder.productQty.setText(Integer.toString(productList.get(position).getCart_qty()));

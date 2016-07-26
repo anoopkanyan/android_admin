@@ -217,8 +217,7 @@ public class MainActivity extends AppCompatActivity implements SessionManager.Lo
                                 xfragmentTransaction.replace(R.id.containerView, new TabFragment()).addToBackStack("tab_fragment commit").commit();
                             } else if (drawerItem.getIdentifier() == 4) {
 
-                                //webview still to be decided
-
+                             
                             } else if (drawerItem.getIdentifier() == 5) {
 
                                 FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();

@@ -21,8 +21,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +45,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import recode360.spreeadminapp.Activities.CreateProductActivity;
 import recode360.spreeadminapp.Activities.MainActivity;
 import recode360.spreeadminapp.Activities.pos.OrderPosActivity;
 import recode360.spreeadminapp.R;
@@ -104,7 +101,7 @@ public class CheckoutPosFragment extends Fragment implements SwipeRefreshLayout.
         cartView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar.make(v, "Going to cart_menu...", Snackbar.LENGTH_SHORT).show();
+                // Snackbar.make(v, "Going to cart_menu...", Snackbar.LENGTH_SHORT).show();
 
                 launchCartActivity();
             }
@@ -289,19 +286,26 @@ public class CheckoutPosFragment extends Fragment implements SwipeRefreshLayout.
         Log.d("Cart", "Cleared the cart");
     }
 
+    /*
+    disabled temporarily
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.pos_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+        */
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
             case R.id.action_add_product:
+                /*
                 Intent intent = new Intent(getActivity(), CreateProductActivity.class);
                 startActivity(intent);
+                */
                 return true;
 
             default:

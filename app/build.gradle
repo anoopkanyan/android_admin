@@ -18,8 +18,8 @@ android {
 
     defaultConfig {
         applicationId "recode360.spreeadminapp"
-        minSdkVersion 14
-        targetSdkVersion 22
+        minSdkVersion 16
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
@@ -33,6 +33,7 @@ android {
 
 repositories {
     maven { url 'https://github.com/goshippo/shippo-java-client' }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     flatDir {
         dirs 'libs'
     }
@@ -75,6 +76,11 @@ dependencies {
     compile('com.mikepenz:materialdrawer:5.3.1@aar') {
         transitive = true
     }
+    compile 'com.github.aakira:expandable-layout:1.5.1@aar'
+    compile 'com.seatgeek:placesautocomplete:0.2-SNAPSHOT'
+    compile 'com.github.cooltechworks:CreditCardView:v1.0'
+    compile 'com.paypal.sdk:paypal-android-sdk:2.14.4'
+
 }
 
 

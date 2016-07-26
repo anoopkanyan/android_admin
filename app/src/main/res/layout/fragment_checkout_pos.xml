@@ -48,7 +48,8 @@
             android:text="CHECK OUT"
             android:textAlignment="center"
             android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/text_size_small" />
+            android:textStyle="bold"
+            android:textSize="14sp" />
 
     </RelativeLayout>
 
