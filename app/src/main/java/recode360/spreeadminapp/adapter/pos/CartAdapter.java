@@ -120,7 +120,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
         priceTotal = priceTotal + (product.getPrice().floatValue() * product.getCart_qty());
         qtyTotal = qtyTotal + product.getCart_qty();
 
-        callback.deletePressed();
+        //callback.deletePressed();
 
         holder.productName.setText(product.getName());
         holder.productPrice.setText("$" + product.getPrice().toString() + "X" + Integer.toString(product.getCart_qty()));

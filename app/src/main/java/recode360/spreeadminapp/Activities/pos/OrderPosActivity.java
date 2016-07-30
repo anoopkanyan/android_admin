@@ -47,6 +47,9 @@ public class OrderPosActivity extends AppCompatActivity implements CartAdapter.E
         totalPriceView = (TextView) findViewById(R.id.cart_item_price);
         totalQtyView = (TextView) findViewById(R.id.cart_item_no);
 
+        totalPriceView.setText(Float.toString(intent.getFloatExtra("price", 0.00f)));
+        totalQtyView.setText(Integer.toString(intent.getIntExtra("quantity", 0)));
+
 
         recyclerView = (RecyclerView) findViewById(R.id.cart_pos_recycler_view);
         adapter = new CartAdapter(this, items);

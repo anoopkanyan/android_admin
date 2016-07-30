@@ -32,7 +32,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 
-import recode360.spreeadminapp.Fragments.PrimaryFragment;
+import recode360.spreeadminapp.Fragments.DashboardFragment;
 import recode360.spreeadminapp.Fragments.ProductsFragment;
 import recode360.spreeadminapp.Fragments.TabFragment;
 import recode360.spreeadminapp.Fragments.pos.CheckoutPosFragment;
@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements SessionManager.Lo
 
         mFragmentManager = getSupportFragmentManager();
         mFragmentTransaction = mFragmentManager.beginTransaction();
-        mFragmentTransaction.replace(R.id.containerView, new PrimaryFragment()).commit();
+        mFragmentTransaction.replace(R.id.containerView, new DashboardFragment()).commit();
 
 
         // Create a few sample profile
@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements SessionManager.Lo
                         new PrimaryDrawerItem().withName(R.string.dashboard).withIcon(R.drawable.ic_home).withIdentifier(1).withSelectable(true).withSelectedTextColor(getResources().getColor(R.color.accent)).withSelectedIconColor(getResources().getColor(R.color.accent)).withIconTintingEnabled(true).withTextColor(getResources().getColor(R.color.colorPrimaryDark)).withIconColor(getResources().getColor(R.color.colorPrimaryDark)).withTypeface(Typeface.SANS_SERIF),
                         new PrimaryDrawerItem().withName(R.string.product).withIcon(R.drawable.ic_products).withIdentifier(2).withSelectable(true).withSelectedTextColor(getResources().getColor(R.color.accent)).withSelectedIconColor(getResources().getColor(R.color.accent)).withIconTintingEnabled(true).withTextColor(getResources().getColor(R.color.colorPrimaryDark)).withIconColor(getResources().getColor(R.color.colorPrimaryDark)).withTypeface(Typeface.SANS_SERIF),
                         new PrimaryDrawerItem().withName(R.string.orders).withIcon(R.drawable.ic_orders).withIdentifier(3).withSelectable(true).withSelectedTextColor(getResources().getColor(R.color.accent)).withSelectedIconColor(getResources().getColor(R.color.accent)).withIconTintingEnabled(true).withTextColor(getResources().getColor(R.color.colorPrimaryDark)).withIconColor(getResources().getColor(R.color.colorPrimaryDark)).withTypeface(Typeface.SANS_SERIF),
-                        new PrimaryDrawerItem().withName("Visit Store").withIcon(R.drawable.ic_cart).withIdentifier(4).withSelectable(true).withSelectedTextColor(getResources().getColor(R.color.accent)).withSelectedIconColor(getResources().getColor(R.color.accent)).withIconTintingEnabled(true).withTextColor(getResources().getColor(R.color.colorPrimaryDark)).withIconColor(getResources().getColor(R.color.colorPrimaryDark)).withTypeface(Typeface.SANS_SERIF),
+                        new PrimaryDrawerItem().withName("Visit Store Online").withIcon(R.drawable.ic_cart).withIdentifier(4).withSelectable(true).withSelectedTextColor(getResources().getColor(R.color.accent)).withSelectedIconColor(getResources().getColor(R.color.accent)).withIconTintingEnabled(true).withTextColor(getResources().getColor(R.color.colorPrimaryDark)).withIconColor(getResources().getColor(R.color.colorPrimaryDark)).withTypeface(Typeface.SANS_SERIF),
                         new PrimaryDrawerItem().withName("POS").withIcon(R.drawable.ic_bill).withIdentifier(5).withSelectable(true).withSelectedTextColor(getResources().getColor(R.color.accent)).withSelectedIconColor(getResources().getColor(R.color.accent)).withIconTintingEnabled(true).withTextColor(getResources().getColor(R.color.colorPrimaryDark)).withIconColor(getResources().getColor(R.color.colorPrimaryDark)).withTypeface(Typeface.SANS_SERIF),
                         new DividerDrawerItem(),
                         new PrimaryDrawerItem().withName("Settings").withIcon(R.drawable.ic_settings).withIdentifier(6).withSelectable(true).withSelectedTextColor(getResources().getColor(R.color.accent)).withSelectedIconColor(getResources().getColor(R.color.accent)).withIconTintingEnabled(true).withTextColor(getResources().getColor(R.color.colorPrimaryDark)).withIconColor(getResources().getColor(R.color.colorPrimaryDark)).withTypeface(Typeface.SANS_SERIF),
@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements SessionManager.Lo
                             if (drawerItem.getIdentifier() == 1) {
                                 // open dashboard
                                 FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
-                                xfragmentTransaction.replace(R.id.containerView, new PrimaryFragment()).addToBackStack("home_fragment commit").commit();
+                                xfragmentTransaction.replace(R.id.containerView, new DashboardFragment()).addToBackStack("home_fragment commit").commit();
 
                             } else if (drawerItem.getIdentifier() == 2) {
                                 // open all the listings(products)
@@ -217,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements SessionManager.Lo
                                 xfragmentTransaction.replace(R.id.containerView, new TabFragment()).addToBackStack("tab_fragment commit").commit();
                             } else if (drawerItem.getIdentifier() == 4) {
 
-                             
+
                             } else if (drawerItem.getIdentifier() == 5) {
 
                                 FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();

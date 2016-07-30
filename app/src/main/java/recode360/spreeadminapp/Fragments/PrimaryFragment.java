@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +26,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,19 +69,51 @@ public class PrimaryFragment extends Fragment {
     private TextView shipments_revenue_text;
     private TextView shipments_expenditure_text;
 
-    String result;
+    private TextView orders_text;
+    private TextView shippings_text;
+
+    private String time_frame;
 
     public PrimaryFragment() {
-        //nothing here yet
+
+
     }
+
+    public static PrimaryFragment newInstance(String time_frame) {
+        PrimaryFragment f = new PrimaryFragment();
+        Bundle args = new Bundle();
+        args.putString("time_frame", time_frame);
+        f.setArguments(args);
+        return f;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.primary_layout, container, false);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.dashboard);
 
         try {
+
+            this.time_frame = getArguments().getString("time_frame");
+
+            orders_text = (TextView) rootView.findViewById(R.id.ordersText);
+            shippings_text = (TextView) rootView.findViewById(R.id.shippingsText);
+
+            if (this.time_frame.equals("week")) {
+                orders_text.setText("ORDERS THIS WEEK");
+                shippings_text.setText("SHIPMENTS THIS WEEK");
+            }
+
+            if (this.time_frame.equals("month")) {
+                orders_text.setText("ORDERS THIS MONTH");
+                shippings_text.setText("SHIPMENTS THIS MONTH");
+            }
+
+            if (this.time_frame.equals("year")) {
+                orders_text.setText("ORDERS THIS YEAR");
+                shippings_text.setText("SHIPMENTS THIS YEAR");
+            }
 
 
             ordersButton = (Button) rootView.findViewById(R.id.ordersButton);
@@ -132,8 +165,7 @@ public class PrimaryFragment extends Fragment {
             });
 
 
-        }
-        catch (Exception e){
+        } catch (Exception e) {
 
             //screw you
         }
@@ -284,6 +316,7 @@ public class PrimaryFragment extends Fragment {
                 shipments_revenue = 0.0;
                 orders_count = 0;
                 shipments_expenditure = 0.0;
+                int counter = 0;
 
                 try {
                     orders_count = response.getInt("count");
@@ -304,16 +337,64 @@ public class PrimaryFragment extends Fragment {
 
                         String payment_state = order.getString("payment_state");
                         if (payment_state.equals("paid")) {
-                            orders_revenue = orders_revenue + order.getDouble("total");
-                            Log.d("Hellaleuah", orders_count + " $" + Double.toString(orders_revenue));
 
-                            try {
-                                shipments_revenue = shipments_revenue + order.getDouble("ship_total");
-                                shipments_expenditure = shipments_expenditure + order.getJSONArray("shipments").getJSONObject(0).getDouble("label_cost");
-                            } catch (Exception e) {
+                            String date = order.getString("created_at");
+                            String year = date.substring(0, 4);
+                            String month = date.substring(5, 7);
+                            String day = date.substring(8, 10);
 
-                                Log.d("Goshippo", "No fields preset for this shipment");
+                            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 
+
+                            if (time_frame.equals("year")) {
+                                Log.e("YEAR YEAR YEAR", timeStamp.substring(0, 4) + year);
+
+                                if (timeStamp.substring(0, 4).equals(year)) {
+
+                                    counter++;
+                                    orders_revenue = orders_revenue + order.getDouble("total");
+                                    Log.d("Hellaleuah", orders_count + " $" + Double.toString(orders_revenue));
+
+                                    try {
+                                        shipments_revenue = shipments_revenue + order.getDouble("ship_total");
+                                        shipments_expenditure = shipments_expenditure + order.getJSONArray("shipments").getJSONObject(0).getDouble("label_cost");
+                                    } catch (Exception e) {
+                                        Log.d("Goshippo", "No fields preset for this shipment");
+
+                                    }
+                                }
+                            } else if (time_frame.equals("month")) {
+                                Log.e(timeStamp.substring(4, 6) + "MONTH MONTH", month);
+
+                                if (timeStamp.substring(4, 6).equals(month)) {
+
+                                    counter++;
+                                    orders_revenue = orders_revenue + order.getDouble("total");
+                                    Log.d("Hellaleuah", orders_count + " $" + Double.toString(orders_revenue));
+
+                                    try {
+                                        shipments_revenue = shipments_revenue + order.getDouble("ship_total");
+                                        shipments_expenditure = shipments_expenditure + order.getJSONArray("shipments").getJSONObject(0).getDouble("label_cost");
+                                    } catch (Exception e) {
+                                        Log.d("Goshippo", "No fields preset for this shipment");
+
+                                    }
+                                }
+                            } else if (time_frame.equals("week")) {
+                                if ((Integer.parseInt(timeStamp.substring(6, 8)) - (Integer.parseInt(day)) < 7) && (timeStamp.substring(4, 6).equals(month))) {
+
+                                    counter++;
+                                    orders_revenue = orders_revenue + order.getDouble("total");
+                                    Log.d("Hellaleuah", orders_count + " $" + Double.toString(orders_revenue));
+
+                                    try {
+                                        shipments_revenue = shipments_revenue + order.getDouble("ship_total");
+                                        shipments_expenditure = shipments_expenditure + order.getJSONArray("shipments").getJSONObject(0).getDouble("label_cost");
+                                    } catch (Exception e) {
+                                        Log.d("Goshippo", "No fields preset for this shipment");
+
+                                    }
+                                }
 
                             }
                         }
@@ -331,12 +412,16 @@ public class PrimaryFragment extends Fragment {
                 }
 
                 orders_revenue_text.setText("$" + String.format("%.2f", orders_revenue));
-                orders_count_text.setText(Integer.toString(orders_count));
+                orders_count_text.setText(Integer.toString(counter));
                 shipments_revenue_text.setText("$" + String.format("%.2f", shipments_revenue));
                 shipments_expenditure_text.setText(("$") + String.format("%.2f", shipments_expenditure));
 
             }
-        }, new Response.ErrorListener() {
+        }
+
+                , new Response.ErrorListener()
+
+        {
 
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -347,7 +432,9 @@ public class PrimaryFragment extends Fragment {
                 dialog.dismiss();
 
             }
-        });
+        }
+
+        );
 
 
         jsonObjReq.setRetryPolicy(new

@@ -263,6 +263,8 @@ public class CheckoutPosFragment extends Fragment implements SwipeRefreshLayout.
         information.putSerializable("products", cart_products);
         Intent intent = new Intent(getActivity(), OrderPosActivity.class);
         intent.putExtras(information);
+        intent.putExtra("quantity", adapter.getQtyTotal());
+        intent.putExtra("price", adapter.getPriceTotal());
         startActivity(intent);
 
     }
