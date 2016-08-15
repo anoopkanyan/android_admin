@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import recode360.spreeadminapp.Activities.MainActivity;
 import recode360.spreeadminapp.R;
 import recode360.spreeadminapp.app.AppController;
 import recode360.spreeadminapp.app.Config;
@@ -104,6 +105,10 @@ public class AddCustomerActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         Log.d(tag_json_obj, response.toString());
                         pDialog.hide();
+
+                        Intent intent = new Intent(AddCustomerActivity.this,MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
                     }
                 }, new Response.ErrorListener() {
 
