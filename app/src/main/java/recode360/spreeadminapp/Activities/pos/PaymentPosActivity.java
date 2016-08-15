@@ -274,6 +274,7 @@ public class PaymentPosActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         Log.d("PAYMENT CREATED:", response.toString());
                         Intent intent = new Intent(PaymentPosActivity.this, AddCustomerActivity.class);
+                        intent.putExtra("order_no",order_no);
                         startActivity(intent);
                         dialog.cancel();
                     }

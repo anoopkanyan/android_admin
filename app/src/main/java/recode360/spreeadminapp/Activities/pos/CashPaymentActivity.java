@@ -122,7 +122,6 @@ public class CashPaymentActivity extends AppCompatActivity {
 
     }
 
-
     //updates the Order and moves from the cart state to the Address state
     public void cartToAddress() {
         addresstoDelivery();
@@ -164,6 +163,7 @@ public class CashPaymentActivity extends AppCompatActivity {
                                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
                                                 Intent intent = new Intent(CashPaymentActivity.this, AddCustomerActivity.class);
+                                                intent.putExtra("order_no", order_no);
                                                 startActivity(intent);
 
                                             }
@@ -189,13 +189,26 @@ public class CashPaymentActivity extends AppCompatActivity {
                 VolleyLog.d("Cash Payment Activity", "Error: " + error.getMessage());
                 pDialog.hide();
 
+
                 MaterialDialog dialog = new MaterialDialog.Builder(CashPaymentActivity.this)
                         .title(order_no.toString())
                         .titleColor(getResources().getColor(R.color.colorPrimaryDark))
                         .content("Sale recorded successfully.")
                         .positiveColor(getResources().getColor(R.color.colorAccent))
                         .positiveText("Ok")
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                                Intent intent = new Intent(CashPaymentActivity.this, AddCustomerActivity.class);
+                                intent.putExtra("order_no", order_no);
+                                startActivity(intent);
+
+                            }
+                        })
                         .show();
+
+
 
             }
         }) {
@@ -208,6 +221,7 @@ public class CashPaymentActivity extends AppCompatActivity {
 
     public void addresstoDelivery() {
 
+        Log.d("Chal raha hai", "shayad chal hi raha hai");
 
         String details = "{\"order\": {\"payments_attributes\": [{\"payment_method_id\": \"2\"}]},\"payment_source\": {\"2\": {}}}";
 
@@ -316,13 +330,15 @@ public class CashPaymentActivity extends AppCompatActivity {
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                                Log.d("this is", "dailog clicked");
                                 dialog.dismiss();
-                                cartToAddress();
+                                addresstoDelivery();
 
                             }
                         })
                         .negativeText("CANCEL")
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 dialog.dismiss();
