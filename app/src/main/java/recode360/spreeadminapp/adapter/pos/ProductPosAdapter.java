@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +56,7 @@ public class ProductPosAdapter extends RecyclerView.Adapter<ProductPosAdapter.My
     private List<Product> passList;
     private int[] array;
 
-    private Float priceTotal = 0.0f;
+    private BigDecimal priceTotal = BigDecimal.ZERO;
     private int qtyTotal = 0;
 
 
@@ -69,11 +70,11 @@ public class ProductPosAdapter extends RecyclerView.Adapter<ProductPosAdapter.My
 
     private EditPlayerAdapterCallback callback;
 
-    public Float getPriceTotal() {
+    public BigDecimal getPriceTotal() {
         return priceTotal;
     }
 
-    public void setPriceTotal(Float priceTotal) {
+    public void setPriceTotal(BigDecimal priceTotal) {
         this.priceTotal = priceTotal;
     }
 
@@ -145,7 +146,7 @@ public class ProductPosAdapter extends RecyclerView.Adapter<ProductPosAdapter.My
                         passList.add(pr);
                     }
 
-                    priceTotal = priceTotal + pr.getPrice().floatValue();
+                    priceTotal = priceTotal.add(pr.getPrice());
                     qtyTotal++;
                     holder.productQty.setText(Integer.toString(productList.get(position).getCart_qty()));
                 } else {
@@ -157,7 +158,7 @@ public class ProductPosAdapter extends RecyclerView.Adapter<ProductPosAdapter.My
                     productList.add(position, pr);
                     passList.add(pr);
                     qtyTotal++;
-                    priceTotal = priceTotal + pr.getPrice().floatValue();
+                    priceTotal = priceTotal.add(pr.getPrice());
                     holder.productQty.setText(Integer.toString(productList.get(position).getCart_qty()));
 
                 }
@@ -182,7 +183,7 @@ public class ProductPosAdapter extends RecyclerView.Adapter<ProductPosAdapter.My
                     productList.add(position, pr);
                     passList.add(pr);
                     qtyTotal--;
-                    priceTotal = priceTotal - pr.getPrice().floatValue();
+                    priceTotal = priceTotal.subtract(pr.getPrice());
 
                     holder.productQty.setText(Integer.toString(productList.get(position).getCart_qty()));
                 } else if (pr.getCart_qty() == 1) {
@@ -192,7 +193,7 @@ public class ProductPosAdapter extends RecyclerView.Adapter<ProductPosAdapter.My
                     productList.add(position, pr);
                     passList.remove(pr);
                     qtyTotal--;
-                    priceTotal = priceTotal - pr.getPrice().floatValue();
+                    priceTotal = priceTotal.subtract(pr.getPrice());
 
                     holder.productQty.setText(Integer.toString(productList.get(position).getCart_qty()));
 

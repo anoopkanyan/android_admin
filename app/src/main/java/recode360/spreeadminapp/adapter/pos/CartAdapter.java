@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import recode360.spreeadminapp.R;
@@ -50,7 +51,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
     }
 
 
-    private Float priceTotal = 0.0f;
+    private BigDecimal priceTotal = BigDecimal.ZERO;
     private int qtyTotal = 0;
 
 
@@ -64,11 +65,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 
     private EditPlayerAdapterCallback callback;
 
-    public Float getPriceTotal() {
+    public BigDecimal getPriceTotal() {
         return priceTotal;
     }
 
-    public void setPriceTotal(Float priceTotal) {
+    public void setPriceTotal(BigDecimal priceTotal) {
         this.priceTotal = priceTotal;
     }
 
@@ -117,7 +118,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 
         final Product product = productList.get(position);
 
-        priceTotal = priceTotal + (product.getPrice().floatValue() * product.getCart_qty());
+        priceTotal = priceTotal.add(product.getPrice().multiply(new BigDecimal(product.getCart_qty())));
         qtyTotal = qtyTotal + product.getCart_qty();
 
         //callback.deletePressed();
@@ -140,7 +141,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                     pr.setCart_qty(pr.getCart_qty() + 1);
                     productList.remove(position);
                     productList.add(position, pr);
-                    priceTotal = priceTotal + pr.getPrice().floatValue();
+                    priceTotal = priceTotal.add(pr.getPrice());
                     qtyTotal++;
                     holder.productQty.setText(Integer.toString(productList.get(position).getCart_qty()));
                     holder.productPrice.setText("$" + product.getPrice().toString() + "X" + Integer.toString(product.getCart_qty()));
@@ -154,7 +155,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                     productList.remove(position);
                     productList.add(position, pr);
                     qtyTotal++;
-                    priceTotal = priceTotal + pr.getPrice().floatValue();
+                    priceTotal = priceTotal.add(pr.getPrice());
                     holder.productQty.setText(Integer.toString(productList.get(position).getCart_qty()));
                     holder.productPrice.setText("$" + product.getPrice().toString() + "X" + Integer.toString(product.getCart_qty()));
                     holder.productPriceTotal.setText("$" + product.getCart_qty() * product.getPrice().floatValue());
@@ -179,7 +180,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                     productList.remove(position);
                     productList.add(position, pr);
                     qtyTotal--;
-                    priceTotal = priceTotal - pr.getPrice().floatValue();
+                    priceTotal = priceTotal.subtract(pr.getPrice());
 
                     holder.productQty.setText(Integer.toString(productList.get(position).getCart_qty()));
                     holder.productPrice.setText("$" + product.getPrice().toString() + "X" + Integer.toString(product.getCart_qty()));
@@ -196,7 +197,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
             public void onClick(View v) {
 
 
-                priceTotal = priceTotal - (product.getPrice().floatValue() * product.getCart_qty());
+                priceTotal = priceTotal.subtract(product.getPrice().multiply(new BigDecimal(product.getCart_qty())));
                 qtyTotal = qtyTotal - product.getCart_qty();
 
                 productList.remove(position);

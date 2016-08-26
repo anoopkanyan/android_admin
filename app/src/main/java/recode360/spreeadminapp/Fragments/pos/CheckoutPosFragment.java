@@ -72,6 +72,7 @@ public class CheckoutPosFragment extends Fragment implements SwipeRefreshLayout.
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View rootView = inflater.inflate(R.layout.fragment_checkout_pos, container, false);
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("POS");
@@ -101,8 +102,6 @@ public class CheckoutPosFragment extends Fragment implements SwipeRefreshLayout.
         cartView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Snackbar.make(v, "Going to cart_menu...", Snackbar.LENGTH_SHORT).show();
-
                 launchCartActivity();
             }
         });
@@ -161,7 +160,7 @@ public class CheckoutPosFragment extends Fragment implements SwipeRefreshLayout.
 
         // Making json object request
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                Config.URL_STORE + "/api/products.json?token=" + Config.API_KEY + "&per_page=200", null, new Response.Listener<JSONObject>() {
+                Config.URL_STORE + "/api/products.json?token=" + Config.API_KEY + "&per_page=2000", null, new Response.Listener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
