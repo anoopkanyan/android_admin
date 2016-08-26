@@ -109,7 +109,7 @@ public class OrderPosActivity extends AppCompatActivity implements CartAdapter.E
         Intent intent = new Intent(OrderPosActivity.this, OrderPosAddressActivity.class);
         intent.putExtras(information);
         intent.putExtra("quantity", adapter.getQtyTotal());
-        intent.putExtra("price", adapter.getPriceTotal());
+        intent.putExtra("price", adapter.getPriceTotal().toString());
         startActivity(intent);
 
     }

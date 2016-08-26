@@ -8,18 +8,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.ScrollView;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.AuthFailureError;
@@ -31,10 +23,10 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.github.aakira.expandablelayout.ExpandableRelativeLayout;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,9 +37,8 @@ import recode360.spreeadminapp.app.AppController;
 import recode360.spreeadminapp.app.Config;
 import recode360.spreeadminapp.models.Address;
 import recode360.spreeadminapp.models.Product;
-import recode360.spreeadminapp.models.State;
 
-public class OrderPosAddressActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, OrderPricesAdapter.EditPlayerAdapterCallback {
+public class OrderPosAddressActivity extends AppCompatActivity implements OrderPricesAdapter.EditPlayerAdapterCallback {
 
     private ExpandableRelativeLayout expandableLayout1;
     private SwitchCompat swt;
@@ -64,11 +55,14 @@ public class OrderPosAddressActivity extends AppCompatActivity implements Compou
     private TextView taxTotalView;
     private TextView shipTotalView;
 
-    private Float totalPrice = 0.00f;
+    private BigDecimal totalPrice = BigDecimal.ZERO;
     private int totalQuantity = 0;
-    private Float tax = 0.00f;
-    private Float shippingCost = 0.00f;
+    private BigDecimal tax = BigDecimal.ZERO;
+    private BigDecimal shippingCost = BigDecimal.ZERO;
 
+
+    /*
+    SHIPPING DISABLED FOR CURRENT VERSION
 
     private EditText firstName, lastName, addressLine1, addressLine2;
     private EditText city, pincode, phone;
@@ -79,9 +73,14 @@ public class OrderPosAddressActivity extends AppCompatActivity implements Compou
     private String TAG = "States List Request";
     private String tag_json_obj = "states list request";
     private ArrayList<State> statesList = new ArrayList<State>();
+
+
     //specific id to get all the united states
-    static String urlStates = "http://mystore-anupkanyan.cs50.io/api/countries/232.json";
+    //chnage it to the current store's URL
+    static String urlStates = Config.URL_STORE + "api/countries/232.json";
     private String[] stateNames;
+
+    */
 
 
     private Address newAddress;
@@ -95,7 +94,7 @@ public class OrderPosAddressActivity extends AppCompatActivity implements Compou
 
         Intent intent = this.getIntent();
         items = (ArrayList<Product>) intent.getSerializableExtra("products");
-        totalPrice = intent.getFloatExtra("price", 0.00f);
+        totalPrice = new BigDecimal(intent.getStringExtra("price"));
         totalQuantity = intent.getIntExtra("quantity", 0);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -115,10 +114,11 @@ public class OrderPosAddressActivity extends AppCompatActivity implements Compou
         recyclerView = (RecyclerView) findViewById(R.id.cart_pos_recycler_view);
         adapter = new OrderPricesAdapter(this, items);
 
-        totalPriceView.setText("$" + Float.toString(totalPrice));
+        //initially the subTotal and grandTotal are the same
+        totalPriceView.setText("$" + totalPrice.toString());
         totalQtyView.setText(Integer.toString(totalQuantity));
-        subTotalView.setText("$" + Float.toString(totalPrice));
-        grandTotalView.setText("$" + Float.toString(totalPrice));
+        subTotalView.setText("$" + totalPrice.toString());
+        grandTotalView.setText("$" + totalPrice.toString());
 
 
         // use a linear layout manager
@@ -128,9 +128,12 @@ public class OrderPosAddressActivity extends AppCompatActivity implements Compou
         adapter.notifyDataSetChanged();
         adapter.setCallback(this);
 
-
+        /*
         expandableLayout1 = (ExpandableRelativeLayout) findViewById(R.id.expandableLayout1);
         initAddressUI();
+        */
+
+
         createCartOrder();
 
         textPay.setOnClickListener(new View.OnClickListener() {
@@ -144,6 +147,7 @@ public class OrderPosAddressActivity extends AppCompatActivity implements Compou
         });
 
 
+        /*
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,9 +160,14 @@ public class OrderPosAddressActivity extends AppCompatActivity implements Compou
 
         });
 
+        */
+
 
     }
 
+
+
+    /*
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -187,6 +196,8 @@ public class OrderPosAddressActivity extends AppCompatActivity implements Compou
         expandableLayout1.toggle(); // toggle expand and collapse
     }
 
+    */
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -204,6 +215,11 @@ public class OrderPosAddressActivity extends AppCompatActivity implements Compou
 
         //do not do anything here
     }
+
+
+
+
+    /*
 
     private void initAddressUI() {
 
@@ -287,6 +303,7 @@ public class OrderPosAddressActivity extends AppCompatActivity implements Compou
         final MaterialDialog dialog = new MaterialDialog.Builder(this)
                 .content("loading")
                 .progress(true, 0)
+                .cancelable(false)
                 .show();
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
@@ -340,8 +357,9 @@ public class OrderPosAddressActivity extends AppCompatActivity implements Compou
 
         AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
 
-
     }
+
+    */
 
 
     public void createCartOrder() {
@@ -382,6 +400,7 @@ public class OrderPosAddressActivity extends AppCompatActivity implements Compou
                 .widgetColor(getResources().getColor(R.color.colorAccent))
                 .contentColor(getResources().getColor(R.color.colorPrimary))
                 .autoDismiss(false)
+                .cancelable(false)
                 .show();
 
         Log.d("Y O HO __", details);
@@ -397,7 +416,7 @@ public class OrderPosAddressActivity extends AppCompatActivity implements Compou
                         try {
                             order_no = response.getString("number");
                             //update the tax amounts
-                            tax = Float.valueOf(response.getString("tax_total"));
+                            tax = new BigDecimal(response.getString("tax_total"));
                             taxTotalView.setText(response.getString("display_tax_total"));
                             grandTotalView.setText(response.getString("display_total"));
                             totalPriceView.setText(response.getString("display_total"));
@@ -508,7 +527,7 @@ public class OrderPosAddressActivity extends AppCompatActivity implements Compou
                                 totalPriceView.setText(response.getString("display_total"));
                                 shipTotalView.setText(response.getString("display_ship_total"));
 
-                                shippingCost = Float.valueOf(response.getString("ship_total"));
+                                shippingCost = new BigDecimal(response.getString("ship_total"));
 
                                 updateState();
                             }
@@ -629,7 +648,7 @@ public class OrderPosAddressActivity extends AppCompatActivity implements Compou
         Intent intent = new Intent(OrderPosAddressActivity.this, PaymentPosActivity.class);
         intent.putExtras(information);
         intent.putExtra("quantity", totalQuantity);
-        intent.putExtra("price", totalPrice + shippingCost + tax);
+        intent.putExtra("price", (totalPrice.add(shippingCost)).add(tax));
         intent.putExtra("order_no", order_no);
         intent.putExtra("shipping_cost", shippingCost);
         intent.putExtra("tax", tax);
