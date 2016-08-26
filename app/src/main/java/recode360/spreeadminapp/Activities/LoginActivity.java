@@ -164,7 +164,16 @@ public class LoginActivity extends Activity {
                                     // For testing i am stroing name, email as follow
                                     // Use user real data
                                     try {
-                                        session.createLoginSession(response.getJSONObject("bill_address").getString("full_name"), username, response.getString("spree_api_key"), URL, password);
+
+                                        String name;
+                                        try {
+                                            name = response.getJSONObject("bill_address").getString("full_name");
+                                        } catch (Exception e) {
+
+                                            name = "Admin User";
+                                        }
+
+                                        session.createLoginSession(name, username, response.getString("spree_api_key"), URL, password);
                                         token = response.getString("spree_api_key");
                                     } catch (JSONException e) {
                                         e.printStackTrace();
