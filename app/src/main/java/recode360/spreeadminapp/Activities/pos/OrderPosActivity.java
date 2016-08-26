@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import recode360.spreeadminapp.R;
@@ -47,12 +48,16 @@ public class OrderPosActivity extends AppCompatActivity implements CartAdapter.E
         totalPriceView = (TextView) findViewById(R.id.cart_item_price);
         totalQtyView = (TextView) findViewById(R.id.cart_item_no);
 
-        totalPriceView.setText(Float.toString(intent.getFloatExtra("price", 0.00f)));
+
+        totalPriceView.setText((intent.getStringExtra("price")));
         totalQtyView.setText(Integer.toString(intent.getIntExtra("quantity", 0)));
 
 
         recyclerView = (RecyclerView) findViewById(R.id.cart_pos_recycler_view);
         adapter = new CartAdapter(this, items);
+
+        adapter.setPriceTotal(new BigDecimal(intent.getStringExtra("price")));
+        adapter.setQtyTotal(intent.getIntExtra("quantity", 0));
 
         // use a linear layout manager
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
