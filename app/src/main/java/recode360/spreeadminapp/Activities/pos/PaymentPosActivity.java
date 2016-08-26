@@ -49,7 +49,7 @@ public class PaymentPosActivity extends AppCompatActivity {
     private CardView cashCard;
     private TextView cart_total;
     private ArrayList<Product> items;
-    private Float totalPrice = 0.00f;
+    private BigDecimal totalPrice = BigDecimal.ZERO;
     private int totalQuantity = 0;
     private String order_no;
 
@@ -76,7 +76,7 @@ public class PaymentPosActivity extends AppCompatActivity {
 
         Intent intent = this.getIntent();
         items = (ArrayList<Product>) intent.getSerializableExtra("products");
-        totalPrice = intent.getFloatExtra("price", 0.00f);
+        totalPrice = new BigDecimal(intent.getStringExtra("price"));
         totalQuantity = intent.getIntExtra("quantity", 0);
         order_no = intent.getStringExtra("order_no");
 
@@ -274,7 +274,7 @@ public class PaymentPosActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         Log.d("PAYMENT CREATED:", response.toString());
                         Intent intent = new Intent(PaymentPosActivity.this, AddCustomerActivity.class);
-                        intent.putExtra("order_no",order_no);
+                        intent.putExtra("order_no", order_no);
                         startActivity(intent);
                         dialog.cancel();
                     }

@@ -648,7 +648,9 @@ public class OrderPosAddressActivity extends AppCompatActivity implements OrderP
         Intent intent = new Intent(OrderPosAddressActivity.this, PaymentPosActivity.class);
         intent.putExtras(information);
         intent.putExtra("quantity", totalQuantity);
-        intent.putExtra("price", (totalPrice.add(shippingCost)).add(tax));
+
+        //pass the sum of three prices as a String instead of BigDecimal
+        intent.putExtra("price", (totalPrice.add(shippingCost)).add(tax).toString());
         intent.putExtra("order_no", order_no);
         intent.putExtra("shipping_cost", shippingCost);
         intent.putExtra("tax", tax);
