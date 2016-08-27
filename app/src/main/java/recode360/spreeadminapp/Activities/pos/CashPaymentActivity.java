@@ -31,6 +31,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,9 +43,9 @@ public class CashPaymentActivity extends AppCompatActivity {
 
     private String order_no;
     private String order_state;
-    private Float totalPrice;
+    private BigDecimal totalPrice;
     private EditText totalPriceView;
-    private Float totalPaid, changeAmt;
+    private BigDecimal totalPaid, changeAmt;
     private Toolbar toolbar;
     private Button payButton;
 
@@ -61,7 +62,7 @@ public class CashPaymentActivity extends AppCompatActivity {
 
         Intent intent = this.getIntent();
         order_no = intent.getStringExtra("order_no");
-        totalPrice = intent.getFloatExtra("price", 0.00f);
+        totalPrice = new BigDecimal(intent.getStringExtra("price"));
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -209,7 +210,6 @@ public class CashPaymentActivity extends AppCompatActivity {
                         .show();
 
 
-
             }
         }) {
 
@@ -318,9 +318,9 @@ public class CashPaymentActivity extends AppCompatActivity {
             case R.id.action_proceed:
 
                 ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(totalPriceView.getWindowToken(), 0);
-                totalPaid = Float.parseFloat(totalPriceView.getText().toString());
+                totalPaid = new BigDecimal(totalPriceView.getText().toString());
 
-                changeAmt = totalPaid - totalPrice;
+                changeAmt = totalPaid.subtract(totalPrice);
                 MaterialDialog dialog = new MaterialDialog.Builder(CashPaymentActivity.this)
                         .title("Cash Payment")
                         .titleColor(getResources().getColor(R.color.colorPrimaryDark))

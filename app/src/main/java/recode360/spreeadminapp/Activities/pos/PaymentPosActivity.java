@@ -135,7 +135,7 @@ public class PaymentPosActivity extends AppCompatActivity {
 
         Log.d("TOTAL PRICE IS", totalPrice.toString());
         Intent intent = new Intent(PaymentPosActivity.this, CashPaymentActivity.class);
-        intent.putExtra("price", totalPrice);
+        intent.putExtra("price", totalPrice.toString());
         intent.putExtra("order_no", order_no);
         startActivity(intent);
 
