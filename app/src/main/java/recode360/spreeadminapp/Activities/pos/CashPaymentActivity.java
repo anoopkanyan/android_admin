@@ -123,11 +123,6 @@ public class CashPaymentActivity extends AppCompatActivity {
 
     }
 
-    //updates the Order and moves from the cart state to the Address state
-    public void cartToAddress() {
-        addresstoDelivery();
-    }
-
 
     public void updateState() {
         String tag_json_obj = "Checkouts";
@@ -149,27 +144,12 @@ public class CashPaymentActivity extends AppCompatActivity {
                         try {
                             order_state = response.getString("state");
 
-                            if (order_state.toString().equals("address")) {
+                            Log.d(order_state, response.toString());
+
+                            if (order_state.toString().equals("payment")) {
                                 addresstoDelivery();
+
                             } else if (order_state.toString().equals("complete")) {
-
-                                MaterialDialog dialog = new MaterialDialog.Builder(CashPaymentActivity.this)
-                                        .title(order_no.toString())
-                                        .titleColor(getResources().getColor(R.color.colorPrimaryDark))
-                                        .content("Sale recorded successfully.")
-                                        .positiveColor(getResources().getColor(R.color.colorAccent))
-                                        .positiveText("Ok")
-                                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                            @Override
-                                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-
-                                                Intent intent = new Intent(CashPaymentActivity.this, AddCustomerActivity.class);
-                                                intent.putExtra("order_no", order_no);
-                                                startActivity(intent);
-
-                                            }
-                                        })
-                                        .show();
 
 
                             } else {
@@ -191,25 +171,6 @@ public class CashPaymentActivity extends AppCompatActivity {
                 pDialog.hide();
 
 
-                MaterialDialog dialog = new MaterialDialog.Builder(CashPaymentActivity.this)
-                        .title(order_no.toString())
-                        .titleColor(getResources().getColor(R.color.colorPrimaryDark))
-                        .content("Sale recorded successfully.")
-                        .positiveColor(getResources().getColor(R.color.colorAccent))
-                        .positiveText("Ok")
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-
-                                Intent intent = new Intent(CashPaymentActivity.this, AddCustomerActivity.class);
-                                intent.putExtra("order_no", order_no);
-                                startActivity(intent);
-
-                            }
-                        })
-                        .show();
-
-
             }
         }) {
 
@@ -221,9 +182,7 @@ public class CashPaymentActivity extends AppCompatActivity {
 
     public void addresstoDelivery() {
 
-        Log.d("Chal raha hai", "shayad chal hi raha hai");
-
-        String details = "{\"order\": {\"payments_attributes\": [{\"payment_method_id\": \"2\"}]},\"payment_source\": {\"2\": {}}}";
+        String details = "{\"order\": {\"payments_attributes\": [{\"payment_method_id\": \"3\"}]},\"payment_source\": {\"3\": {}}}";
 
 
         JSONObject jsonBody = null;
@@ -235,7 +194,7 @@ public class CashPaymentActivity extends AppCompatActivity {
 
 
         String tag_json_obj = "order_update_request";
-        String url = Config.URL_STORE + "/api/orders/" + order_no + ".json?token=" + Config.API_KEY;
+        String url = Config.URL_STORE + "/api/checkouts/" + order_no + ".json?token=" + Config.API_KEY;
 
 
         final MaterialDialog pDialog = new MaterialDialog.Builder(this)
@@ -256,8 +215,12 @@ public class CashPaymentActivity extends AppCompatActivity {
 
                         try {
                             order_state = response.getString("state");
-                            updateState();
+                            String payment_id = response.getJSONArray("payments").getJSONObject(0).getString("id");
                             pDialog.hide();
+
+                            capturePayments(payment_id);
+
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -268,7 +231,6 @@ public class CashPaymentActivity extends AppCompatActivity {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.d("Add line items to cart", "Error: " + error.getMessage());
                 // Log.e(url, details);
 
                 // hide the progress dialog
@@ -324,16 +286,14 @@ public class CashPaymentActivity extends AppCompatActivity {
                 MaterialDialog dialog = new MaterialDialog.Builder(CashPaymentActivity.this)
                         .title("Cash Payment")
                         .titleColor(getResources().getColor(R.color.colorPrimaryDark))
-                        .content("Total Paid     $" + totalPaid + "\n" + "Return         $" + changeAmt.toString().substring(0, changeAmt.toString().indexOf(".") + 2))
+                        .content("Total Paid     $" + totalPaid + "\n" + "Return          $" + changeAmt.toString().substring(0, changeAmt.toString().indexOf(".") + 2))
                         .positiveText("CONFIRM")
                         .positiveColor(getResources().getColor(R.color.accent))
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-
-                                Log.d("this is", "dailog clicked");
                                 dialog.dismiss();
-                                addresstoDelivery();
+                                updateState();
 
                             }
                         })
@@ -358,6 +318,64 @@ public class CashPaymentActivity extends AppCompatActivity {
         }
     }
 
+
+    //makes a request to capture a Cash Payment, so that the order appears in the list of Orders
+    public void capturePayments(String payment_id) {
+
+        String tag_json_obj = "Payment Capture";
+        String url = Config.URL_STORE + "/api/orders/" + order_no + "/payments/" + payment_id + "/capture?token=" + Config.API_KEY;
+
+        final MaterialDialog pDialog = new MaterialDialog.Builder(this)
+                .content("Recording payment")
+                .widgetColor(getResources().getColor(R.color.colorAccent))
+                .contentColor(getResources().getColor(R.color.colorPrimary))
+                .progress(true, 0)
+                .show();
+
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.PUT,
+                url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        pDialog.hide();
+                        //show dialog if the payment is successful
+                        Log.d(order_state, response.toString());
+
+                        MaterialDialog dialog = new MaterialDialog.Builder(CashPaymentActivity.this)
+                                .title(order_no.toString())
+                                .titleColor(getResources().getColor(R.color.colorPrimaryDark))
+                                .content("Sale recorded successfully.")
+                                .positiveColor(getResources().getColor(R.color.colorAccent))
+                                .positiveText("Ok")
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                                        Intent intent = new Intent(CashPaymentActivity.this, AddCustomerActivity.class);
+                                        intent.putExtra("order_no", order_no);
+                                        startActivity(intent);
+
+                                    }
+                                })
+                                .show();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("Cash Payment Activity", "Error: " + error.getMessage());
+                pDialog.hide();
+
+
+            }
+        }) {
+
+        };
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(req, tag_json_obj);
+
+
+    }
 
 }
 
