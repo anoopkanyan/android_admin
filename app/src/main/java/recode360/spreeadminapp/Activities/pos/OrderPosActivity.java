@@ -49,7 +49,7 @@ public class OrderPosActivity extends AppCompatActivity implements CartAdapter.E
         totalQtyView = (TextView) findViewById(R.id.cart_item_no);
 
 
-        totalPriceView.setText((intent.getStringExtra("price")));
+        totalPriceView.setText("$" + (intent.getStringExtra("price")));
         totalQtyView.setText(Integer.toString(intent.getIntExtra("quantity", 0)));
 
 

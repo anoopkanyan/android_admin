@@ -3,6 +3,7 @@ package recode360.spreeadminapp.Activities.pos;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -52,6 +54,7 @@ public class PaymentPosActivity extends AppCompatActivity {
     private BigDecimal totalPrice = BigDecimal.ZERO;
     private int totalQuantity = 0;
     private String order_no;
+    private String order_state;
 
     private String url;
     private String details;
@@ -228,7 +231,7 @@ public class PaymentPosActivity extends AppCompatActivity {
 
                         //update backend about the payment and show activity for user
 
-                        updateStore();
+                        updateState();
 
 
                     } catch (JSONException e) {
@@ -249,43 +252,60 @@ public class PaymentPosActivity extends AppCompatActivity {
     private void updateStore() {
 
 
-        url = Config.URL_STORE + "/api/orders/" + order_no + "/payments?payment[payment_method_id]=1&payment[amount]=" + amount.toString() +
-                "&token=" + Config.API_KEY;
-
-        String tag_json_obj = "json_obj_req";
+        String details = "{\"order\": {\"payments_attributes\": [{\"payment_method_id\": \"3\"}]},\"payment_source\": {\"3\": {}}}";
 
 
-        final MaterialDialog dialog = new MaterialDialog.Builder(PaymentPosActivity.this)
-                .content("Processing")
-                .progress(true, 0)
-                .titleColor(getResources().getColor(R.color.colorPrimaryDark))
+        JSONObject jsonBody = null;
+        try {
+            jsonBody = new JSONObject(details);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        String tag_json_obj = "order_update_request";
+        String url = Config.URL_STORE + "/api/checkouts/" + order_no + ".json?token=" + Config.API_KEY;
+
+
+        final MaterialDialog pDialog = new MaterialDialog.Builder(this)
+                .content("Recording payment")
                 .widgetColor(getResources().getColor(R.color.colorAccent))
                 .contentColor(getResources().getColor(R.color.colorPrimary))
-                .autoDismiss(false)
-                .cancelable(false)
+                .progress(true, 0)
                 .show();
 
 
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
-                url, null,
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.PUT,
+                url, jsonBody,
                 new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("PAYMENT CREATED:", response.toString());
-                        Intent intent = new Intent(PaymentPosActivity.this, AddCustomerActivity.class);
-                        intent.putExtra("order_no", order_no);
-                        startActivity(intent);
-                        dialog.cancel();
+                        Log.d("Adding payment", response.toString());
+
+                        try {
+                            order_state = response.getString("state");
+                            String payment_id = response.getJSONArray("payments").getJSONObject(0).getString("id");
+                            pDialog.hide();
+
+                            capturePayments(payment_id);
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
                     }
                 }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.d("Paypal Payment", "Error: " + error.getMessage());
-                dialog.cancel();
+                // Log.e(url, details);
 
-
+                // hide the progress dialog
+                //pDialog.hide();
+                pDialog.cancel();
             }
         }) {
             @Override
@@ -318,5 +338,123 @@ public class PaymentPosActivity extends AppCompatActivity {
     }
 
 
+    public void updateState() {
+        String tag_json_obj = "Checkouts";
+        String url = Config.URL_STORE + "/api/checkouts/" + order_no + "/next.json?token=" + Config.API_KEY;
+
+        final MaterialDialog pDialog = new MaterialDialog.Builder(this)
+                .content("Recording payment")
+                .widgetColor(getResources().getColor(R.color.colorAccent))
+                .contentColor(getResources().getColor(R.color.colorPrimary))
+                .progress(true, 0)
+                .show();
+
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.PUT,
+                url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        try {
+                            order_state = response.getString("state");
+
+                            Log.d(order_state, response.toString());
+
+                            if (order_state.toString().equals("payment")) {
+                                updateStore();
+
+                            } else if (order_state.toString().equals("complete")) {
+
+
+                            } else {
+                                //keep on updating the state with default values
+                                updateState();
+
+                            }
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        pDialog.hide();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("Cash Payment Activity", "Error: " + error.getMessage());
+                pDialog.hide();
+
+
+            }
+        }) {
+
+        };
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(req, tag_json_obj);
+    }
+
+
+    //makes a request to capture a Cash Payment, so that the order appears in the list of Orders
+    public void capturePayments(String payment_id) {
+
+        String tag_json_obj = "Payment Capture";
+        String url = Config.URL_STORE + "/api/orders/" + order_no + "/payments/" + payment_id + "/capture?token=" + Config.API_KEY;
+
+        final MaterialDialog pDialog = new MaterialDialog.Builder(this)
+                .content("Recording payment")
+                .widgetColor(getResources().getColor(R.color.colorAccent))
+                .contentColor(getResources().getColor(R.color.colorPrimary))
+                .progress(true, 0)
+                .show();
+
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.PUT,
+                url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        pDialog.hide();
+                        //show dialog if the payment is successful
+                        Log.d(order_state, response.toString());
+
+                        MaterialDialog dialog = new MaterialDialog.Builder(PaymentPosActivity.this)
+                                .title(order_no.toString())
+                                .titleColor(getResources().getColor(R.color.colorPrimaryDark))
+                                .content("Sale recorded successfully.")
+                                .positiveColor(getResources().getColor(R.color.colorAccent))
+                                .positiveText("Ok")
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                                        Intent intent = new Intent(PaymentPosActivity.this, AddCustomerActivity.class);
+                                        intent.putExtra("order_no", order_no);
+                                        startActivity(intent);
+
+                                    }
+                                })
+                                .show();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("Cash Payment Activity", "Error: " + error.getMessage());
+                pDialog.hide();
+
+
+            }
+        }) {
+
+        };
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(req, tag_json_obj);
+
+
+    }
+
+
 }
+
+
+
 
