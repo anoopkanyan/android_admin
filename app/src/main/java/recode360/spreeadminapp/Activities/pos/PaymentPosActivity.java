@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -251,9 +252,7 @@ public class PaymentPosActivity extends AppCompatActivity {
 
     private void updateStore() {
 
-
         String details = "{\"order\": {\"payments_attributes\": [{\"payment_method_id\": \"3\"}]},\"payment_source\": {\"3\": {}}}";
-
 
         JSONObject jsonBody = null;
         try {
@@ -452,6 +451,17 @@ public class PaymentPosActivity extends AppCompatActivity {
 
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                super.onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 }
 

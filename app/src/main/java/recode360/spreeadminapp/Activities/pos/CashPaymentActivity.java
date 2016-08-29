@@ -310,6 +310,11 @@ public class CashPaymentActivity extends AppCompatActivity {
 
                 return true;
 
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                super.onBackPressed();
+                return true;
+
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
@@ -376,6 +381,8 @@ public class CashPaymentActivity extends AppCompatActivity {
 
 
     }
+
+
 
 }
 
