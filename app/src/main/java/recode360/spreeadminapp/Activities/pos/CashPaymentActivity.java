@@ -283,30 +283,43 @@ public class CashPaymentActivity extends AppCompatActivity {
                 totalPaid = new BigDecimal(totalPriceView.getText().toString());
 
                 changeAmt = totalPaid.subtract(totalPrice);
-                MaterialDialog dialog = new MaterialDialog.Builder(CashPaymentActivity.this)
-                        .title("Cash Payment")
-                        .titleColor(getResources().getColor(R.color.colorPrimaryDark))
-                        .content("Total Paid     $" + totalPaid + "\n" + "Return          $" + changeAmt.toString().substring(0, changeAmt.toString().indexOf(".") + 2))
-                        .positiveText("CONFIRM")
-                        .positiveColor(getResources().getColor(R.color.accent))
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                dialog.dismiss();
-                                updateState();
 
-                            }
-                        })
-                        .negativeText("CANCEL")
-                        .onNegative(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                dialog.dismiss();
-                                ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+                if (changeAmt.compareTo(BigDecimal.ZERO) >= 0) {
 
-                            }
-                        })
-                        .show();
+                    MaterialDialog dialog = new MaterialDialog.Builder(CashPaymentActivity.this)
+                            .title("Cash Payment")
+                            .titleColor(getResources().getColor(R.color.colorPrimaryDark))
+                            .content("Total Paid     $" + totalPaid + "\n" + "Return           $" + changeAmt.toString().substring(0, changeAmt.toString().indexOf(".") + 2))
+                            .positiveText("CONFIRM")
+                            .positiveColor(getResources().getColor(R.color.accent))
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    dialog.dismiss();
+                                    updateState();
+
+                                }
+                            })
+                            .negativeText("CANCEL")
+                            .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    dialog.dismiss();
+                                    ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+
+                                }
+                            })
+                            .show();
+                } else {
+                    MaterialDialog dialog = new MaterialDialog.Builder(this)
+                            .title("Stop")
+                            .content("Cash paid must be greater than or equal to the total bill.")
+                            .positiveText("Ok")
+                            .positiveColor(getResources().getColor(R.color.accent))
+                            .titleColor(getResources().getColor(R.color.accent))
+                            .show();
+
+                }
 
                 return true;
 
@@ -381,7 +394,6 @@ public class CashPaymentActivity extends AppCompatActivity {
 
 
     }
-
 
 
 }
