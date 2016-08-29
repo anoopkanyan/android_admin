@@ -51,6 +51,9 @@ public class AddCustomerActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.bs_ic_clear);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         txtFirstName = (EditText) findViewById(R.id.textFirstName);
         txtLastName = (EditText) findViewById(R.id.textLastname);
         txtEmail = (EditText) findViewById(R.id.textEmail);

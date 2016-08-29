@@ -7,13 +7,10 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,6 +46,8 @@ public class CashPaymentActivity extends AppCompatActivity {
     private BigDecimal totalPaid, changeAmt;
     private Toolbar toolbar;
     private Button payButton;
+    private double parsed;
+    private boolean changed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,13 +70,14 @@ public class CashPaymentActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("PAY $" + totalPrice.toString());
 
 
-        totalPriceView.setText("0.00");
-        totalPriceView.setSelection(4);
+        totalPriceView.setText("$" + totalPrice.toString());
+        totalPriceView.setSelection(totalPriceView.getText().length());
 
 
         totalPriceView.addTextChangedListener(new TextWatcher() {
 
             int count = -1;
+            private String current = "";
 
             public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
 
@@ -86,39 +87,30 @@ public class CashPaymentActivity extends AppCompatActivity {
 
             }
 
-            public void afterTextChanged(Editable arg0) {
-                if (arg0.length() > 0) {
-                    String str = totalPriceView.getText().toString();
-                    totalPriceView.setOnKeyListener(new View.OnKeyListener() {
-                        public boolean onKey(View v, int keyCode, KeyEvent event) {
-                            if (keyCode == KeyEvent.KEYCODE_DEL) {
-                                count--;
-                                InputFilter[] fArray = new InputFilter[1];
-                                fArray[0] = new InputFilter.LengthFilter(100);
-                                totalPriceView.setFilters(fArray);
-                                //change the edittext's maximum length to 100.
-                                //If we didn't change this the edittext's maximum length will
-                                //be number of digits we previously entered.
-                            }
-                            return false;
-                        }
-                    });
-                    char t = str.charAt(arg0.length() - 1);
-                    if (t == '.') {
-                        count = 0;
-                    }
-                    if (count >= 0) {
-                        if (count == 2) {
-                            InputFilter[] fArray = new InputFilter[1];
-                            fArray[0] = new InputFilter.LengthFilter(arg0.length());
-                            totalPriceView.setFilters(fArray);
-                            //prevent the edittext from accessing digits
-                            //by setting maximum length as total number of digits we typed till now.
-                        }
-                        count++;
-                    }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                changed = true;
+
+                if (!s.toString().equals(current)) {
+                    totalPriceView.removeTextChangedListener(this);
+
+                    String cleanString = s.toString().replaceAll("[$,.]", "");
+
+                    parsed = Double.parseDouble(cleanString);
+                    String formatted = NumberFormat.getCurrencyInstance().format((parsed / 100));
+
+                    current = formatted;
+                    totalPriceView.setText(formatted);
+                    totalPriceView.setSelection(formatted.length());
+
+                    totalPriceView.addTextChangedListener(this);
                 }
+
             }
+
+
         });
 
     }
@@ -280,11 +272,17 @@ public class CashPaymentActivity extends AppCompatActivity {
             case R.id.action_proceed:
 
                 ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(totalPriceView.getWindowToken(), 0);
-                totalPaid = new BigDecimal(totalPriceView.getText().toString());
+
+                if (changed) {
+                    totalPaid = new BigDecimal(parsed);
+                    totalPaid = totalPaid.divide(new BigDecimal(100));
+                } else {
+                    totalPaid = totalPrice;
+                }
 
                 changeAmt = totalPaid.subtract(totalPrice);
 
-                if (changeAmt.compareTo(BigDecimal.ZERO) >= 0) {
+                if (changeAmt.compareTo(BigDecimal.ZERO) != -1) {
 
                     MaterialDialog dialog = new MaterialDialog.Builder(CashPaymentActivity.this)
                             .title("Cash Payment")
