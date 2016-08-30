@@ -1,6 +1,5 @@
 package recode360.spreeadminapp.Activities.pos;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -53,6 +53,7 @@ public class AddCustomerActivity extends AppCompatActivity {
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.bs_ic_clear);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Add Customer");
 
         txtFirstName = (EditText) findViewById(R.id.textFirstName);
         txtLastName = (EditText) findViewById(R.id.textLastname);
@@ -76,6 +77,12 @@ public class AddCustomerActivity extends AppCompatActivity {
                 updateCustomer();
                 return true;
 
+            case android.R.id.home:
+                Intent intent = new Intent(AddCustomerActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                return true;
+
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
@@ -94,11 +101,14 @@ public class AddCustomerActivity extends AppCompatActivity {
         // Tag used to cancel the request
         final String tag_json_obj = "customer_update_request";
 
-        String url = Config.URL_STORE + "/api/pos/associate/" + order_no + "?token=" + Config.API_KEY+"&new_email="+email;
+        String url = Config.URL_STORE + "/api/pos/associate/" + order_no + "?token=" + Config.API_KEY + "&new_email=" + email;
 
-        final ProgressDialog pDialog = new ProgressDialog(this);
-        pDialog.setMessage("Loading...");
-        pDialog.show();
+        final MaterialDialog pDialog = new MaterialDialog.Builder(this)
+                .content("Loading...")
+                .widgetColor(getResources().getColor(R.color.colorAccent))
+                .contentColor(getResources().getColor(R.color.colorPrimary))
+                .progress(true, 0)
+                .show();
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
                 url, null,
@@ -109,7 +119,7 @@ public class AddCustomerActivity extends AppCompatActivity {
                         Log.d(tag_json_obj, response.toString());
                         pDialog.hide();
 
-                        Intent intent = new Intent(AddCustomerActivity.this,MainActivity.class);
+                        Intent intent = new Intent(AddCustomerActivity.this, MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                     }

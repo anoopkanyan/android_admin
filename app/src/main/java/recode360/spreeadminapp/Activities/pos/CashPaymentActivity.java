@@ -2,6 +2,7 @@ package recode360.spreeadminapp.Activities.pos;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -58,6 +59,7 @@ public class CashPaymentActivity extends AppCompatActivity {
 
 
         totalPriceView = (EditText) findViewById(R.id.cash_price);
+        totalPriceView.setRawInputType(Configuration.KEYBOARD_12KEY);
 
 
         Intent intent = this.getIntent();
@@ -278,6 +280,7 @@ public class CashPaymentActivity extends AppCompatActivity {
                     totalPaid = totalPaid.divide(new BigDecimal(100));
                 } else {
                     totalPaid = totalPrice;
+
                 }
 
                 changeAmt = totalPaid.subtract(totalPrice);

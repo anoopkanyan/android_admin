@@ -50,7 +50,7 @@
                 android:layout_toRightOf="@+id/cash_image"
                 android:gravity="center_vertical"
                 android:paddingBottom="8dp"
-                android:text="CASH (USD)"
+                android:text="CASH "
                 android:textSize="17dp" />
 
             <EditText
@@ -62,7 +62,6 @@
                 android:layout_margin="16dp"
                 android:background="@null"
                 android:gravity="center_vertical"
-                android:inputType="numberDecimal"
                 android:paddingBottom="8dp"
                 android:textColor="@color/colorAccent"
                 android:textSize="17dp" />
