@@ -183,7 +183,8 @@
         <activity
             android:name=".Activities.pos.AddCustomerActivity"
             android:label="@string/title_activity_add_customer"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".Activities.pos.ShippingPOSActivity"></activity>
     </application>
 
 </manifest>

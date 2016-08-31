@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.math.BigDecimal;
@@ -31,6 +32,7 @@ public class OrderPosActivity extends AppCompatActivity implements CartAdapter.E
     private TextView subTotalView;
     private int done = 0;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +49,7 @@ public class OrderPosActivity extends AppCompatActivity implements CartAdapter.E
 
         totalPriceView = (TextView) findViewById(R.id.cart_item_price);
         totalQtyView = (TextView) findViewById(R.id.cart_item_no);
+
 
 
         totalPriceView.setText("$" + (intent.getStringExtra("price")));
@@ -76,6 +79,7 @@ public class OrderPosActivity extends AppCompatActivity implements CartAdapter.E
 
             }
         });
+
 
 
     }

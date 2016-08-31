@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -54,6 +55,9 @@ public class OrderPosAddressActivity extends AppCompatActivity implements OrderP
     private TextView grandTotalView;
     private TextView taxTotalView;
     private TextView shipTotalView;
+
+    private Button shipping_button;
+
 
     private BigDecimal totalPrice = BigDecimal.ZERO;
     private int totalQuantity = 0;
@@ -109,6 +113,7 @@ public class OrderPosAddressActivity extends AppCompatActivity implements OrderP
         grandTotalView = (TextView) findViewById(R.id.total);
         taxTotalView = (TextView) findViewById(R.id.tax_total);
         shipTotalView = (TextView) findViewById(R.id.ship_total);
+        shipping_button = (Button) findViewById(R.id.shippingButton);
 
 
         recyclerView = (RecyclerView) findViewById(R.id.cart_pos_recycler_view);
@@ -145,6 +150,16 @@ public class OrderPosAddressActivity extends AppCompatActivity implements OrderP
             }
 
         });
+
+
+        shipping_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(OrderPosAddressActivity.this, ShippingPOSActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
 
         /*

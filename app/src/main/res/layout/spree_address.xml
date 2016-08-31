@@ -22,7 +22,6 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/margin_5dp"
                 android:text="All fields are mandatory"
-
                 ></TextView>
 
 
@@ -132,17 +131,6 @@
                 android:layout_marginRight="@dimen/margin_35dp"
                 android:text="Minimum 10 digits"></TextView>
 
-            <Button
-                android:id="@+id/fragment_address_save_btn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:elevation="7dp"
-                android:layout_gravity="right"
-                android:layout_margin="@dimen/margin_35dp"
-                android:background="@color/colorAccent"
-                android:text="Update"
-                android:textColor="@color/white">
-            </Button>
         </LinearLayout>
     </ScrollView>
 
