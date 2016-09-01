@@ -27,7 +27,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import recode360.spreeadminapp.R;
@@ -421,16 +420,6 @@ public class LoginActivity extends Activity {
                             e.printStackTrace();
                         }
 
-
-                        Log.d("Reading: ", "Reading all contacts..");
-                        List<State> states = database.getAllStates();
-
-                        for (State state : states) {
-                            String log = "Id: " + Integer.toString(state.getId()) + " ,Name: " + state.getName();
-                            // Writing Contacts to log
-                            Log.d("Name: ", log);
-
-                        }
 
                         dialog.dismiss();
 

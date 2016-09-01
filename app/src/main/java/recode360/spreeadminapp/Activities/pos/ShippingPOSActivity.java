@@ -5,10 +5,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+
+import java.util.List;
 
 import recode360.spreeadminapp.R;
+import recode360.spreeadminapp.models.State;
+import recode360.spreeadminapp.utils.DatabaseHandler;
+
 
 public class ShippingPOSActivity extends AppCompatActivity {
+
+    private DatabaseHandler database;
+    private List<State> states;
+    private String[] stateNames;
+
+    private Spinner stateSpinner;
 
 
     @Override
@@ -22,6 +35,10 @@ public class ShippingPOSActivity extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.bs_ic_clear);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Add Address");
+
+        stateSpinner = (Spinner) findViewById(R.id.fragment_address_state_spinner);
+
+        setStateSpinnerAdapter();
 
     }
 
@@ -52,5 +69,24 @@ public class ShippingPOSActivity extends AppCompatActivity {
         }
     }
 
+
+    private void setStateSpinnerAdapter() {
+
+        database = new DatabaseHandler(this);
+        states = database.getAllStates();
+        stateNames = new String[states.size()];
+
+        int i = 0;
+        for (State state : states) {
+            stateNames[i] = state.getName();
+            i++;
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(ShippingPOSActivity.this, android.R.layout.simple_spinner_item, stateNames);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        stateSpinner.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+
+    }
 
 }
