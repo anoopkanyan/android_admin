@@ -17,19 +17,21 @@ import recode360.spreeadminapp.models.State;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
+
     // All Static variables
     // Database Version
     private static final int DATABASE_VERSION = 1;
 
     // Database Name
-    private static final String DATABASE_NAME = "cacheData";
+    private static final String DATABASE_NAME = "cacheManager";
 
     // States table name
     private static final String TABLE_STATES = "states";
 
     // States Table Columns names
-    private static final String KEY_ID = "state_id";
-    private static final String KEY_NAME = "state_name";
+    private static final String KEY_ID = "id";
+    private static final String KEY_NAME = "name";
+    private static final String KEY_STATE_ID = "state_id";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -38,9 +40,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Creating Tables
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_STATES + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT" + ")";
-        db.execSQL(CREATE_CONTACTS_TABLE);
+        String CREATE_STATES_TABLE = "CREATE TABLE " + TABLE_STATES + "("
+                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
+                + KEY_STATE_ID + " TEXT" + ")";
+        db.execSQL(CREATE_STATES_TABLE);
     }
 
     // Upgrading database
@@ -57,35 +60,33 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * All CRUD(Create, Read, Update, Delete) Operations
      */
 
-    // Adding new state
-    void addState(State state) {
+    // Adding a new state
+    public void addState(State state) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(KEY_NAME, state.getName()); // State Name
-        values.put(KEY_ID, state.getId()); // State ID
+        values.put(KEY_STATE_ID, Integer.toString(state.getId())); // State Id
 
         // Inserting Row
         db.insert(TABLE_STATES, null, values);
         db.close(); // Closing database connection
     }
 
-    // Getting a single state
-    State getState(int id) {
+    // Getting single state
+    public State getState(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_STATES, new String[]{KEY_ID,
-                        KEY_NAME}, KEY_ID + "=?",
+                        KEY_NAME, KEY_STATE_ID}, KEY_ID + "=?",
                 new String[]{String.valueOf(id)}, null, null, null, null);
         if (cursor != null)
             cursor.moveToFirst();
 
         State state = new State();
 
-        state.setId(Integer.parseInt(cursor.getString(0)));
         state.setName(cursor.getString(1));
-
-
+        state.setId(Integer.parseInt(cursor.getString(2)));
         // return state
         return state;
     }
@@ -103,9 +104,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 State state = new State();
-                state.setId(Integer.parseInt(cursor.getString(0)));
                 state.setName(cursor.getString(1));
-
+                state.setId(Integer.parseInt(cursor.getString(2)));
                 // Adding state to list
                 stateList.add(state);
             } while (cursor.moveToNext());
@@ -121,14 +121,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(KEY_NAME, state.getName());
-        values.put(KEY_ID, state.getId());
+        values.put(KEY_STATE_ID, state.getId());
 
         // updating row
+        //to be updated to work perfectly, use something else instead of the ids
         return db.update(TABLE_STATES, values, KEY_ID + " = ?",
                 new String[]{String.valueOf(state.getId())});
     }
 
     // Deleting single state
+    //to be updated to work perfectly, use something else instead of the ids
     public void deleteState(State state) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_STATES, KEY_ID + " = ?",

@@ -22,16 +22,20 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import recode360.spreeadminapp.R;
 import recode360.spreeadminapp.app.AppController;
+import recode360.spreeadminapp.models.State;
 import recode360.spreeadminapp.models.sessions.AlertDialogManager;
 import recode360.spreeadminapp.models.sessions.SessionManager;
+import recode360.spreeadminapp.utils.DatabaseHandler;
 
 public class LoginActivity extends Activity {
 
@@ -53,6 +57,7 @@ public class LoginActivity extends Activity {
 
     // Session Manager Class
     SessionManager session;
+    private DatabaseHandler database;
 
     //JSONObject to send the user details
     private JSONObject jsonBody;
@@ -70,6 +75,7 @@ public class LoginActivity extends Activity {
         // Session Manager
         session = new SessionManager(getApplicationContext());
 
+        database = new DatabaseHandler(this);
 
         inputLayoutUrl = (TextInputLayout) findViewById(R.id.input_layout_url);
         inputLayoutEmail = (TextInputLayout) findViewById(R.id.input_layout_email);
@@ -179,6 +185,7 @@ public class LoginActivity extends Activity {
                                         e.printStackTrace();
                                     }
 
+                                    getStates();
                                     getStoreAttributes();
 
                                 }
@@ -326,10 +333,13 @@ public class LoginActivity extends Activity {
                             SessionManager session = new SessionManager(getApplicationContext());
                             session.addGoshippoKey(token);
 
-
+                            /*
                             Intent i = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(i);
                             finish();
+                            */
+
+                            getStates();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -362,6 +372,83 @@ public class LoginActivity extends Activity {
 
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(jsonObjReq, "store_attributes request");
+
+    }
+
+
+    public void getStates() {
+
+        final String TAG = "States List Request";
+        final String tag_json_obj = "states list request";
+
+
+        //specific id to get all the united states
+        String urlStates = "http://limitless-caverns-92762.herokuapp.com/api/countries/232.json";
+
+        final MaterialDialog dialog = new MaterialDialog.Builder(this)
+                .content("loading")
+                .progress(true, 0)
+                .cancelable(false)
+                .show();
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+                urlStates, null,
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+
+                        Log.d("Insert: ", "Inserting ..");
+                        try {
+                            JSONArray states = response.getJSONArray("states");
+                            Log.d("STATES REQUEST", response.toString());
+                            for (int i = 0; i < states.length(); i++) {
+
+                                State state = new State();
+                                state.setId(states.getJSONObject(i).getInt("id"));
+                                state.setName(states.getJSONObject(i).getString("name"));
+                                database.addState(state);
+
+                            }
+
+                            Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(i);
+                            finish();
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        Log.d("Reading: ", "Reading all contacts..");
+                        List<State> states = database.getAllStates();
+
+                        for (State state : states) {
+                            String log = "Id: " + Integer.toString(state.getId()) + " ,Name: " + state.getName();
+                            // Writing Contacts to log
+                            Log.d("Name: ", log);
+
+                        }
+
+                        dialog.dismiss();
+
+                    }
+
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.networkResponse);
+                // hide the progress dialog
+
+                dialog.dismiss();
+            }
+        });
+
+
+        AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
 
     }
 
