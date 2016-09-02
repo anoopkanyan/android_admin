@@ -39,6 +39,7 @@ import recode360.spreeadminapp.app.Config;
 import recode360.spreeadminapp.models.Address;
 import recode360.spreeadminapp.models.Product;
 
+
 public class OrderPosAddressActivity extends AppCompatActivity implements OrderPricesAdapter.EditPlayerAdapterCallback {
 
     private ExpandableRelativeLayout expandableLayout1;
@@ -156,6 +157,7 @@ public class OrderPosAddressActivity extends AppCompatActivity implements OrderP
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(OrderPosAddressActivity.this, ShippingPOSActivity.class);
+                intent.putExtra("order_no", order_no);
                 startActivity(intent);
             }
         });

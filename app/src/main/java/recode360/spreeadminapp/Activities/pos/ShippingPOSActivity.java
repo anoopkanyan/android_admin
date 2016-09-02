@@ -1,9 +1,11 @@
 package recode360.spreeadminapp.Activities.pos;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -11,9 +13,26 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import recode360.spreeadminapp.R;
+import recode360.spreeadminapp.app.AppController;
+import recode360.spreeadminapp.app.Config;
 import recode360.spreeadminapp.models.Address;
 import recode360.spreeadminapp.models.State;
 import recode360.spreeadminapp.utils.DatabaseHandler;
@@ -21,10 +40,12 @@ import recode360.spreeadminapp.utils.DatabaseHandler;
 
 public class ShippingPOSActivity extends AppCompatActivity {
 
+    private String order_no;
     private DatabaseHandler database;
     private List<State> states;
     private String[] stateNames;
     private Address newAddress;
+    private State newState;
 
     private Spinner stateSpinner;
     private EditText firstName, lastName, addressLine1, addressLine2;
@@ -34,6 +55,9 @@ public class ShippingPOSActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        Intent intent = this.getIntent();
+        order_no = intent.getStringExtra("order_no");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shipping_pos);
@@ -63,11 +87,16 @@ public class ShippingPOSActivity extends AppCompatActivity {
 
             case R.id.action_add_product:
                 //add the Shipping address and get the shipping prices
-                validateForm();
+                if (validateForm()) {
+                    //editAddress();
+                    updateOrder();
+                }
                 return true;
 
             case android.R.id.home:
                 //shipping disabled
+                //move back to the previous activity
+                super.onBackPressed();
                 return true;
 
             default:
@@ -146,15 +175,118 @@ public class ShippingPOSActivity extends AppCompatActivity {
         }
 
         newAddress = new Address();
+        newState = new State();
+        newState.setId(states.get(stateSpinner.getSelectedItemPosition()).getId());
+
         newAddress.setFirstname(firstName.getText().toString());
         newAddress.setLastname(lastName.getText().toString());
         newAddress.setAddress1(addressLine1.getText().toString());
         newAddress.setAddress2(addressLine2.getText().toString());
         newAddress.setCity(city.getText().toString());
-        //newAddress.setStateId(stateArrayList.get(stateSpinnerSelectedItem).getId());
+        newAddress.setState(newState);
         newAddress.setZipcode(Integer.parseInt(pincode.getText().toString()));
         newAddress.setPhone(phone.getText().toString());
         return true;
+    }
+
+
+    public void updateOrder() {
+
+        String ship_address = "\"ship_address\":{\"firstname\":\"" + newAddress.getFirstname() + "\",\"lastname\":\"" + newAddress.getLastname() + "\",\"address1\":\"" + newAddress.getAddress1() + "\",\"address2\":\"" + newAddress.getAddress2() + "\",\"country_id\": 232,\"state_id\":3535,\"city\":\"" + newAddress.getCity() + "\",\"zipcode\": " + newAddress.getZipcode() + ",\"phone\": \"" + newAddress.getPhone() + "\"}";
+
+        Log.d("THE SHIP ADDRESS IS", ship_address);
+        String bill_address = "\"bill_address\":{\"firstname\": \"Test\",\"lastname\": \"User\",\"address1\": \"Unit \",\"address2\": \"1 Test Lane\",\"country_id\": 232,\"state_id\": 3535,\"city\": \"Bethesda\",\"zipcode\": \"20814\",\"phone\": \"(555) 555-5555\"}";
+
+
+        String details = "{\"order\": {" + ship_address + "," + bill_address + ",email:\"anoop123@gmail.com\"}}";
+
+
+        JSONObject jsonBody = null;
+        try {
+            jsonBody = new JSONObject(details);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        String tag_json_obj = "order_update_request";
+        String url = Config.URL_STORE + "/api/checkouts/" + order_no + ".json?token=" + Config.API_KEY;
+
+
+        final MaterialDialog pDialog = new MaterialDialog.Builder(this)
+                .content("Updating address")
+                .widgetColor(getResources().getColor(R.color.colorAccent))
+                .contentColor(getResources().getColor(R.color.colorPrimary))
+                .progress(true, 0)
+                .show();
+
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.PUT,
+                url, jsonBody,
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Adding payment", response.toString());
+
+
+                        try {
+                            response.getString("state");
+
+                            if (response.getString("state").equals("address")) {
+
+                                response.getString("display_tax_total");
+                                response.getString("display_total");
+                                response.getString("display_total");
+                                response.getString("display_ship_total");
+
+                                BigDecimal shippingCost = new BigDecimal(response.getString("ship_total"));
+
+                                finish();
+
+                            }
+                            pDialog.hide();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("Adding new Address", "Error: " + error.getMessage());
+
+                pDialog.cancel();
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Accept", "application/json");
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                return headers;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+        };
+
+        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(
+                50000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        // Adding request to request queue
+        jsonObjReq.setShouldCache(false);
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+
     }
 
 }
