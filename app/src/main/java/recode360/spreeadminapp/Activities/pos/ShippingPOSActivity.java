@@ -54,6 +54,7 @@ public class ShippingPOSActivity extends AppCompatActivity {
     private State newState;
 
     private Spinner stateSpinner;
+    private EditText email;
     private EditText firstName, lastName, addressLine1, addressLine2;
     private EditText city, pincode, phone;
     private ScrollView addOrEditContainer;
@@ -142,6 +143,7 @@ public class ShippingPOSActivity extends AppCompatActivity {
 
         // ADD or EDIT mode
         addOrEditContainer = (ScrollView) findViewById(R.id.fragment_address_scroll_view);
+        email = (EditText) findViewById(R.id.fragment_address_email_txt);
         firstName = (EditText) findViewById(R.id.fragment_address_first_name_txt);
         lastName = (EditText) findViewById(R.id.fragment_address_last_name_txt);
         addressLine1 = (EditText) findViewById(R.id.fragment_address_line1_txt);
@@ -158,6 +160,10 @@ public class ShippingPOSActivity extends AppCompatActivity {
 
     //validates the address form
     private boolean validateForm() {
+
+        if (TextUtils.isEmpty(email.getText())) {
+            email.setError("cannot be empty");
+        }
 
         if (TextUtils.isEmpty(firstName.getText())) {
             firstName.setError("cannot be empty");
@@ -302,7 +308,7 @@ public class ShippingPOSActivity extends AppCompatActivity {
 
     //creates a blank Order using the email entered along the address.
     public void createBlankOrder() {
-        String url = Config.URL_STORE + "/api/orders.json?token=" + Config.API_KEY + "&order[email]=test@example.com";
+        String url = Config.URL_STORE + "/api/orders.json?token=" + Config.API_KEY + "&order[email]=" + email.getText().toString();
 
         String tag_json_obj = "blank_order_request";
 
@@ -388,7 +394,7 @@ public class ShippingPOSActivity extends AppCompatActivity {
 
         final String details_initial = "{\"order\": {\"line_items\": [";
 
-        final String end = "],\"email\":\"test@example.com\"}}";
+        final String end = "],\"email\":\"" + email.getText().toString() + "\"}}";
 
         String prev = "";
 
