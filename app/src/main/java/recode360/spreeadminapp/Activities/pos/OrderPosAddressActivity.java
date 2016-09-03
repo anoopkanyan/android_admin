@@ -156,9 +156,12 @@ public class OrderPosAddressActivity extends AppCompatActivity implements OrderP
         shipping_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle information = new Bundle();
+                information.putSerializable("products", items);
                 Intent intent = new Intent(OrderPosAddressActivity.this, ShippingPOSActivity.class);
-                intent.putExtra("order_no", order_no);
+                intent.putExtras(information);
                 startActivity(intent);
+
             }
         });
 

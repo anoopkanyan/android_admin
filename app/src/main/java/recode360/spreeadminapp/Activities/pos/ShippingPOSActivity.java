@@ -26,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,7 @@ import recode360.spreeadminapp.R;
 import recode360.spreeadminapp.app.AppController;
 import recode360.spreeadminapp.app.Config;
 import recode360.spreeadminapp.models.Address;
+import recode360.spreeadminapp.models.Product;
 import recode360.spreeadminapp.models.State;
 import recode360.spreeadminapp.utils.DatabaseHandler;
 
@@ -41,6 +43,10 @@ import recode360.spreeadminapp.utils.DatabaseHandler;
 public class ShippingPOSActivity extends AppCompatActivity {
 
     private String order_no;
+    private String order_token; //token for the guest user
+
+    private ArrayList<Product> items;
+
     private DatabaseHandler database;
     private List<State> states;
     private String[] stateNames;
@@ -57,7 +63,7 @@ public class ShippingPOSActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         Intent intent = this.getIntent();
-        order_no = intent.getStringExtra("order_no");
+        items = (ArrayList<Product>) intent.getSerializableExtra("products");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shipping_pos);
@@ -88,7 +94,7 @@ public class ShippingPOSActivity extends AppCompatActivity {
             case R.id.action_add_product:
                 //add the Shipping address and get the shipping prices
 
-                createBlankOrder();
+                addLineItems();
 
 
                 //if (validateForm()) {
@@ -194,7 +200,7 @@ public class ShippingPOSActivity extends AppCompatActivity {
     }
 
 
-    public void updateOrder() {
+    public void addAddress() {
 
         String ship_address = "\"ship_address\":{\"firstname\":\"" + newAddress.getFirstname() + "\",\"lastname\":\"" + newAddress.getLastname() + "\",\"address1\":\"" + newAddress.getAddress1() + "\",\"address2\":\"" + newAddress.getAddress2() + "\",\"country_id\": 232,\"state_id\":3535,\"city\":\"" + newAddress.getCity() + "\",\"zipcode\": " + newAddress.getZipcode() + ",\"phone\": \"" + newAddress.getPhone() + "\"}";
 
@@ -294,9 +300,8 @@ public class ShippingPOSActivity extends AppCompatActivity {
     }
 
 
+    //creates a blank Order using the email entered along the address.
     public void createBlankOrder() {
-
-
         String url = Config.URL_STORE + "/api/orders.json?token=" + Config.API_KEY + "&order[email]=test@example.com";
 
         String tag_json_obj = "blank_order_request";
@@ -321,10 +326,12 @@ public class ShippingPOSActivity extends AppCompatActivity {
 
                         try {
                             order_no = response.getString("number");
+                            order_token = response.getString("token");
                             Log.d("EMAIL IS", response.getString("email"));
 
 
                             dialog.hide();
+
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -369,5 +376,116 @@ public class ShippingPOSActivity extends AppCompatActivity {
 
 
     }
+
+
+    //adds line items to the newly created blank Order.
+    public void addLineItems() {
+
+        String url = Config.URL_STORE + "/api/orders.json?token=" + Config.API_KEY;
+
+        String tag_json_obj = "json_obj_req";
+        // final String details = "{\"line_item\":{\"variant_id\":\"" + username + "\",\"quantity\":\"" + password + "\"}}";
+
+        final String details_initial = "{\"order\": {\"line_items\": [";
+
+        final String end = "],\"email\":\"test@example.com\"}}";
+
+        String prev = "";
+
+        for (int i = 0; i < items.size(); i++) {
+
+            prev = prev + "{\"variant_id\":" + items.get(i).getId() + ", \"quantity\":" + items.get(i).getCart_qty() + "}";
+
+            if (i != (items.size() - 1)) {
+                prev = prev + ",";
+            }
+        }
+
+        String details = details_initial + prev + end;
+
+        JSONObject jsonBody = null;
+        try {
+            jsonBody = new JSONObject(details);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        final MaterialDialog dialog = new MaterialDialog.Builder(ShippingPOSActivity.this)
+                .content("Loading")
+                .progress(true, 0)
+                .titleColor(getResources().getColor(R.color.colorPrimaryDark))
+                .widgetColor(getResources().getColor(R.color.colorAccent))
+                .contentColor(getResources().getColor(R.color.colorPrimary))
+                .autoDismiss(false)
+                .cancelable(false)
+                .show();
+
+        Log.d("Y O HO __", details);
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
+                url, jsonBody,
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Add line items to yoyo", response.toString());
+
+                        try {
+                            order_no = response.getString("number");
+                            //update the tax amounts
+                            //tax = new BigDecimal(response.getString("tax_total"));
+                            //taxTotalView.setText(response.getString("display_tax_total"));
+                            //grandTotalView.setText(response.getString("display_total"));
+                            //totalPriceView.setText(response.getString("display_total"));
+
+                            dialog.hide();
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("Add line items to cart", "Error: " + error.getMessage());
+                // Log.e(url, details);
+
+                // hide the progress dialog
+                //pDialog.hide();
+                dialog.cancel();
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Accept", "application/json");
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                return headers;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+        };
+
+        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(
+                50000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        // Adding request to request queue
+        jsonObjReq.setShouldCache(false);
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+
+    }
+
 
 }
