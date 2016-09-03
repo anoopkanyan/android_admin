@@ -87,10 +87,14 @@ public class ShippingPOSActivity extends AppCompatActivity {
 
             case R.id.action_add_product:
                 //add the Shipping address and get the shipping prices
-                if (validateForm()) {
-                    //editAddress();
-                    updateOrder();
-                }
+
+                createBlankOrder();
+
+
+                //if (validateForm()) {
+                //editAddress();
+                //  updateOrder();
+                //}
                 return true;
 
             case android.R.id.home:
@@ -286,6 +290,83 @@ public class ShippingPOSActivity extends AppCompatActivity {
 
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+
+    }
+
+
+    public void createBlankOrder() {
+
+
+        String url = Config.URL_STORE + "/api/orders.json?token=" + Config.API_KEY + "&order[email]=test@example.com";
+
+        String tag_json_obj = "blank_order_request";
+
+        final MaterialDialog dialog = new MaterialDialog.Builder(ShippingPOSActivity.this)
+                .content("Loading")
+                .progress(true, 0)
+                .titleColor(getResources().getColor(R.color.colorPrimaryDark))
+                .widgetColor(getResources().getColor(R.color.colorAccent))
+                .contentColor(getResources().getColor(R.color.colorPrimary))
+                .autoDismiss(false)
+                .cancelable(false)
+                .show();
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
+                url, null,
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Created blank order", response.toString());
+
+                        try {
+                            order_no = response.getString("number");
+                            Log.d("EMAIL IS", response.getString("email"));
+
+
+                            dialog.hide();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("Add line items to cart", "Error: " + error.getMessage());
+
+                dialog.cancel();
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Accept", "application/json");
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                return headers;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+        };
+
+        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(
+                50000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        // Adding request to request queue
+        jsonObjReq.setShouldCache(false);
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+
 
     }
 
