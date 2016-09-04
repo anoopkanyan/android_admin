@@ -25,7 +25,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +43,7 @@ public class ShippingPOSActivity extends AppCompatActivity {
 
     private String order_no;
     private String order_token; //token for the guest user
+    private String order_state;
 
     private ArrayList<Product> items;
 
@@ -207,7 +207,7 @@ public class ShippingPOSActivity extends AppCompatActivity {
 
 
     public void addAddress() {
-       
+
         String details = "{\n" +
                 "  \"order\": {\n" +
                 "    \"bill_address_attributes\": {\n" +
@@ -244,10 +244,8 @@ public class ShippingPOSActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
         String tag_json_obj = "order_update_request";
         String url = Config.URL_STORE + "/api/checkouts/" + order_no + ".json?order_token=" + order_token;
-
 
         final MaterialDialog pDialog = new MaterialDialog.Builder(this)
                 .content("Updating address")
@@ -256,15 +254,12 @@ public class ShippingPOSActivity extends AppCompatActivity {
                 .progress(true, 0)
                 .show();
 
-
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.PUT,
                 url, jsonBody,
                 new Response.Listener<JSONObject>() {
-
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d("Adding address", response.toString());
-
 
                         try {
                             response.getString("state");
@@ -276,7 +271,7 @@ public class ShippingPOSActivity extends AppCompatActivity {
                                 response.getString("display_total");
                                 response.getString("display_ship_total");
 
-                                BigDecimal shippingCost = new BigDecimal(response.getString("ship_total"));
+                                updateState();
 
                                 //finish();
 
@@ -322,83 +317,6 @@ public class ShippingPOSActivity extends AppCompatActivity {
 
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
-
-    }
-
-
-    //creates a blank Order using the email entered along the address.
-    public void createBlankOrder() {
-        String url = Config.URL_STORE + "/api/orders.json?token=" + Config.API_KEY + "&order[email]=" + email.getText().toString();
-
-        String tag_json_obj = "blank_order_request";
-
-        final MaterialDialog dialog = new MaterialDialog.Builder(ShippingPOSActivity.this)
-                .content("Loading")
-                .progress(true, 0)
-                .titleColor(getResources().getColor(R.color.colorPrimaryDark))
-                .widgetColor(getResources().getColor(R.color.colorAccent))
-                .contentColor(getResources().getColor(R.color.colorPrimary))
-                .autoDismiss(false)
-                .cancelable(false)
-                .show();
-
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
-                url, null,
-                new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d("Created blank order", response.toString());
-
-                        try {
-                            order_no = response.getString("number");
-                            order_token = response.getString("token");
-                            Log.d("EMAIL IS", response.getString("email"));
-
-                            dialog.hide();
-
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-
-                    }
-                }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.d("Add line items to cart", "Error: " + error.getMessage());
-
-                dialog.cancel();
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("Accept", "application/json");
-                headers.put("Content-Type", "application/json; charset=utf-8");
-                return headers;
-            }
-
-            @Override
-            public String getBodyContentType() {
-                return "application/json; charset=utf-8";
-            }
-
-        };
-
-        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(
-                50000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-        // Adding request to request queue
-        jsonObjReq.setShouldCache(false);
-
-        // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
-
 
     }
 
@@ -459,12 +377,8 @@ public class ShippingPOSActivity extends AppCompatActivity {
                         try {
                             order_no = response.getString("number");
                             order_token = response.getString("token");
-                            //update the tax amounts
-                            //tax = new BigDecimal(response.getString("tax_total"));
-                            //taxTotalView.setText(response.getString("display_tax_total"));
-                            //grandTotalView.setText(response.getString("display_total"));
-                            //totalPriceView.setText(response.getString("display_total"));
 
+                            //next get the shipping rates and choose the default shipping method
                             dialog.hide();
 
                             //validate address and move to the delivery state
@@ -516,6 +430,54 @@ public class ShippingPOSActivity extends AppCompatActivity {
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
 
+    }
+
+
+    public void updateState() {
+
+        String tag_json_obj = "Checkouts";
+        String url = Config.URL_STORE + "/api/checkouts/" + order_no + "/next.json?order_token=" + order_token;
+
+        final MaterialDialog pDialog = new MaterialDialog.Builder(this)
+                .content("Recording payment")
+                .widgetColor(getResources().getColor(R.color.colorAccent))
+                .contentColor(getResources().getColor(R.color.colorPrimary))
+                .progress(true, 0)
+                .show();
+
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.PUT,
+                url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        try {
+                            order_state = response.getString("state");
+                            Log.d(order_state, response.toString());
+
+                            if (order_state.toString().equals("delivery")) {
+                                //keep on updating the state with default values
+                                updateState();
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        pDialog.hide();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("Cash Payment Activity", "Error: " + error.getMessage());
+                pDialog.hide();
+
+
+            }
+        }) {
+
+        };
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(req, tag_json_obj);
     }
 
 
