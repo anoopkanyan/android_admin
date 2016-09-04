@@ -207,26 +207,46 @@ public class ShippingPOSActivity extends AppCompatActivity {
 
 
     public void addAddress() {
-
-        String ship_address = "\"ship_address\":{\"firstname\":\"" + newAddress.getFirstname() + "\",\"lastname\":\"" + newAddress.getLastname() + "\",\"address1\":\"" + newAddress.getAddress1() + "\",\"address2\":\"" + newAddress.getAddress2() + "\",\"country_id\": 232,\"state_id\":3535,\"city\":\"" + newAddress.getCity() + "\",\"zipcode\": " + newAddress.getZipcode() + ",\"phone\": \"" + newAddress.getPhone() + "\"}";
-
-        Log.d("THE SHIP ADDRESS IS", ship_address);
-        String bill_address = "\"bill_address\":{\"firstname\": \"Test\",\"lastname\": \"User\",\"address1\": \"Unit \",\"address2\": \"1 Test Lane\",\"country_id\": 232,\"state_id\": 3535,\"city\": \"Bethesda\",\"zipcode\": \"20814\",\"phone\": \"(555) 555-5555\"}";
-
-
-        String details = "{\"order\": {" + ship_address + "," + bill_address + ",email:\"anoop123@gmail.com\"}}";
+       
+        String details = "{\n" +
+                "  \"order\": {\n" +
+                "    \"bill_address_attributes\": {\n" +
+                "      \"firstname\": \"" + newAddress.getFirstname() + "\",\n" +
+                "      \"lastname\": \"" + newAddress.getLastname() + "\",\n" +
+                "      \"address1\": \"" + newAddress.getAddress1() + "\",\n" +
+                "      \"address2\": \"" + newAddress.getAddress2() + "\",\n" +
+                "      \"city\": \"" + newAddress.getCity() + "\",\n" +
+                "      \"phone\": \"" + newAddress.getPhone() + "\",\n" +
+                "      \"zipcode\": \"" + newAddress.getZipcode() + "\",\n" +
+                "      \"state_id\": " + newAddress.getState().getId() + ",\n" +
+                "      \"country_id\": 232 \n" +
+                "    },\n" +
+                "    \"ship_address_attributes\": {\n" +
+                "      \"firstname\": \"" + newAddress.getFirstname() + "\",\n" +
+                "      \"lastname\": \"" + newAddress.getLastname() + "\",\n" +
+                "      \"address1\": \"" + newAddress.getAddress1() + "\",\n" +
+                "      \"address2\": \"" + newAddress.getAddress2() + "\",\n" +
+                "      \"city\": \"" + newAddress.getCity() + "\",\n" +
+                "      \"phone\": \"" + newAddress.getPhone() + "\",\n" +
+                "      \"zipcode\": \"" + newAddress.getZipcode() + "\",\n" +
+                "      \"state_id\":" + newAddress.getState().getId() + ",\n" +
+                "      \"country_id\": 232\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
 
 
         JSONObject jsonBody = null;
         try {
             jsonBody = new JSONObject(details);
+            Log.d("ADDRESS IS", jsonBody.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
 
         String tag_json_obj = "order_update_request";
-        String url = Config.URL_STORE + "/api/checkouts/" + order_no + ".json?token=" + Config.API_KEY;
+        String url = Config.URL_STORE + "/api/checkouts/" + order_no + ".json?order_token=" + order_token;
 
 
         final MaterialDialog pDialog = new MaterialDialog.Builder(this)
@@ -243,7 +263,7 @@ public class ShippingPOSActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("Adding payment", response.toString());
+                        Log.d("Adding address", response.toString());
 
 
                         try {
@@ -258,7 +278,7 @@ public class ShippingPOSActivity extends AppCompatActivity {
 
                                 BigDecimal shippingCost = new BigDecimal(response.getString("ship_total"));
 
-                                finish();
+                                //finish();
 
                             }
                             pDialog.hide();
@@ -334,7 +354,6 @@ public class ShippingPOSActivity extends AppCompatActivity {
                             order_no = response.getString("number");
                             order_token = response.getString("token");
                             Log.d("EMAIL IS", response.getString("email"));
-
 
                             dialog.hide();
 
@@ -412,6 +431,7 @@ public class ShippingPOSActivity extends AppCompatActivity {
         JSONObject jsonBody = null;
         try {
             jsonBody = new JSONObject(details);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -426,7 +446,7 @@ public class ShippingPOSActivity extends AppCompatActivity {
                 .cancelable(false)
                 .show();
 
-        Log.d("Y O HO __", details);
+        Log.d("LINE_ITEMS", details);
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
                 url, jsonBody,
@@ -434,10 +454,11 @@ public class ShippingPOSActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("Add line items to yoyo", response.toString());
+                        Log.d("LINE ITEMS RESPONSE", response.toString());
 
                         try {
                             order_no = response.getString("number");
+                            order_token = response.getString("token");
                             //update the tax amounts
                             //tax = new BigDecimal(response.getString("tax_total"));
                             //taxTotalView.setText(response.getString("display_tax_total"));
@@ -446,6 +467,10 @@ public class ShippingPOSActivity extends AppCompatActivity {
 
                             dialog.hide();
 
+                            //validate address and move to the delivery state
+                            if (validateForm()) {
+                                addAddress();
+                            }
 
                         } catch (JSONException e) {
                             e.printStackTrace();
