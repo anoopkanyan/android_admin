@@ -45,6 +45,9 @@ public class ShippingPOSActivity extends AppCompatActivity {
     private String order_token; //token for the guest user
     private String order_state;
 
+    private String shipment_id;
+    private String selected_shiiping_rate_id;
+
     private ArrayList<Product> items;
 
     private DatabaseHandler database;
@@ -271,9 +274,9 @@ public class ShippingPOSActivity extends AppCompatActivity {
                                 response.getString("display_total");
                                 response.getString("display_ship_total");
 
+
                                 updateState();
 
-                                //finish();
 
                             }
                             pDialog.hide();
@@ -457,7 +460,14 @@ public class ShippingPOSActivity extends AppCompatActivity {
 
                             if (order_state.toString().equals("delivery")) {
                                 //keep on updating the state with default values
-                                updateState();
+
+                                //send shipment attributes, choose a particular shipping method
+
+                                shipment_id = response.getJSONArray("shipments").getJSONObject(0).getString("id");
+                                selected_shiiping_rate_id = response.getJSONArray("shipments").getJSONObject(0).getJSONArray("shipping_rates").getJSONObject(1).getString("id");
+                                addShipments();
+
+
                             }
 
                         } catch (JSONException e) {
@@ -478,6 +488,100 @@ public class ShippingPOSActivity extends AppCompatActivity {
         };
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(req, tag_json_obj);
+    }
+
+
+    public void addShipments() {
+
+        String details = " {        \"order\": {\n" +
+                "              \"shipments_attributes\": [\n" +
+                "                {\"id\":\"" + shipment_id + "\",\n" +
+                "                \"selected_shipping_rate_id\": \"" + selected_shiiping_rate_id + "\"} \n" +
+                "              ]\n" +
+                "            }\n" +
+                "    }";
+
+
+        JSONObject jsonBody = null;
+        try {
+            jsonBody = new JSONObject(details);
+            Log.d("ADDRESS IS", jsonBody.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        String tag_json_obj = "shipment_update_request";
+        String url = Config.URL_STORE + "/api/checkouts/" + order_no + ".json?order_token=" + order_token;
+
+        final MaterialDialog pDialog = new MaterialDialog.Builder(this)
+                .content("Updating address")
+                .widgetColor(getResources().getColor(R.color.colorAccent))
+                .contentColor(getResources().getColor(R.color.colorPrimary))
+                .progress(true, 0)
+                .show();
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.PUT,
+                url, jsonBody,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Adding shipments", response.toString());
+
+                        try {
+                            response.getString("state");
+
+                            if (response.getString("state").equals("address")) {
+
+                                response.getString("display_tax_total");
+                                response.getString("display_total");
+                                response.getString("display_total");
+                                response.getString("display_ship_total");
+
+                                //finish();
+
+                            }
+                            pDialog.hide();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("Adding new Address", "Error: " + error.getMessage());
+
+                pDialog.cancel();
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Accept", "application/json");
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                return headers;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+        };
+
+        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(
+                50000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        // Adding request to request queue
+        jsonObjReq.setShouldCache(false);
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+
     }
 
 
