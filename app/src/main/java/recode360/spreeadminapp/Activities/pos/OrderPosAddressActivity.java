@@ -48,7 +48,10 @@ public class OrderPosAddressActivity extends AppCompatActivity implements OrderP
     private RecyclerView recyclerView;
     private OrderPricesAdapter adapter;
     private Toolbar toolbar;
-    private int done = 0;
+
+    private Boolean isShipment = false;
+    private final int ActivityTwoRequestCode = 1;
+
     private TextView textPay;
     private TextView totalPriceView;
     private TextView totalQtyView;
@@ -90,6 +93,7 @@ public class OrderPosAddressActivity extends AppCompatActivity implements OrderP
 
     private Address newAddress;
     private String order_no;
+    private String order_token;
 
 
     @Override
@@ -160,7 +164,7 @@ public class OrderPosAddressActivity extends AppCompatActivity implements OrderP
                 information.putSerializable("products", items);
                 Intent intent = new Intent(OrderPosAddressActivity.this, ShippingPOSActivity.class);
                 intent.putExtras(information);
-                startActivity(intent);
+                startActivityForResult(intent, ActivityTwoRequestCode);
 
             }
         });
@@ -229,6 +233,29 @@ public class OrderPosAddressActivity extends AppCompatActivity implements OrderP
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+
+                taxTotalView.setText(data.getStringExtra("display_tax_total"));
+                grandTotalView.setText(data.getStringExtra("display_total"));
+                totalPriceView.setText(data.getStringExtra("display_total"));
+                shipTotalView.setText(data.getStringExtra("display_ship_total"));
+
+                shippingCost = new BigDecimal(data.getStringExtra("shipping_cost"));
+
+                isShipment = true;   //orde is in payment state, shipments created
+                order_no = data.getStringExtra("order_no");
+                order_token = data.getStringExtra("order_token");
+
+
+            }
+        }
+    }
+
 
     @Override
     public void deletePressed() {
@@ -492,6 +519,7 @@ public class OrderPosAddressActivity extends AppCompatActivity implements OrderP
                             totalPriceView.setText(response.getString("display_total"));
                             shipTotalView.setText(response.getString("display_ship_total"));
 
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -529,12 +557,10 @@ public class OrderPosAddressActivity extends AppCompatActivity implements OrderP
         intent.putExtra("order_no", order_no);
         intent.putExtra("shipping_cost", shippingCost);
         intent.putExtra("tax", tax);
+        intent.putExtra("isShipment", isShipment);
 
         startActivity(intent);
 
     }
 
 }
-
-
-

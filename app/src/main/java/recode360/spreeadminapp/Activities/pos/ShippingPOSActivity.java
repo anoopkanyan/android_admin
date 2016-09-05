@@ -358,7 +358,7 @@ public class ShippingPOSActivity extends AppCompatActivity {
         }
 
         final MaterialDialog dialog = new MaterialDialog.Builder(ShippingPOSActivity.this)
-                .content("Loading")
+                .content("Adding address")
                 .progress(true, 0)
                 .titleColor(getResources().getColor(R.color.colorPrimaryDark))
                 .widgetColor(getResources().getColor(R.color.colorAccent))
@@ -442,7 +442,7 @@ public class ShippingPOSActivity extends AppCompatActivity {
         String url = Config.URL_STORE + "/api/checkouts/" + order_no + "/next.json?order_token=" + order_token;
 
         final MaterialDialog pDialog = new MaterialDialog.Builder(this)
-                .content("Recording payment")
+                .content("Adding address")
                 .widgetColor(getResources().getColor(R.color.colorAccent))
                 .contentColor(getResources().getColor(R.color.colorPrimary))
                 .progress(true, 0)
@@ -505,7 +505,7 @@ public class ShippingPOSActivity extends AppCompatActivity {
         JSONObject jsonBody = null;
         try {
             jsonBody = new JSONObject(details);
-            Log.d("ADDRESS IS", jsonBody.toString());
+            Log.d("SHIPMENT IS", jsonBody.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -528,26 +528,44 @@ public class ShippingPOSActivity extends AppCompatActivity {
                         Log.d("Adding shipments", response.toString());
 
                         try {
-                            response.getString("state");
 
-                            if (response.getString("state").equals("address")) {
+                            String display_item_total = response.getString("display_item_total");
+                            String display_tax_total = response.getString("display_tax_total");
+                            String display_total = response.getString("display_total");
+                            String display_ship_total = response.getString("display_ship_total");
+                            String shipping_cost = response.getString("ship_total");
 
-                                response.getString("display_tax_total");
-                                response.getString("display_total");
-                                response.getString("display_total");
-                                response.getString("display_ship_total");
 
-                                //finish();
+                            //send back Order details to the previous activity
+                            Intent intent = new Intent();
+                            intent.putExtra("order_no", order_no);
+                            intent.putExtra("order_token", order_token);
+                            intent.putExtra("display_item_total", display_item_total);
+                            intent.putExtra("display_tax_total", display_tax_total);
+                            intent.putExtra("display_total", display_total);
+                            intent.putExtra("display_ship_total", display_ship_total);
+                            intent.putExtra("shipping_cost", shipping_cost);
 
-                            }
+                            setResult(RESULT_OK, intent);
+                            finish();
+
+
                             pDialog.hide();
-                        } catch (JSONException e) {
+                        } catch (
+                                JSONException e
+                                )
+
+                        {
                             e.printStackTrace();
                         }
 
 
                     }
-                }, new Response.ErrorListener() {
+                }
+
+                , new Response.ErrorListener()
+
+        {
 
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -555,7 +573,11 @@ public class ShippingPOSActivity extends AppCompatActivity {
 
                 pDialog.cancel();
             }
-        }) {
+        }
+
+        )
+
+        {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
@@ -571,16 +593,22 @@ public class ShippingPOSActivity extends AppCompatActivity {
 
         };
 
-        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(
+        jsonObjReq.setRetryPolicy(new
+
+                DefaultRetryPolicy(
                 50000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+
+        );
 
         // Adding request to request queue
         jsonObjReq.setShouldCache(false);
 
         // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+        AppController.getInstance().
+
+                addToRequestQueue(jsonObjReq, tag_json_obj);
 
     }
 

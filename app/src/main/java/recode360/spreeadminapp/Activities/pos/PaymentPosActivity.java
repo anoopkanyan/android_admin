@@ -57,10 +57,13 @@ public class PaymentPosActivity extends AppCompatActivity {
     private String order_no;
     private String order_state;
 
+    private Boolean isShipment;
+
     private String url;
     private String details;
     MaterialDialog dialog;
     BigDecimal amount;
+
 
     // To store the products those are added to cart
     private List<PayPalItem> productsInCart = new ArrayList<PayPalItem>();
@@ -83,6 +86,7 @@ public class PaymentPosActivity extends AppCompatActivity {
         totalPrice = new BigDecimal(intent.getStringExtra("price"));
         totalQuantity = intent.getIntExtra("quantity", 0);
         order_no = intent.getStringExtra("order_no");
+        isShipment = intent.getBooleanExtra("isShipment", false);
 
 
         for (int i = 0; i < items.size(); i++) {
@@ -232,8 +236,12 @@ public class PaymentPosActivity extends AppCompatActivity {
 
                         //update backend about the payment and show activity for user
 
-                        updateState();
+                        if (isShipment) {
+                            updateStore();
 
+                        } else {
+                            updateState();
+                        }
 
                     } catch (JSONException e) {
                         Log.e(TAG, "an extremely unlikely failure occurred: ",
