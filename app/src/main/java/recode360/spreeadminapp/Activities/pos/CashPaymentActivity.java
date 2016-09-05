@@ -41,6 +41,7 @@ import recode360.spreeadminapp.app.Config;
 public class CashPaymentActivity extends AppCompatActivity {
 
     private String order_no;
+    private Boolean isShipment;
     private String order_state;
     private BigDecimal totalPrice;
     private EditText totalPriceView;
@@ -65,6 +66,8 @@ public class CashPaymentActivity extends AppCompatActivity {
         Intent intent = this.getIntent();
         order_no = intent.getStringExtra("order_no");
         totalPrice = new BigDecimal(intent.getStringExtra("price"));
+        isShipment = intent.getBooleanExtra("isShipment", false);
+
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -297,7 +300,12 @@ public class CashPaymentActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                     dialog.dismiss();
-                                    updateState();
+
+                                    if (isShipment) {
+                                        addresstoDelivery();
+                                    } else {
+                                        updateState();
+                                    }
 
                                 }
                             })

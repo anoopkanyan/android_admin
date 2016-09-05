@@ -145,6 +145,7 @@ public class PaymentPosActivity extends AppCompatActivity {
         Intent intent = new Intent(PaymentPosActivity.this, CashPaymentActivity.class);
         intent.putExtra("price", totalPrice.toString());
         intent.putExtra("order_no", order_no);
+        intent.putExtra("isShipment", isShipment);
         startActivity(intent);
 
     }
