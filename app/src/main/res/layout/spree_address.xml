@@ -113,7 +113,7 @@
                     <EditText
                         android:id="@+id/fragment_address_pincode_txt"
                         style="@style/EditText"
-                        android:hint="Pincode"
+                        android:hint="Zipcode"
                         android:inputType="number"
                         android:maxLength="6"></EditText>
                 </android.support.design.widget.TextInputLayout>
