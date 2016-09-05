@@ -34,6 +34,7 @@ import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+import recode360.spreeadminapp.Activities.MainActivity;
 import recode360.spreeadminapp.R;
 import recode360.spreeadminapp.app.AppController;
 import recode360.spreeadminapp.app.Config;
@@ -379,9 +380,17 @@ public class CashPaymentActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
-                                        Intent intent = new Intent(CashPaymentActivity.this, AddCustomerActivity.class);
-                                        intent.putExtra("order_no", order_no);
-                                        startActivity(intent);
+                                        if (isShipment) {
+                                            Intent intent = new Intent(CashPaymentActivity.this, MainActivity.class);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                            startActivity(intent);
+                                        } else {
+
+                                            Intent intent = new Intent(CashPaymentActivity.this, AddCustomerActivity.class);
+                                            intent.putExtra("order_no", order_no);
+                                            startActivity(intent);
+
+                                        }
 
                                     }
                                 })
