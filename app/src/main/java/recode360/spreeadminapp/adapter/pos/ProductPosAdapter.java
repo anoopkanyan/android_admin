@@ -141,7 +141,11 @@ public class ProductPosAdapter extends RecyclerView.Adapter<ProductPosAdapter.My
                     productList.remove(position);
                     productList.add(position, pr);
                     if (passList.size() > 0) {
-                        passList.add(position, pr);
+                        try {
+                            passList.add(position, pr);
+                        } catch (Exception e) {
+                            passList.add(pr);
+                        }
                     } else {
                         passList.add(pr);
                     }
