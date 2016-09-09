@@ -96,7 +96,6 @@
                 android:layout_marginLeft="@dimen/margin_35dp"
                 android:layout_marginRight="@dimen/margin_35dp"
                 android:layout_marginTop="@dimen/margin_35dp"
-                android:prompt="@string/app_name"
                 android:visibility="visible"></Spinner>
 
 

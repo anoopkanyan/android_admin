@@ -240,7 +240,7 @@ public class PrimaryFragment extends Fragment {
 
 
         //request for stock items which are out of stock
-        url = Config.URL_STORE + "/api/stock_locations/1/stock_items?q[s]=count_on_hand%20asc";
+        url = Config.URL_STORE + "/api/stock_locations/1/stock_items?q[s]=count_on_hand%500asc";
         count = 0;
         jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                 url, null,

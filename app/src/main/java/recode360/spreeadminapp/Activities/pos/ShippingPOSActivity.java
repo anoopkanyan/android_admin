@@ -8,6 +8,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ScrollView;
@@ -31,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import recode360.spreeadminapp.R;
+import recode360.spreeadminapp.adapter.SpinnerAdapter;
 import recode360.spreeadminapp.app.AppController;
 import recode360.spreeadminapp.app.Config;
 import recode360.spreeadminapp.models.Address;
@@ -134,10 +137,48 @@ public class ShippingPOSActivity extends AppCompatActivity {
             i++;
         }
 
+        /*
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(ShippingPOSActivity.this, android.R.layout.simple_spinner_item, stateNames);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         stateSpinner.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+
+        */
+
+
+
+        SpinnerAdapter adapter = new SpinnerAdapter(ShippingPOSActivity.this, android.R.layout.simple_list_item_1);
+        adapter.addAll(stateNames);
+        adapter.add("This is Hint");
+        stateSpinner.setAdapter(adapter);
+        stateSpinner.setSelection(adapter.getCount());
+
+        stateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                // TODO Auto-generated method stub
+
+                if(stateSpinner.getSelectedItem() == "Choose a state")
+                {
+
+                    //Do nothing.
+                }
+                else{
+
+                   // Toast.makeText(MainActivity.this, spinner.getSelectedItem().toString(), Toast.LENGTH_LONG).show();
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+
 
     }
 
