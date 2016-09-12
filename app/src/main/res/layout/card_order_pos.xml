@@ -23,7 +23,8 @@
             android:paddingBottom="4dp"
             android:text="Product Name"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="17dp" />
+            android:textSize="17dp"
+            android:typeface="sans"/>
 
         <TextView
             android:id="@+id/product_price_pos"
@@ -34,7 +35,7 @@
             android:paddingTop="4dp"
             android:text="$20.00"
             android:textColor="@color/colorPrimary"
-            android:textSize="13dp" />
+            android:textSize="15dp" />
 
         <TextView
             android:id="@+id/product_price_total_pos"

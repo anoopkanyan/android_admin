@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.Spinner;
@@ -101,7 +100,8 @@ public class ShippingPOSActivity extends AppCompatActivity {
             case R.id.action_add_product:
                 //add the Shipping address and get the shipping prices
 
-                addLineItems();
+                //addLineItems();
+                createBlankOrder();
 
 
                 //if (validateForm()) {
@@ -146,10 +146,9 @@ public class ShippingPOSActivity extends AppCompatActivity {
         */
 
 
-
         SpinnerAdapter adapter = new SpinnerAdapter(ShippingPOSActivity.this, android.R.layout.simple_list_item_1);
         adapter.addAll(stateNames);
-        adapter.add("This is Hint");
+        adapter.add("Choose a state");
         stateSpinner.setAdapter(adapter);
         stateSpinner.setSelection(adapter.getCount());
 
@@ -160,14 +159,12 @@ public class ShippingPOSActivity extends AppCompatActivity {
                                        int position, long id) {
                 // TODO Auto-generated method stub
 
-                if(stateSpinner.getSelectedItem() == "Choose a state")
-                {
+                if (stateSpinner.getSelectedItem() == "Choose a state") {
 
                     //Do nothing.
-                }
-                else{
+                } else {
 
-                   // Toast.makeText(MainActivity.this, spinner.getSelectedItem().toString(), Toast.LENGTH_LONG).show();
+                    // Toast.makeText(MainActivity.this, spinner.getSelectedItem().toString(), Toast.LENGTH_LONG).show();
 
                 }
             }
@@ -365,38 +362,13 @@ public class ShippingPOSActivity extends AppCompatActivity {
     }
 
 
-    //adds line items to the newly created blank Order.
-    public void addLineItems() {
+    public void createBlankOrder() {
 
-        String url = Config.URL_STORE + "/api/orders.json?token=" + Config.API_KEY;
+
+        String url = Config.URL_STORE + "/api/orders.json?order[email]=" + email.getText().toString();
 
         String tag_json_obj = "json_obj_req";
-        // final String details = "{\"line_item\":{\"variant_id\":\"" + username + "\",\"quantity\":\"" + password + "\"}}";
 
-        final String details_initial = "{\"order\": {\"line_items\": [";
-
-        final String end = "],\"email\":\"" + email.getText().toString() + "\"}}";
-
-        String prev = "";
-
-        for (int i = 0; i < items.size(); i++) {
-
-            prev = prev + "{\"variant_id\":" + items.get(i).getId() + ", \"quantity\":" + items.get(i).getCart_qty() + "}";
-
-            if (i != (items.size() - 1)) {
-                prev = prev + ",";
-            }
-        }
-
-        String details = details_initial + prev + end;
-
-        JSONObject jsonBody = null;
-        try {
-            jsonBody = new JSONObject(details);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
         final MaterialDialog dialog = new MaterialDialog.Builder(ShippingPOSActivity.this)
                 .content("Adding address")
@@ -408,15 +380,14 @@ public class ShippingPOSActivity extends AppCompatActivity {
                 .cancelable(false)
                 .show();
 
-        Log.d("LINE_ITEMS", details);
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
-                url, jsonBody,
+                url, null,
                 new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("LINE ITEMS RESPONSE", response.toString());
+                        Log.d("CREATE BLANK ORDER", response.toString());
 
                         try {
                             order_no = response.getString("number");
@@ -425,10 +396,7 @@ public class ShippingPOSActivity extends AppCompatActivity {
                             //next get the shipping rates and choose the default shipping method
                             dialog.hide();
 
-                            //validate address and move to the delivery state
-                            if (validateForm()) {
-                                addAddress();
-                            }
+                            addLineItems();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -448,18 +416,7 @@ public class ShippingPOSActivity extends AppCompatActivity {
                 dialog.cancel();
             }
         }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("Accept", "application/json");
-                headers.put("Content-Type", "application/json; charset=utf-8");
-                return headers;
-            }
 
-            @Override
-            public String getBodyContentType() {
-                return "application/json; charset=utf-8";
-            }
 
         };
 
@@ -474,6 +431,108 @@ public class ShippingPOSActivity extends AppCompatActivity {
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
 
+    }
+
+
+    //adds line items to the newly created blank Order.
+    public void addLineItems() {
+
+        String url = Config.URL_STORE + "/api/orders/" + order_no + "/line_items?order_token=" + order_token;
+
+        String tag_json_obj = "json_obj_req";
+        // final String details = "{\"line_item\":{\"variant_id\":\"" + username + "\",\"quantity\":\"" + password + "\"}}";
+
+        final String details_initial = " {\"line_item\": ";
+
+        final String end = "}";
+
+        String prev = "";
+
+        for (int i = 0; i < items.size(); i++) {
+
+            prev = "{\"variant_id\":" + items.get(i).getId() + ", \"quantity\":" + items.get(i).getCart_qty() + "}";
+
+
+            String details = details_initial + prev + end;
+
+            JSONObject jsonBody = null;
+            try {
+                jsonBody = new JSONObject(details);
+                Log.d("BODY IS", jsonBody.toString());
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            final MaterialDialog dialog = new MaterialDialog.Builder(ShippingPOSActivity.this)
+                    .content("Adding address")
+                    .progress(true, 0)
+                    .titleColor(getResources().getColor(R.color.colorPrimaryDark))
+                    .widgetColor(getResources().getColor(R.color.colorAccent))
+                    .contentColor(getResources().getColor(R.color.colorPrimary))
+                    .autoDismiss(false)
+                    .cancelable(false)
+                    .show();
+
+            Log.d("LINE_ITEMS", details);
+
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
+                    url, jsonBody,
+                    new Response.Listener<JSONObject>() {
+
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.d("LINE ITEMS RESPONSE", response.toString());
+
+
+                            //next get the shipping rates and choose the default shipping method
+                            dialog.hide();
+
+                            //validate address and move to the delivery state
+                            if (validateForm()) {
+                                addAddress();
+                            }
+
+
+                        }
+                    }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    VolleyLog.d("Add line items to cart", "Error: " + error.getMessage());
+                    // Log.e(url, details);
+
+                    // hide the progress dialog
+                    //pDialog.hide();
+                    dialog.cancel();
+                }
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> headers = new HashMap<String, String>();
+                    headers.put("Accept", "application/json");
+                    headers.put("Content-Type", "application/json; charset=utf-8");
+                    return headers;
+                }
+
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+            };
+
+            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(
+                    50000,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+            // Adding request to request queue
+            jsonObjReq.setShouldCache(false);
+
+            // Adding request to request queue
+            AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+        }
     }
 
 
