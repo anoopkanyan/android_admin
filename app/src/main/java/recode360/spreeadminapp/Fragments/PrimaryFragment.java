@@ -167,7 +167,7 @@ public class PrimaryFragment extends Fragment {
 
         } catch (Exception e) {
 
-            //screw you
+
         }
 
         return rootView;
