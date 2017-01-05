@@ -18,12 +18,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.github.johnkil.print.PrintConfig;
 import com.mikepenz.fastadapter.utils.RecyclerViewCacheUtil;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -38,17 +32,11 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import recode360.spreeadminapp.Fragments.PrimaryFragment;
+import recode360.spreeadminapp.Fragments.DashboardFragment;
 import recode360.spreeadminapp.Fragments.ProductsFragment;
 import recode360.spreeadminapp.Fragments.TabFragment;
+import recode360.spreeadminapp.Fragments.pos.CheckoutPosFragment;
 import recode360.spreeadminapp.R;
-import recode360.spreeadminapp.app.AppController;
 import recode360.spreeadminapp.app.Config;
 import recode360.spreeadminapp.models.sessions.AlertDialogManager;
 import recode360.spreeadminapp.models.sessions.SessionManager;
@@ -56,13 +44,14 @@ import recode360.spreeadminapp.utils.Utils;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SessionManager.LoginCallback {
     DrawerLayout mDrawerLayout;
     NavigationView mNavigationView;
     View mHeader;
     FragmentManager mFragmentManager;
     FragmentTransaction mFragmentTransaction;
     ActionBarDrawerToggle mDrawerToggle;
+    private Boolean outStock = false;
 
     private Toolbar toolbar;
 
@@ -85,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
     private String total_listings;
     private String out_of_stock;    //listings which are currently out of stock
     private int count;
+    private int start = 0;
 
 
     @Override
@@ -93,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Session class instance
         session = new SessionManager(getApplicationContext());
+        session.setCallback(this);
         session.checkLogin();
 
         setContentView(R.layout.activity_main);
@@ -136,16 +127,17 @@ public class MainActivity extends AppCompatActivity {
         image.setImageDrawable(drawable);
 
         */
-        getStoreAttributes();
+
 
         /**
          * Lets inflate the very first fragment
          * Here , we are inflating the TabFragment as the first Fragment
          */
 
+
         mFragmentManager = getSupportFragmentManager();
         mFragmentTransaction = mFragmentManager.beginTransaction();
-        mFragmentTransaction.replace(R.id.containerView, new PrimaryFragment()).commit();
+        mFragmentTransaction.replace(R.id.containerView, new DashboardFragment()).commit();
 
 
         // Create a few sample profile
@@ -192,10 +184,11 @@ public class MainActivity extends AppCompatActivity {
                         new PrimaryDrawerItem().withName(R.string.dashboard).withIcon(R.drawable.ic_home).withIdentifier(1).withSelectable(true).withSelectedTextColor(getResources().getColor(R.color.accent)).withSelectedIconColor(getResources().getColor(R.color.accent)).withIconTintingEnabled(true).withTextColor(getResources().getColor(R.color.colorPrimaryDark)).withIconColor(getResources().getColor(R.color.colorPrimaryDark)).withTypeface(Typeface.SANS_SERIF),
                         new PrimaryDrawerItem().withName(R.string.product).withIcon(R.drawable.ic_products).withIdentifier(2).withSelectable(true).withSelectedTextColor(getResources().getColor(R.color.accent)).withSelectedIconColor(getResources().getColor(R.color.accent)).withIconTintingEnabled(true).withTextColor(getResources().getColor(R.color.colorPrimaryDark)).withIconColor(getResources().getColor(R.color.colorPrimaryDark)).withTypeface(Typeface.SANS_SERIF),
                         new PrimaryDrawerItem().withName(R.string.orders).withIcon(R.drawable.ic_orders).withIdentifier(3).withSelectable(true).withSelectedTextColor(getResources().getColor(R.color.accent)).withSelectedIconColor(getResources().getColor(R.color.accent)).withIconTintingEnabled(true).withTextColor(getResources().getColor(R.color.colorPrimaryDark)).withIconColor(getResources().getColor(R.color.colorPrimaryDark)).withTypeface(Typeface.SANS_SERIF),
-                        new PrimaryDrawerItem().withName("Visit Store").withIcon(R.drawable.ic_cart).withIdentifier(4).withSelectable(true).withSelectedTextColor(getResources().getColor(R.color.accent)).withSelectedIconColor(getResources().getColor(R.color.accent)).withIconTintingEnabled(true).withTextColor(getResources().getColor(R.color.colorPrimaryDark)).withIconColor(getResources().getColor(R.color.colorPrimaryDark)).withTypeface(Typeface.SANS_SERIF),
+                        new PrimaryDrawerItem().withName("Visit Store Online").withIcon(R.drawable.ic_cart).withIdentifier(4).withSelectable(true).withSelectedTextColor(getResources().getColor(R.color.accent)).withSelectedIconColor(getResources().getColor(R.color.accent)).withIconTintingEnabled(true).withTextColor(getResources().getColor(R.color.colorPrimaryDark)).withIconColor(getResources().getColor(R.color.colorPrimaryDark)).withTypeface(Typeface.SANS_SERIF),
+                        new PrimaryDrawerItem().withName("POS").withIcon(R.drawable.ic_bill).withIdentifier(5).withSelectable(true).withSelectedTextColor(getResources().getColor(R.color.accent)).withSelectedIconColor(getResources().getColor(R.color.accent)).withIconTintingEnabled(true).withTextColor(getResources().getColor(R.color.colorPrimaryDark)).withIconColor(getResources().getColor(R.color.colorPrimaryDark)).withTypeface(Typeface.SANS_SERIF),
                         new DividerDrawerItem(),
-                        new PrimaryDrawerItem().withName("Settings").withIcon(R.drawable.ic_settings).withIdentifier(5).withSelectable(true).withSelectedTextColor(getResources().getColor(R.color.accent)).withSelectedIconColor(getResources().getColor(R.color.accent)).withIconTintingEnabled(true).withTextColor(getResources().getColor(R.color.colorPrimaryDark)).withIconColor(getResources().getColor(R.color.colorPrimaryDark)).withTypeface(Typeface.SANS_SERIF),
-                        new PrimaryDrawerItem().withName("Help").withIcon(R.drawable.ic_help).withIdentifier(6).withSelectable(true).withSelectedTextColor(getResources().getColor(R.color.accent)).withSelectedIconColor(getResources().getColor(R.color.accent)).withIconTintingEnabled(true).withTextColor(getResources().getColor(R.color.colorPrimaryDark)).withIconColor(getResources().getColor(R.color.colorPrimaryDark)).withTypeface(Typeface.SANS_SERIF)
+                        new PrimaryDrawerItem().withName("Settings").withIcon(R.drawable.ic_settings).withIdentifier(6).withSelectable(true).withSelectedTextColor(getResources().getColor(R.color.accent)).withSelectedIconColor(getResources().getColor(R.color.accent)).withIconTintingEnabled(true).withTextColor(getResources().getColor(R.color.colorPrimaryDark)).withIconColor(getResources().getColor(R.color.colorPrimaryDark)).withTypeface(Typeface.SANS_SERIF),
+                        new PrimaryDrawerItem().withName("Help").withIcon(R.drawable.ic_help).withIdentifier(7).withSelectable(true).withSelectedTextColor(getResources().getColor(R.color.accent)).withSelectedIconColor(getResources().getColor(R.color.accent)).withIconTintingEnabled(true).withTextColor(getResources().getColor(R.color.colorPrimaryDark)).withIconColor(getResources().getColor(R.color.colorPrimaryDark)).withTypeface(Typeface.SANS_SERIF)
                 )// add the items we want to use with our Drawer
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -211,10 +204,11 @@ public class MainActivity extends AppCompatActivity {
                             if (drawerItem.getIdentifier() == 1) {
                                 // open dashboard
                                 FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
-                                xfragmentTransaction.replace(R.id.containerView, new PrimaryFragment()).addToBackStack("home_fragment commit").commit();
+                                xfragmentTransaction.replace(R.id.containerView, new DashboardFragment()).addToBackStack("home_fragment commit").commit();
 
                             } else if (drawerItem.getIdentifier() == 2) {
                                 // open all the listings(products)
+                                outStock = false;
                                 FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
                                 xfragmentTransaction.replace(R.id.containerView, new ProductsFragment()).addToBackStack("prodcuts_fragment commit").commit();
                             } else if (drawerItem.getIdentifier() == 3) {
@@ -223,13 +217,18 @@ public class MainActivity extends AppCompatActivity {
                                 xfragmentTransaction.replace(R.id.containerView, new TabFragment()).addToBackStack("tab_fragment commit").commit();
                             } else if (drawerItem.getIdentifier() == 4) {
 
-                                //webview still to be decided
 
                             } else if (drawerItem.getIdentifier() == 5) {
+
+                                FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
+                                xfragmentTransaction.replace(R.id.containerView, new CheckoutPosFragment()).addToBackStack("pos_fragment commit").commit();
+
+
+                            } else if (drawerItem.getIdentifier() == 6) {
                                 intent = new Intent(MainActivity.this, SettingsActivity.class);
                                 startActivity(intent);
 
-                            } else if (drawerItem.getIdentifier() == 6) {
+                            } else if (drawerItem.getIdentifier() == 7) {
                                 // help
 
                             }
@@ -395,56 +394,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    //get store attributes such as store name, goshippo api tokens, and mail address
-
-    public void getStoreAttributes() {
-
-        String url = Config.URL_STORE + "/api/stores";
-        final String TAG = "Store attributes request";
+    @Override
+    public void loginSuccess() {
 
 
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                url, null,
-                new Response.Listener<JSONObject>() {
+    }
 
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d(TAG, response.toString());
 
-                        try {
-                            Config.USER_SHIPPO_KEY = response.getJSONArray("stores").getJSONObject(0).getString("goshippo_api");
+    public Boolean isOutofStock() {
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+        return outStock;
 
-                    }
-                }, new Response.ErrorListener() {
+    }
 
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(TAG, "Error: " + error.getMessage());
+    public void setOutofStock(Boolean outStock) {
 
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("Accept", "application/json");
-                headers.put("Content-Type", "application/json; charset=utf-8");
-                headers.put("X-Spree-Token", Config.API_KEY);
-                return headers;
-            }
-
-            @Override
-            public String getBodyContentType() {
-                return "application/json; charset=utf-8";
-            }
-
-        };
-
-        // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(jsonObjReq, "store_attributes request");
+        this.outStock = outStock;
 
     }
 

@@ -190,11 +190,11 @@ public class TabFragment extends Fragment {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new AllOrdersFragment();
-                case 1:
                     return new OrdersPendingFragment();
-                case 2:
+                case 1:
                     return new OrdersShipFragment();
+                case 2:
+                    return new AllOrdersFragment();
             }
             return null;
         }
@@ -215,11 +215,11 @@ public class TabFragment extends Fragment {
 
             switch (position) {
                 case 0:
-                    return "All orders";
+                    return "New Orders";
                 case 1:
-                    return "Ship";
+                    return "Shipped";
                 case 2:
-                    return "Completed";
+                    return "All Orders";
 
             }
             return null;

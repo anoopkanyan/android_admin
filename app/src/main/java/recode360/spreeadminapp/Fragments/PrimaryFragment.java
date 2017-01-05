@@ -1,10 +1,10 @@
 package recode360.spreeadminapp.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,9 +26,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import recode360.spreeadminapp.Activities.AllShipmentsActivity;
+import recode360.spreeadminapp.Activities.MainActivity;
 import recode360.spreeadminapp.R;
 import recode360.spreeadminapp.app.AppController;
 import recode360.spreeadminapp.app.Config;
@@ -65,64 +69,106 @@ public class PrimaryFragment extends Fragment {
     private TextView shipments_revenue_text;
     private TextView shipments_expenditure_text;
 
-    String result;
+    private TextView orders_text;
+    private TextView shippings_text;
+
+    private String time_frame;
 
     public PrimaryFragment() {
-        //nothing here yet
+
+
     }
+
+    public static PrimaryFragment newInstance(String time_frame) {
+        PrimaryFragment f = new PrimaryFragment();
+        Bundle args = new Bundle();
+        args.putString("time_frame", time_frame);
+        f.setArguments(args);
+        return f;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.primary_layout, container, false);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.dashboard);
 
+        try {
 
-        ordersButton = (Button) rootView.findViewById(R.id.ordersButton);
-        shipButton = (Button) rootView.findViewById(R.id.shippingsButton);
-        listingsButton = (Button) rootView.findViewById(R.id.listingsButton);
+            this.time_frame = getArguments().getString("time_frame");
 
-        getListingStats();
-        getOrderStats();
+            orders_text = (TextView) rootView.findViewById(R.id.ordersText);
+            shippings_text = (TextView) rootView.findViewById(R.id.shippingsText);
 
-        in_stock = (TextView) rootView.findViewById(R.id.listingsStock);
-        out_stock = (TextView) rootView.findViewById(R.id.listingsNoStock);
-
-        orders_count_text = (TextView) rootView.findViewById(R.id.ordersQty);
-        orders_revenue_text = (TextView) rootView.findViewById(R.id.ordersRevenue);
-
-        shipments_revenue_text = (TextView) rootView.findViewById(R.id.shippingsRevenue);
-        shipments_expenditure_text = (TextView) rootView.findViewById(R.id.shippingsExpenditure);
-
-
-        mFragmentManager = getActivity().getSupportFragmentManager();
-        mFragmentTransaction = mFragmentManager.beginTransaction();
-
-        ordersButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // launch Orders fragment
-                mFragmentTransaction.replace(R.id.containerView, new TabFragment()).commit();
-
+            if (this.time_frame.equals("week")) {
+                orders_text.setText("ORDERS THIS WEEK");
+                shippings_text.setText("SHIPMENTS THIS WEEK");
             }
-        });
 
-        shipButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
+            if (this.time_frame.equals("month")) {
+                orders_text.setText("ORDERS THIS MONTH");
+                shippings_text.setText("SHIPMENTS THIS MONTH");
             }
-        });
 
-        listingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //launch shipments fragment
-                mFragmentTransaction.replace(R.id.containerView, new ProductsFragment()).commit();
-
+            if (this.time_frame.equals("year")) {
+                orders_text.setText("ORDERS THIS YEAR");
+                shippings_text.setText("SHIPMENTS THIS YEAR");
             }
-        });
+
+
+            ordersButton = (Button) rootView.findViewById(R.id.ordersButton);
+            shipButton = (Button) rootView.findViewById(R.id.shippingsButton);
+            listingsButton = (Button) rootView.findViewById(R.id.listingsButton);
+
+            getListingStats();
+            getOrderStats();
+
+            in_stock = (TextView) rootView.findViewById(R.id.listingsStock);
+            out_stock = (TextView) rootView.findViewById(R.id.listingsNoStock);
+
+            orders_count_text = (TextView) rootView.findViewById(R.id.ordersQty);
+            orders_revenue_text = (TextView) rootView.findViewById(R.id.ordersRevenue);
+
+            shipments_revenue_text = (TextView) rootView.findViewById(R.id.shippingsRevenue);
+            shipments_expenditure_text = (TextView) rootView.findViewById(R.id.shippingsExpenditure);
+
+
+            mFragmentManager = getActivity().getSupportFragmentManager();
+            mFragmentTransaction = mFragmentManager.beginTransaction();
+
+            ordersButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // launch Orders fragment
+                    mFragmentTransaction.replace(R.id.containerView, new TabFragment()).commit();
+
+                }
+            });
+
+            shipButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getActivity(), AllShipmentsActivity.class);
+                    getActivity().startActivity(intent);
+                }
+            });
+
+            listingsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //launch shipments fragment
+                    MainActivity act = (MainActivity) getActivity();
+                    act.setOutofStock(true);
+                    mFragmentTransaction.replace(R.id.containerView, new ProductsFragment()).commit();
+
+                }
+            });
+
+
+        } catch (Exception e) {
+
+
+        }
 
         return rootView;
     }
@@ -133,10 +179,8 @@ public class PrimaryFragment extends Fragment {
 
 
         dialog = new MaterialDialog.Builder(getContext())
-                .title("Dashboard")
-                .content("Updating the statistics")
+                .content("Updating Dashboard")
                 .progress(true, 0)
-                .progressIndeterminateStyle(true)
                 .titleColor(getResources().getColor(R.color.colorPrimaryDark))
                 .widgetColor(getResources().getColor(R.color.colorAccent))
                 .contentColor(getResources().getColor(R.color.colorPrimary))
@@ -196,7 +240,7 @@ public class PrimaryFragment extends Fragment {
 
 
         //request for stock items which are out of stock
-        url = Config.URL_STORE + "/api/stock_locations/1/stock_items?q[s]=count_on_hand%20asc";
+        url = Config.URL_STORE + "/api/stock_locations/1/stock_items?q[s]=count_on_hand%500asc";
         count = 0;
         jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                 url, null,
@@ -272,6 +316,7 @@ public class PrimaryFragment extends Fragment {
                 shipments_revenue = 0.0;
                 orders_count = 0;
                 shipments_expenditure = 0.0;
+                int counter = 0;
 
                 try {
                     orders_count = response.getInt("count");
@@ -292,16 +337,64 @@ public class PrimaryFragment extends Fragment {
 
                         String payment_state = order.getString("payment_state");
                         if (payment_state.equals("paid")) {
-                            orders_revenue = orders_revenue + order.getDouble("total");
-                            Log.d("Hellaleuah", orders_count + " $" + Double.toString(orders_revenue));
 
-                            try {
-                                shipments_revenue = shipments_revenue + order.getDouble("ship_total");
-                                shipments_expenditure = shipments_expenditure + order.getJSONArray("shipments").getJSONObject(0).getDouble("label_cost");
-                            } catch (Exception e) {
+                            String date = order.getString("created_at");
+                            String year = date.substring(0, 4);
+                            String month = date.substring(5, 7);
+                            String day = date.substring(8, 10);
 
-                                Log.d("Goshippo", "No fields preset for this shipment");
+                            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 
+
+                            if (time_frame.equals("year")) {
+                                Log.e("YEAR YEAR YEAR", timeStamp.substring(0, 4) + year);
+
+                                if (timeStamp.substring(0, 4).equals(year)) {
+
+                                    counter++;
+                                    orders_revenue = orders_revenue + order.getDouble("total");
+                                    Log.d("Hellaleuah", orders_count + " $" + Double.toString(orders_revenue));
+
+                                    try {
+                                        shipments_revenue = shipments_revenue + order.getDouble("ship_total");
+                                        shipments_expenditure = shipments_expenditure + order.getJSONArray("shipments").getJSONObject(0).getDouble("label_cost");
+                                    } catch (Exception e) {
+                                        Log.d("Goshippo", "No fields preset for this shipment");
+
+                                    }
+                                }
+                            } else if (time_frame.equals("month")) {
+                                Log.e(timeStamp.substring(4, 6) + "MONTH MONTH", month);
+
+                                if (timeStamp.substring(4, 6).equals(month)) {
+
+                                    counter++;
+                                    orders_revenue = orders_revenue + order.getDouble("total");
+                                    Log.d("Hellaleuah", orders_count + " $" + Double.toString(orders_revenue));
+
+                                    try {
+                                        shipments_revenue = shipments_revenue + order.getDouble("ship_total");
+                                        shipments_expenditure = shipments_expenditure + order.getJSONArray("shipments").getJSONObject(0).getDouble("label_cost");
+                                    } catch (Exception e) {
+                                        Log.d("Goshippo", "No fields preset for this shipment");
+
+                                    }
+                                }
+                            } else if (time_frame.equals("week")) {
+                                if ((Integer.parseInt(timeStamp.substring(6, 8)) - (Integer.parseInt(day)) < 7) && (timeStamp.substring(4, 6).equals(month))) {
+
+                                    counter++;
+                                    orders_revenue = orders_revenue + order.getDouble("total");
+                                    Log.d("Hellaleuah", orders_count + " $" + Double.toString(orders_revenue));
+
+                                    try {
+                                        shipments_revenue = shipments_revenue + order.getDouble("ship_total");
+                                        shipments_expenditure = shipments_expenditure + order.getJSONArray("shipments").getJSONObject(0).getDouble("label_cost");
+                                    } catch (Exception e) {
+                                        Log.d("Goshippo", "No fields preset for this shipment");
+
+                                    }
+                                }
 
                             }
                         }
@@ -319,12 +412,16 @@ public class PrimaryFragment extends Fragment {
                 }
 
                 orders_revenue_text.setText("$" + String.format("%.2f", orders_revenue));
-                orders_count_text.setText(Integer.toString(orders_count));
+                orders_count_text.setText(Integer.toString(counter));
                 shipments_revenue_text.setText("$" + String.format("%.2f", shipments_revenue));
                 shipments_expenditure_text.setText(("$") + String.format("%.2f", shipments_expenditure));
 
             }
-        }, new Response.ErrorListener() {
+        }
+
+                , new Response.ErrorListener()
+
+        {
 
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -335,7 +432,9 @@ public class PrimaryFragment extends Fragment {
                 dialog.dismiss();
 
             }
-        });
+        }
+
+        );
 
 
         jsonObjReq.setRetryPolicy(new
@@ -355,11 +454,7 @@ public class PrimaryFragment extends Fragment {
 
     }
 
-    public static void onBackPressed(){
-
-
-
-
+    public static void onBackPressed() {
 
 
     }

@@ -10,9 +10,6 @@ import android.content.SharedPreferences.Editor;
 
 import java.util.HashMap;
 
-import recode360.spreeadminapp.Activities.BoardingActivity;
-import recode360.spreeadminapp.Activities.LaunchScreenActivity;
-import recode360.spreeadminapp.Activities.LoginActivity;
 import recode360.spreeadminapp.Activities.OnboardingWithCenterAnimationActivity;
 import recode360.spreeadminapp.app.Config;
 
@@ -51,6 +48,10 @@ public class SessionManager {
 
     public static String KEY_PASSWORD = "password";
 
+    public static String KEY_GOSHIPPO_TOKEN = "goshippo_token";
+
+    private LoginCallback callback;
+
 
     // Constructor
     public SessionManager(Context context) {
@@ -85,6 +86,15 @@ public class SessionManager {
         editor.commit();
     }
 
+
+    public void addGoshippoKey(String token) {
+        editor.putString(KEY_GOSHIPPO_TOKEN, token);
+        editor.commit();
+        Config.USER_SHIPPO_KEY = pref.getString(KEY_GOSHIPPO_TOKEN, null);
+        // notify the MainActivity about onboarding is complete and start making requests for dashboard
+       // callback.loginSuccess();
+    }
+
     /**
      * Check login method wil check user login status
      * If false it will redirect user to login page
@@ -111,6 +121,7 @@ public class SessionManager {
         Config.USER_EMAIL = pref.getString(KEY_EMAIL, null);
         Config.URL_STORE = pref.getString(KEY_URL, null);
         Config.USER_PASSWORD = pref.getString(KEY_PASSWORD, null);
+        Config.USER_SHIPPO_KEY = pref.getString(KEY_GOSHIPPO_TOKEN, null);
 
     }
 
@@ -164,4 +175,16 @@ public class SessionManager {
     public boolean isLoggedIn() {
         return pref.getBoolean(IS_LOGIN, false);
     }
+
+
+    public void setCallback(LoginCallback callback) {
+
+        this.callback = callback;
+    }
+
+
+    public interface LoginCallback {
+        public void loginSuccess();
+    }
+
 }

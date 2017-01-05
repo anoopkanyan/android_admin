@@ -2,9 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:fontFamily="sans-serif"
-    >
+    android:orientation="vertical">
 
     <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -33,7 +32,7 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="24dp"
                     android:paddingTop="8dp"
-                    android:text="MONTHLY ORDERS"
+                    android:text="ORDERS THIS MONTH"
                     android:textColor="@color/lbl_product_name"
                     android:textSize="16dp" />
 
@@ -75,7 +74,7 @@
                     android:paddingBottom="8dp"
                     android:paddingLeft="24dp"
                     android:paddingRight="40dp"
-                    android:text="New Orders"
+                    android:text="All Orders"
                     android:textColor="@color/colorPrimary" />
 
 
@@ -101,7 +100,7 @@
                     android:layout_below="@+id/ordersQtyTag"
                     android:layout_centerHorizontal="true"
                     android:paddingLeft="24dp"
-                    android:text="VIEW ALL ORDERS"
+                    android:text="VIEW NEW ORDERS"
                     android:textColor="@color/colorAccent" />
 
 
@@ -136,7 +135,7 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="24dp"
                     android:paddingTop="8dp"
-                    android:text="SHIPMENTS"
+                    android:text="SHIPMENTS THIS MONTH"
                     android:textColor="@color/lbl_product_name"
                     android:textSize="16dp" />
 
@@ -157,14 +156,14 @@
                     android:id="@+id/shippingsRevenue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_above="@+id/shippingsExpenditureTag"
+                    android:layout_alignLeft="@+id/shippingsRevenueTag"
+                    android:layout_alignStart="@+id/shippingsRevenueTag"
                     android:paddingLeft="40dp"
                     android:paddingRight="24dp"
                     android:paddingTop="16dp"
                     android:textColor="@color/lbl_product_description"
-                    android:textSize="24dp"
-                    android:layout_above="@+id/shippingsExpenditureTag"
-                    android:layout_alignLeft="@+id/shippingsRevenueTag"
-                    android:layout_alignStart="@+id/shippingsRevenueTag" />
+                    android:textSize="24dp" />
 
 
                 <TextView
@@ -186,14 +185,14 @@
                     android:id="@+id/shippingsRevenueTag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/shippingsExpenditureTag"
+                    android:layout_toEndOf="@+id/shippingsExpenditureTag"
+                    android:layout_toRightOf="@+id/shippingsExpenditureTag"
                     android:paddingBottom="8dp"
                     android:paddingLeft="40dp"
                     android:paddingRight="24dp"
                     android:text="Shipping Revenue"
-                    android:textColor="@color/colorPrimary"
-                    android:layout_alignTop="@+id/shippingsExpenditureTag"
-                    android:layout_toRightOf="@+id/shippingsExpenditureTag"
-                    android:layout_toEndOf="@+id/shippingsExpenditureTag" />
+                    android:textColor="@color/colorPrimary" />
 
 
                 <Button
@@ -242,7 +241,7 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="24dp"
                     android:paddingTop="8dp"
-                    android:text="LISTINGS"
+                    android:text="PRODUCTS"
                     android:textColor="@color/lbl_product_name"
                     android:textSize="16dp" />
 
@@ -263,14 +262,14 @@
                     android:id="@+id/listingsNoStock"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/listingsStock"
+                    android:layout_toEndOf="@+id/listingsStockTag"
+                    android:layout_toRightOf="@+id/listingsStockTag"
                     android:paddingLeft="40dp"
                     android:paddingRight="24dp"
                     android:paddingTop="16dp"
                     android:textColor="@color/lbl_product_description"
-                    android:textSize="24dp"
-                    android:layout_alignTop="@+id/listingsStock"
-                    android:layout_toRightOf="@+id/listingsStockTag"
-                    android:layout_toEndOf="@+id/listingsStockTag" />
+                    android:textSize="24dp" />
 
 
                 <TextView
@@ -302,23 +301,22 @@
                     android:textColor="@color/colorPrimary" />
 
                 <Button
-                android:id="@+id/listingsButton"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/listingsStockTag"
-                android:layout_centerHorizontal="true"
-                android:paddingLeft="24dp"
-                android:text="VIEW LISTINGS"
-                android:textColor="@color/colorAccent" />
+                    android:id="@+id/listingsButton"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@+id/listingsStockTag"
+                    android:layout_centerHorizontal="true"
+                    android:paddingLeft="24dp"
+                    android:text="VIEW OUT OF STOCK"
+                    android:textColor="@color/colorAccent" />
 
 
             </RelativeLayout>
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
-
 
 
 </LinearLayout>

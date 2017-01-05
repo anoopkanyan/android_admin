@@ -2,13 +2,13 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/order_details_card"
     android:layout_width="match_parent"
-    android:layout_height="160dp"
+    android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
     android:layout_marginTop="8dp"
     android:background="?android:selectableItemBackground"
-    android:foreground="?android:attr/selectableItemBackground"
     android:clickable="true"
     android:elevation="100dp"
+    android:foreground="?android:attr/selectableItemBackground"
     card_view:cardBackgroundColor="@color/white"
     card_view:cardCornerRadius="@dimen/card_corner_radius">
 
@@ -27,27 +27,25 @@
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
-            android:textColor="#000"
-            android:textSize="26sp"
-            android:text="Order Details"/>
+            android:text="Order Details"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="26sp" />
 
 
         <TableLayout
             android:id="@+id/orderTable"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/fixedText"
-            android:alpha="0.8"
-            android:paddingBottom="5dp"
+            android:paddingBottom="8dp"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="5dp"
             android:shrinkColumns="1"
             android:stretchColumns="*"
-            android:textColor="@color/black"
+            android:textColor="@color/colorPrimary"
             android:textSize="15dp">
 
             <TableRow>
@@ -55,16 +53,16 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="Order Id:"></TextView>
+                    android:text="Order Id:"
+                    android:textColor="@color/colorPrimary"></TextView>
 
                 <TextView
                     android:id="@+id/order_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
                     android:gravity="left"
-                    android:inputType="text"></TextView>
+                    android:inputType="text"
+                    android:textColor="@color/colorPrimary"></TextView>
             </TableRow>
 
             <TableRow>
@@ -72,15 +70,15 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="Order No:"></TextView>
+                    android:text="Order No:"
+                    android:textColor="@color/colorPrimary"></TextView>
 
                 <TextView
                     android:id="@+id/order_no"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:gravity="left"></TextView>
+                    android:gravity="left"
+                    android:textColor="@color/colorPrimary"></TextView>
             </TableRow>
 
             <TableRow>
@@ -88,16 +86,16 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="Item Total:"></TextView>
+                    android:text="Item Total:"
+                    android:textColor="@color/colorPrimary"></TextView>
 
                 <TextView
                     android:id="@+id/item_total"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
                     android:gravity="left"
-                    android:inputType="text"></TextView>
+                    android:inputType="text"
+                    android:textColor="@color/colorPrimary"></TextView>
             </TableRow>
 
             <TableRow>
@@ -105,15 +103,15 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="Quantity:"></TextView>
+                    android:text="Quantity:"
+                    android:textColor="@color/colorPrimary"></TextView>
 
                 <TextView
                     android:id="@+id/quantity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:gravity="left"></TextView>
+                    android:gravity="left"
+                    android:textColor="@color/colorPrimary"></TextView>
             </TableRow>
 
             <TableRow>
@@ -121,18 +119,45 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="Total:"></TextView>
+                    android:text="Total:"
+                    android:textColor="@color/colorPrimary"></TextView>
 
                 <TextView
                     android:id="@+id/total"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:gravity="left"></TextView>
+                    android:gravity="left"
+                    android:textColor="@color/colorPrimary"></TextView>
             </TableRow>
 
         </TableLayout>
+
+        <Button
+            android:id="@+id/shipments_button"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/orderTable"
+            android:layout_marginLeft="16dp"
+            android:background="@color/white"
+            android:backgroundTint="@color/white"
+            android:padding="8dp"
+            android:text="View Shipments"
+            android:textColor="@color/colorAccent" />
+
+        <Button
+            android:id="@+id/bill_details_button"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/orderTable"
+            android:layout_marginRight="16dp"
+            android:background="@color/white"
+            android:padding="8dp"
+            android:text="Bill Details"
+            android:textColor="@color/colorAccent" />
+
 
     </RelativeLayout>
 

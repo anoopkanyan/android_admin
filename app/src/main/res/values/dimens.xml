@@ -7,6 +7,10 @@
     <dimen name="card_margin">8dp</dimen>
     <dimen name="card_corner_radius">2dp</dimen>
 
+    <!--Product image sizes-->
+    <dimen name="product_image_width">65dp</dimen>
+    <dimen name="product_image_height">65dp</dimen>
+
     <dimen name="feed_item_margin">10dp</dimen>
     <dimen name="feed_item_padding_top_bottom">20dp</dimen>
     <dimen name="feed_item_padding_left_right">15dp</dimen>
@@ -19,4 +23,37 @@
     <dimen name="feed_item_corner_radius">3dp</dimen>
     <dimen name="feed_item_border_width">1dp</dimen>
     <dimen name="statusbar_size">24dp</dimen>
+
+
+    <!-- Fonts' sizes -->
+    <dimen name="text_size_micro">12sp</dimen>
+    <dimen name="text_size_small">14sp</dimen>
+    <dimen name="text_size_medium">18sp</dimen>
+    <dimen name="text_size_large">22sp</dimen>
+    <dimen name="text_size_xlarge">28sp</dimen>
+    <dimen name="text_size_fragment">50sp</dimen>
+    <dimen name="text_size_title">50sp</dimen>
+
+
+    <!-- margins -->
+    <dimen name="margin_120dp">120dp</dimen>
+    <dimen name="margin_80dp">80dp</dimen>
+    <dimen name="margin_50dp">50dp</dimen>
+    <dimen name="margin_45dp">45dp</dimen>
+    <dimen name="margin_40dp">40dp</dimen>
+    <dimen name="margin_35dp">35dp</dimen>
+    <dimen name="margin_30dp">30dp</dimen>
+    <dimen name="margin_25dp">25dp</dimen>
+    <dimen name="margin_20dp">20dp</dimen>
+    <dimen name="margin_15dp">15dp</dimen>
+    <dimen name="margin_14dp">14dp</dimen>
+    <dimen name="margin_12dp">12dp</dimen>
+    <dimen name="margin_10dp">10dp</dimen>
+    <dimen name="margin_8dp">8dp</dimen>
+    <dimen name="margin_6dp">6dp</dimen>
+    <dimen name="margin_5dp">5dp</dimen>
+    <dimen name="margin_3dp">3dp</dimen>
+    <dimen name="margin_2dp">2dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
 </resources>

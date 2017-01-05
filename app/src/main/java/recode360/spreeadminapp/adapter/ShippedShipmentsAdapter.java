@@ -12,18 +12,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 
-import recode360.spreeadminapp.Activities.CreateLabelActivity;
 import recode360.spreeadminapp.R;
 import recode360.spreeadminapp.models.Address;
 import recode360.spreeadminapp.models.Shipments;
@@ -38,6 +34,12 @@ public class ShippedShipmentsAdapter extends RecyclerView.Adapter<ShippedShipmen
         this.shipAddress = shipAddress;
         this.context = context;
     }
+
+    public ShippedShipmentsAdapter(List<Shipments> shipments, Context context) {
+        this.shipments = shipments;
+        this.context = context;
+    }
+
 
     @Override
     public ShippedShipmentsAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {

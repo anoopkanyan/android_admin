@@ -67,7 +67,7 @@ public class PackagesRecyclerViewAdapter extends RecyclerView.Adapter<PackagesVi
         });
 
 
-        holder.packageName.setText(packageList.get(position).getName());
+        holder.packageName.setText(packageList.get(position).getName().substring(5));
         if (imageLoader == null)
             imageLoader = AppController.getInstance().getImageLoader();
         holder.packagePhoto.setImageUrl(packageList.get(position).getPhoto(), imageLoader);

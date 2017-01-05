@@ -3,7 +3,6 @@ package recode360.spreeadminapp.Activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.webkit.URLUtil;
 
 import com.android.volley.AuthFailureError;
@@ -23,7 +21,6 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
-import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
 import org.json.JSONArray;
@@ -50,7 +47,7 @@ import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 
 //works with orders which have shipment and payment details
-public class OrdersActivity extends AppCompatActivity {
+public class OrdersActivity extends AppCompatActivity implements LineItemsAdapter.EditPlayerAdapterCallback {
 
 
     private String order_no;   //order number passed by the calling activity
@@ -94,37 +91,6 @@ public class OrdersActivity extends AppCompatActivity {
         LinearLayoutManager llm = new LinearLayoutManager(getBaseContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
-
-        menu1 = (FloatingActionMenu) findViewById(R.id.menu1);
-        menu1.hideMenuButton(false);
-        menu1.showMenuButton(true);
-
-        final FloatingActionMenu fab = (FloatingActionMenu) findViewById(R.id.menu1);
-        fab.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
-            @Override
-            public void onMenuToggle(boolean opened) {
-                int drawableId;
-                if (opened) {
-                    drawableId = R.drawable.ic_add;
-                } else {
-                    drawableId = R.drawable.ic_menu;
-                }
-                Drawable drawable = getResources().getDrawable(drawableId);
-                fab.getMenuIconView().setImageDrawable(drawable);
-            }
-        });
-
-
-        final FloatingActionButton programFab1 = new FloatingActionButton(this);
-        final FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fab1);
-        final FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
-
-        programFab1.setButtonSize(FloatingActionButton.SIZE_MINI);
-        programFab1.setLabelText("View Shipments");
-        programFab1.setImageResource(R.drawable.ic_done);
-        programFab1.setColorNormalResId(R.color.colorAccent);
-        programFab1.setColorPressedResId(R.color.color_alizarin);
-        programFab1.setColorRippleResId(R.color.color_alizarin);
 
 
         //this is store details related to the whole order
@@ -234,6 +200,7 @@ public class OrdersActivity extends AppCompatActivity {
 
                             adapter = new LineItemsAdapter(order, lineItemsList, OrdersActivity.this);
                             recList.setAdapter(adapter);
+                            adapter.setCallback(OrdersActivity.this);
                             adapter.notifyDataSetChanged();
 
                         } catch (JSONException e) {
@@ -274,76 +241,6 @@ public class OrdersActivity extends AppCompatActivity {
 
         //set button if shipment is pending, otherwise not
 
-
-        menu1.addMenuButton(programFab1);
-        programFab1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-
-        fab1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alert.showAlertDialog(OrdersActivity.this, "Bill Details", "Name:  " + order.getBill_address().getFull_name() + "\nAddress:  " + order.getBill_address().getAddress1() + " " + order.getBill_address().getAddress2()
-                        + "\nCity:  " + order.getBill_address().getCity() + "\nState:  " + order.getBill_address().getState().getName() + "\nCountry:  " + order.getBill_address().getCountry().getName(), true);
-            }
-        });
-
-        fab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alert.showAlertDialog(OrdersActivity.this, "Shipment Details", "Name:  " + order.getShip_address().getFull_name() + "\nAddress:  " + order.getShip_address().getAddress1() + " " + order.getShip_address().getAddress2()
-                        + "\nCity:  " + order.getBill_address().getCity() + "\nState:  " + order.getShip_address().getState().getName() + "\nCountry:  " + order.getShip_address().getCountry().getName(), true);
-            }
-        });
-
-        programFab1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /*
-                Intent intent = new Intent(OrdersActivity.this, CreateLabelActivity.class);
-                intent.putExtra("ShipAddress", order.getShip_address());
-                Log.d("random shit", order.getShip_address().getCountry().getIso());
-                intent.putExtra("country", order.getShip_address().getCountry().getIso());
-                intent.putExtra("state", order.getShip_address().getState().getAbbr());
-
-                // intent.putExtra("key", value); //put Order and shipment details
-                startActivity(intent);
-                */
-
-                if (shipment.equalsIgnoreCase("shipped")) {
-
-                    Intent intent = new Intent(OrdersActivity.this, ShippedShipmentsActivity.class);
-                    intent.putExtra("order_no", order_no);
-                    Log.d("Actaully -------"," it has been shipped");
-                    startActivity(intent);
-
-                } else {
-
-                    Intent intent = new Intent(OrdersActivity.this, ReadyShipmentsActivity.class);
-                    intent.putExtra("order_no", order_no);
-                    startActivity(intent);
-
-
-                }
-            }
-        });
-
-
-        menu1.setOnMenuButtonClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (menu1.isOpened()) {
-                    //nothing to do here yet
-                    //    Toast.makeText(OrdersActivity.this, menu1.getMenuButtonLabelText(), Toast.LENGTH_SHORT).show();
-                }
-
-                menu1.toggle(true);
-            }
-        });
 
         //   presentShowcaseView(500);
 
@@ -417,5 +314,32 @@ public class OrdersActivity extends AppCompatActivity {
         sequence.start();
     }
 
+    @Override
+    public void shipmentsButtonPressed() {
+
+        if (shipment.equalsIgnoreCase("shipped")) {
+
+            Intent intent = new Intent(OrdersActivity.this, ShippedShipmentsActivity.class);
+            intent.putExtra("order_no", order_no);
+            Log.d("Actaully -------", " it has been shipped");
+            startActivity(intent);
+
+        } else {
+
+            Intent intent = new Intent(OrdersActivity.this, ReadyShipmentsActivity.class);
+            intent.putExtra("order_no", order_no);
+            startActivity(intent);
+
+        }
+
+    }
+
+    @Override
+    public void billDetailsButtonPressed() {
+
+        alert.showAlertDialog(OrdersActivity.this, "Bill Details", "Name:  " + order.getBill_address().getFull_name() + "\nAddress:  " + order.getBill_address().getAddress1() + " " + order.getBill_address().getAddress2()
+                + "\nCity:  " + order.getBill_address().getCity() + "\nState:  " + order.getBill_address().getState().getName() + "\nCountry:  " + order.getBill_address().getCountry().getName(), true);
+
+    }
 
 }

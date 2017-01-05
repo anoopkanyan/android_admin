@@ -164,7 +164,7 @@ public class CreateLabelActivity extends AppCompatActivity {
         shipment_number = i.getStringExtra("shipment_number");
 
 
-        carriersText = (TextView) findViewById(R.id.carriers);
+       // carriersText = (TextView) findViewById(R.id.carriers);
         templateText = (TextView) findViewById(R.id.template);
         insuranceText = (TextView) findViewById(R.id.insurancePrice);
 
@@ -219,8 +219,8 @@ public class CreateLabelActivity extends AppCompatActivity {
                             .title("Insurance")
                             .titleColor(getResources().getColor(R.color.accent))
                             .content("Enter the insurance amount")
-                            .inputType(InputType.TYPE_NUMBER_FLAG_DECIMAL)
-                            .input("Amount", "0.00", new MaterialDialog.InputCallback() {
+                            .inputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL)
+                            .input("Amount", "", new MaterialDialog.InputCallback() {
                                 @Override
                                 public void onInput(MaterialDialog dialog, CharSequence input) {
                                     Log.d("The insurance amount is", input.toString());
@@ -277,14 +277,14 @@ public class CreateLabelActivity extends AppCompatActivity {
 
         parcel_weight = weight.getText().toString();
 
-        carrierButton = (ImageButton) findViewById(R.id.imageButton);
-        carrierButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(CreateLabelActivity.this, CarriersActivity.class);
-                startActivity(i);
-            }
-        });
+       // carrierButton = (ImageButton) findViewById(R.id.imageButton);
+       // carrierButton.setOnClickListener(new View.OnClickListener() {
+           // @Override
+         //   public void onClick(View v) {
+         //       Intent i = new Intent(CreateLabelActivity.this, CarriersActivity.class);
+           //     startActivity(i);
+           // }
+        //});
 
         boxesButton = (ImageButton) findViewById(R.id.imageButton1);
         boxesButton.setOnClickListener(new View.OnClickListener() {
@@ -579,7 +579,7 @@ public class CreateLabelActivity extends AppCompatActivity {
         String[] items = new String[rates.size()];
         int index = 0;
         for (int i = 0; i < rates.size(); i++) {
-            items[index] = rates.get(i).getProvider().toString().toUpperCase() + ":  " + rates.get(i).getCurrency().toString() + " " + rates.get(i).getAmount().toString();
+            items[index] = rates.get(i).getProvider().toString().toUpperCase() + " "+rates.get(i).getServicelevelName().toString()+":  "  + "$" + rates.get(i).getAmount().toString();
             index++;
         }
 

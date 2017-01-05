@@ -95,6 +95,7 @@ public class ProductsFragment extends Fragment implements ProductListAdapterList
     private ProgressDialog pDialog;
     private MaterialDialog dialog;
     private FloatingActionButton fab;
+    private MainActivity act;
 
 
     SwipeRefreshLayout swipeLayout;
@@ -106,6 +107,7 @@ public class ProductsFragment extends Fragment implements ProductListAdapterList
 
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        act = (MainActivity) getActivity();
 
         View view = inflater.inflate(R.layout.products_layout, container, false);
 
@@ -122,7 +124,12 @@ public class ProductsFragment extends Fragment implements ProductListAdapterList
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
 //        activity.setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.product);
+        if (act.isOutofStock()) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Out of Stock");
+            fab.hide();
+        } else {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.product);
+        }
         ((AppCompatActivity) getActivity()).getSupportActionBar().invalidateOptionsMenu();
         listView = (ListView) view.findViewById(R.id.list);
 
@@ -296,8 +303,16 @@ public class ProductsFragment extends Fragment implements ProductListAdapterList
                         p.setDescription(description);
                         p.setPrice(price);
 
-                        //productsList.add(p);
-                        tempList.add(p);
+
+                        if (act.isOutofStock()) {
+                            if (!product.getJSONObject("master").getBoolean("in_stock"))
+                                //productsList.add(p);
+                                tempList.add(p);
+
+                        } else {
+
+                            tempList.add(p);
+                        }
                     }
 
                     // notifying adapter about data changes, so that the

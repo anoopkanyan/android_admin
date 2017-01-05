@@ -22,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,8 +31,10 @@ import java.util.Map;
 
 import recode360.spreeadminapp.R;
 import recode360.spreeadminapp.app.AppController;
+import recode360.spreeadminapp.models.State;
 import recode360.spreeadminapp.models.sessions.AlertDialogManager;
 import recode360.spreeadminapp.models.sessions.SessionManager;
+import recode360.spreeadminapp.utils.DatabaseHandler;
 
 public class LoginActivity extends Activity {
 
@@ -53,11 +56,13 @@ public class LoginActivity extends Activity {
 
     // Session Manager Class
     SessionManager session;
+    private DatabaseHandler database;
 
     //JSONObject to send the user details
     private JSONObject jsonBody;
     private String URL;
     private String url;
+    private String token;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,6 +74,7 @@ public class LoginActivity extends Activity {
         // Session Manager
         session = new SessionManager(getApplicationContext());
 
+        database = new DatabaseHandler(this);
 
         inputLayoutUrl = (TextInputLayout) findViewById(R.id.input_layout_url);
         inputLayoutEmail = (TextInputLayout) findViewById(R.id.input_layout_email);
@@ -140,15 +146,15 @@ public class LoginActivity extends Activity {
                     // pDialog.show();
 
 
-                      dialog = new MaterialDialog.Builder(LoginActivity.this)
+                    dialog = new MaterialDialog.Builder(LoginActivity.this)
                             .title("Sign In")
                             .content("Reaching your store")
                             .progress(true, 0)
                             .progressIndeterminateStyle(true)
                             .titleColor(getResources().getColor(R.color.colorPrimaryDark))
-                              .widgetColor(getResources().getColor(R.color.colorAccent))
-                              .contentColor(getResources().getColor(R.color.colorPrimary))
-                              .autoDismiss(false)
+                            .widgetColor(getResources().getColor(R.color.colorAccent))
+                            .contentColor(getResources().getColor(R.color.colorPrimary))
+                            .autoDismiss(false)
                             .show();
 
                     JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
@@ -163,14 +169,23 @@ public class LoginActivity extends Activity {
                                     // For testing i am stroing name, email as follow
                                     // Use user real data
                                     try {
-                                        session.createLoginSession(response.getJSONObject("bill_address").getString("full_name"), username, response.getString("spree_api_key"), URL, password);
+
+                                        String name;
+                                        try {
+                                            name = response.getJSONObject("bill_address").getString("full_name");
+                                        } catch (Exception e) {
+
+                                            name = "Admin User";
+                                        }
+
+                                        session.createLoginSession(name, username, response.getString("spree_api_key"), URL, password);
+                                        token = response.getString("spree_api_key");
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
 
-                                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                                    startActivity(i);
-                                    finish();
+                                    getStates();
+                                    getStoreAttributes();
 
                                 }
                             }, new Response.ErrorListener() {
@@ -293,6 +308,137 @@ public class LoginActivity extends Activity {
         }
 
         return true;
+    }
+
+
+    //get store attributes such as store name, goshippo api tokens, and mail address
+
+    public void getStoreAttributes() {
+
+        String url = URL + "/api/stores";
+        final String TAG = "Store attributes request";
+
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+                url, null,
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, response.toString());
+
+                        try {
+                            String token = response.getJSONArray("stores").getJSONObject(0).getString("goshippo_api");
+                            SessionManager session = new SessionManager(getApplicationContext());
+                            session.addGoshippoKey(token);
+
+                            /*
+                            Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(i);
+                            finish();
+                            */
+
+                            getStates();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Accept", "application/json");
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                headers.put("X-Spree-Token", token);
+                return headers;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+        };
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(jsonObjReq, "store_attributes request");
+
+    }
+
+
+    public void getStates() {
+
+        final String TAG = "States List Request";
+        final String tag_json_obj = "states list request";
+
+
+        //specific id to get all the united states
+        String urlStates = "http://limitless-caverns-92762.herokuapp.com/api/countries/232.json";
+
+        final MaterialDialog dialog = new MaterialDialog.Builder(this)
+                .content("loading")
+                .progress(true, 0)
+                .cancelable(false)
+                .show();
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+                urlStates, null,
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+
+                        Log.d("Insert: ", "Inserting ..");
+                        try {
+                            JSONArray states = response.getJSONArray("states");
+                            Log.d("STATES REQUEST", response.toString());
+                            for (int i = 0; i < states.length(); i++) {
+
+                                State state = new State();
+                                state.setId(states.getJSONObject(i).getInt("id"));
+                                state.setName(states.getJSONObject(i).getString("name"));
+                                database.addState(state);
+
+                            }
+
+                            Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(i);
+                            finish();
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        dialog.dismiss();
+
+                    }
+
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.networkResponse);
+                // hide the progress dialog
+
+                dialog.dismiss();
+            }
+        });
+
+
+        AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+
     }
 
 
